@@ -10,11 +10,10 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import scala.Tuple2;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EventCollectionStreamingApp {
+class EventCollectionStreamingApp {
     private static final String HOST = "localhost";
     private static final int PORT = 9999;
     private static final String CHECKPOINT_DIR = "/tmp";

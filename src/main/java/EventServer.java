@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.util.Random;
 import java.util.concurrent.*;
 
-public class EventServer {
+class EventServer {
     private static final Executor SERVER_EXECUTOR = Executors.newSingleThreadExecutor();
     private static final int PORT = 9999;
     private static final String DELIMITER = ":";

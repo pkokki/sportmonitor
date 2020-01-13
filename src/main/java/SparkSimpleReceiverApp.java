@@ -5,9 +5,8 @@ import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.*;
 
 import java.io.File;
-import java.io.IOException;
 
-public class SparkSimpleReceiverApp {
+class SparkSimpleReceiverApp {
     private static final String HOST = "localhost";
     private static final int PORT = 9999;
 

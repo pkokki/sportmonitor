@@ -15,7 +15,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-public class JavaCorrelation {
+class JavaCorrelation {
     public static void main(String[] args) {
         // hadoop.home.dir
         File workaround = new File(".");
