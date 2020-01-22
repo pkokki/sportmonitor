@@ -1,0 +1,36 @@
+version: "3"
+services:
+
+  kafka:
+    image: spotify/kafka
+    hostname: localhost
+    container_name: kafka
+    user: root
+    volumes:
+      - /c/panos/docker/storage/kafka/kafka-logs:/tmp/kafka-logs
+    ports:
+      - "2181:2181"
+      - "9092:9092"
+    environment:
+      ADVERTISED_HOST: localhost
+      ADVERTISED_PORT: 9092
+      LOG_RETENTION_HOURS: 1440
+
+  graphite:
+    image: sitespeedio/graphite
+    container_name: graphite
+    ports:
+      - "4003:4003"
+      - "4004:4004"
+      - "8090:8090"
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    volumes:
+      - /c/panos/docker/storage/grafana:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    user: root
+    links:
+      - graphite
