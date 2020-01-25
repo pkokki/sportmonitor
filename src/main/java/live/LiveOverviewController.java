@@ -2,6 +2,7 @@ package live;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,8 +26,8 @@ public class LiveOverviewController {
         final ObjectMapper mapper = new ObjectMapper();
         LiveOverview overviewObj = mapper.readValue(overview, LiveOverview.class);
 
-        LiveOverviewKafkaSender ks = new LiveOverviewKafkaSender("localhost:9092");
-        ks.send(overviewObj.getEvents());
+        //LiveOverviewKafkaSender ks = new LiveOverviewKafkaSender("localhost:9092");
+        LiveOverviewKafkaSender.send(overviewObj.getEvents());
         return "OK";
     }
 }

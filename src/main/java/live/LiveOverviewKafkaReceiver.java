@@ -3,17 +3,19 @@ package live;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.Durations;
-import org.apache.spark.streaming.api.java.JavaInputDStream;
-import org.apache.spark.streaming.api.java.JavaPairDStream;
-import org.apache.spark.streaming.api.java.JavaStreamingContext;
+import org.apache.spark.streaming.StateSpec;
+import org.apache.spark.streaming.api.java.*;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
 import scala.Tuple2;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.*;
 
 class LiveOverviewKafkaReceiver {
@@ -50,9 +52,15 @@ class LiveOverviewKafkaReceiver {
                         LocationStrategies.PreferConsistent(),
                         ConsumerStrategies.Subscribe(topics, kafkaParams)
                 );
-        JavaPairDStream<String, LiveOverview.Event> eventsDS = eventRecordDS
-                .mapToPair(record -> new Tuple2<>(record.key(), record.value()));
-        eventsDS.print(100);
+
+        JavaDStream<LiveOverview.Event> eventsDS = eventRecordDS.map(r -> r.value());
+        eventsDS.print();
+
+        // Apply the state update function to the events streaming Dataset grouped by eventId
+        JavaMapWithStateDStream<String, LiveOverview.Event, LiveOverview.EventInfo, LiveOverview.EventUpdate> eventUpdates = eventsDS
+                .mapToPair(e -> new Tuple2<>(e.getId(), e))
+                .mapWithState(StateSpec.function(LiveOverviewFunctions.MappingFunc).timeout(Durations.minutes(1)));
+        eventUpdates.print();
 
         // Execute the Spark workflow defined above
         streamingContext.start();

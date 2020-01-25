@@ -58,7 +58,7 @@ public class LiveOverview implements Serializable {
         this.events = events;
     }
 
-    public class Selection implements Serializable {
+    public static class Selection implements Serializable {
         private String id;
         private String description;
         private Float price;
@@ -88,7 +88,7 @@ public class LiveOverview implements Serializable {
         }
     }
 
-    public class Market implements Serializable {
+    public static class Market implements Serializable {
         private String id;
         private String description;
         private String type;
@@ -136,9 +136,9 @@ public class LiveOverview implements Serializable {
         }
     }
 
-    public class Event implements Serializable {
+    public static class Event implements Serializable {
         private String id;
-        private String timestamp;
+        private Long timestamp;
         private String regionId;
         private String regionName;
         private String leagueId;
@@ -160,8 +160,8 @@ public class LiveOverview implements Serializable {
         private Integer awayRedCards;
         private List<Market> markets;
 
-        public String getTimestamp() { return timestamp; }
-        public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
+        public Long getTimestamp() { return timestamp; }
+        public void setTimestamp(Long timestamp) { this.timestamp = timestamp; }
 
         public String getId() {
             return id;
@@ -323,6 +323,72 @@ public class LiveOverview implements Serializable {
         public void setAwayScore(String awayScore) {
             this.awayScore = awayScore;
         }
+
+        @Override public String toString() {
+            return "Event(id = " + id + " " + clockTime + " " + shortTitle + " " + homeScore + "-" + awayScore + ")";
+        }
     }
 
+    /**
+     * User-defined data type for storing an event information as state in mapGroupsWithState.
+     */
+    public static class EventInfo implements Serializable {
+        private int numEvents = 0;
+        private long startTimestampMs = -1;
+        private long endTimestampMs = -1;
+
+        public int getNumEvents() { return numEvents; }
+        public void setNumEvents(int numEvents) { this.numEvents = numEvents; }
+
+        public long getStartTimestampMs() { return startTimestampMs; }
+        public void setStartTimestampMs(long startTimestampMs) {
+            this.startTimestampMs = startTimestampMs;
+        }
+
+        public long getEndTimestampMs() { return endTimestampMs; }
+        public void setEndTimestampMs(long endTimestampMs) { this.endTimestampMs = endTimestampMs; }
+
+        public long calculateDuration() { return endTimestampMs - startTimestampMs; }
+
+        @Override public String toString() {
+            return "EventInfo(numEvents = " + numEvents +
+                    ", timestamps = " + startTimestampMs + " to " + endTimestampMs + ")";
+        }
+    }
+
+    /**
+     * User-defined data type representing the update information returned by mapGroupsWithState.
+     */
+    public static class EventUpdate implements Serializable {
+        private String id;
+        private long durationMs;
+        private int numEvents;
+        private boolean expired;
+
+        public EventUpdate() { }
+
+        public EventUpdate(String id, long durationMs, int numEvents, boolean expired) {
+            this.id = id;
+            this.durationMs = durationMs;
+            this.numEvents = numEvents;
+            this.expired = expired;
+        }
+
+        public String getId() { return id; }
+        public void setId(String id) { this.id = id; }
+
+        public long getDurationMs() { return durationMs; }
+        public void setDurationMs(long durationMs) { this.durationMs = durationMs; }
+
+        public int getNumEvents() { return numEvents; }
+        public void setNumEvents(int numEvents) { this.numEvents = numEvents; }
+
+        public boolean isExpired() { return expired; }
+        public void setExpired(boolean expired) { this.expired = expired; }
+
+        @Override public String toString() {
+            return "EventUpdate(id = " + id + ", numEvents = " + numEvents +
+                    ", durationMs = " + durationMs + ", expired = " + expired + ")";
+        }
+    }
 }
