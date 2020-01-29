@@ -360,14 +360,14 @@ public class LiveOverview implements Serializable {
      * User-defined data type representing the update information returned by mapGroupsWithState.
      */
     public static class EventMaster implements Serializable {
-        private long id;
+        private long id, maxTimestamp;
         private long durationMs;
         private int numEvents;
         private boolean expired;
 
         public EventMaster() { }
 
-        public EventMaster(long id, long durationMs, int numEvents, boolean expired) {
+        public EventMaster(long id, long maxTimestamp, long durationMs, int numEvents, boolean expired) {
             this.id = id;
             this.durationMs = durationMs;
             this.numEvents = numEvents;
@@ -376,6 +376,9 @@ public class LiveOverview implements Serializable {
 
         public long getId() { return id; }
         public void setId(long id) { this.id = id; }
+
+        public long getMaxTimestamp() { return maxTimestamp; }
+        public void setMaxTimestamp(long maxTimestamp) { this.maxTimestamp = maxTimestamp; }
 
         public long getDurationMs() { return durationMs; }
         public void setDurationMs(long durationMs) { this.durationMs = durationMs; }

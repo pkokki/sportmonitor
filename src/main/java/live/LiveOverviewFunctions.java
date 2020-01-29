@@ -12,7 +12,7 @@ public class LiveOverviewFunctions {
                 public LiveOverview.EventMaster call(Long eventId, Optional<LiveOverview.Event> event, State<LiveOverview.EventState> state) throws Exception {
                     // If timed out, then remove event and send final update
                     if (state.isTimingOut()) {
-                        return new LiveOverview.EventMaster(eventId, 0, 0, true);
+                        return new LiveOverview.EventMaster(eventId, 0, 0, 0, true);
                     }
                     else {
                         // Find max and min timestamps in events
@@ -38,7 +38,7 @@ public class LiveOverviewFunctions {
                         }
                         state.update(newState);
                         return new LiveOverview.EventMaster(
-                                eventId, state.get().calculateDuration(), state.get().getNumEvents(), false);
+                                eventId, maxTimestampMs, state.get().calculateDuration(), state.get().getNumEvents(), false);
                     }
                 }
             };
