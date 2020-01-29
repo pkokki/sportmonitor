@@ -4,44 +4,40 @@ import org.apache.spark.api.java.Optional;
 import org.apache.spark.api.java.function.Function3;
 import org.apache.spark.streaming.State;
 
-import java.util.Iterator;
-
 public class LiveOverviewFunctions {
 
-    static Function3<String, Optional<LiveOverview.Event>, State<LiveOverview.EventInfo>, LiveOverview.EventUpdate> MappingFunc =
-            new Function3<String, Optional<LiveOverview.Event>, State<LiveOverview.EventInfo>, LiveOverview.EventUpdate>() {
+    static Function3<Long, Optional<LiveOverview.Event>, State<LiveOverview.EventState>, LiveOverview.EventMaster> MappingFunc =
+            new Function3<Long, Optional<LiveOverview.Event>, State<LiveOverview.EventState>, LiveOverview.EventMaster>() {
                 @Override
-                public LiveOverview.EventUpdate call(String eventId, Optional<LiveOverview.Event> events, State<LiveOverview.EventInfo> state) throws Exception {
+                public LiveOverview.EventMaster call(Long eventId, Optional<LiveOverview.Event> event, State<LiveOverview.EventState> state) throws Exception {
                     // If timed out, then remove event and send final update
                     if (state.isTimingOut()) {
-                        LiveOverview.EventUpdate finalUpdate = new LiveOverview.EventUpdate(
-                                eventId, 0, 0, true);
-                        return finalUpdate;
+                        return new LiveOverview.EventMaster(eventId, 0, 0, true);
                     }
                     else {
                         // Find max and min timestamps in events
                         long maxTimestampMs = Long.MIN_VALUE;
                         long minTimestampMs = Long.MAX_VALUE;
                         int numNewEvents = 0;
-                        long timestampMs = events.get().getTimestamp();
+                        long timestampMs = event.get().getTimestamp();
                         maxTimestampMs = Math.max(timestampMs, maxTimestampMs);
                         minTimestampMs = Math.min(timestampMs, minTimestampMs);
                         numNewEvents += 1;
-                        LiveOverview.EventInfo updatedSession = new LiveOverview.EventInfo();
+                        LiveOverview.EventState newState = new LiveOverview.EventState();
 
                         // Update start and end timestamps in session
                         if (state.exists()) {
-                            LiveOverview.EventInfo oldSession = state.get();
-                            updatedSession.setNumEvents(oldSession.getNumEvents() + numNewEvents);
-                            updatedSession.setStartTimestampMs(oldSession.getStartTimestampMs());
-                            updatedSession.setEndTimestampMs(Math.max(oldSession.getEndTimestampMs(), maxTimestampMs));
+                            LiveOverview.EventState prevState = state.get();
+                            newState.setNumEvents(prevState.getNumEvents() + numNewEvents);
+                            newState.setStartTimestampMs(prevState.getStartTimestampMs());
+                            newState.setEndTimestampMs(Math.max(prevState.getEndTimestampMs(), maxTimestampMs));
                         } else {
-                            updatedSession.setNumEvents(numNewEvents);
-                            updatedSession.setStartTimestampMs(minTimestampMs);
-                            updatedSession.setEndTimestampMs(maxTimestampMs);
+                            newState.setNumEvents(numNewEvents);
+                            newState.setStartTimestampMs(minTimestampMs);
+                            newState.setEndTimestampMs(maxTimestampMs);
                         }
-                        state.update(updatedSession);
-                        return new LiveOverview.EventUpdate(
+                        state.update(newState);
+                        return new LiveOverview.EventMaster(
                                 eventId, state.get().calculateDuration(), state.get().getNumEvents(), false);
                     }
                 }

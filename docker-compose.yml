@@ -16,6 +16,9 @@ services:
       ADVERTISED_PORT: 9092
       LOG_RETENTION_HOURS: 1440
 
+  postgres:
+
+
   graphite:
     image: sitespeedio/graphite
     container_name: graphite

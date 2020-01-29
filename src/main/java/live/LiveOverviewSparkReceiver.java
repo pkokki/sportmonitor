@@ -35,11 +35,6 @@ public class LiveOverviewSparkReceiver {
         streamingContext.sparkContext().setLogLevel("WARN");
         streamingContext.checkpoint(CHECKPOINT_DIR);
 
-        SparkSession spark = SparkSession
-                .builder()
-                .appName("LiveOverview")
-                .getOrCreate();
-
         // Receive streaming data from the source
         JavaReceiverInputDStream<String> inputOverviews = streamingContext.socketTextStream(HOST, PORT);
         //inputOverviews.print();
