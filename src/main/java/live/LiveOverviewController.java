@@ -30,4 +30,10 @@ public class LiveOverviewController {
         LiveOverviewKafkaSender.send(overviewObj.getEvents());
         return "OK";
     }
+
+    @PostMapping(value = "/sportradar", consumes = "text/plain")
+    String sportradar(@RequestBody String data) {
+        LiveOverviewKafkaSender.send("RADAR", data);
+        return "OK";
+    }
 }

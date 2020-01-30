@@ -13,8 +13,19 @@ import java.util.Properties;
 
 class LiveOverviewKafkaSender {
     private static final Logger logger = LoggerFactory.getLogger(LiveOverviewKafkaSender.class);
-    private static final Properties props = getProducerConfig("localhost:9092");
-    private static final KafkaProducer<String, LiveOverview.Event> producer = new KafkaProducer<>(props);
+    private static final KafkaProducer<String, LiveOverview.Event> producer = new KafkaProducer<>(
+            getProducerConfig("localhost:9092", LiveOverviewEventSerializer.class.getName())
+    );
+    private static final KafkaProducer<String, String> stringProducer = new KafkaProducer<>(
+            getProducerConfig("localhost:9092", StringSerializer.class.getName())
+    );
+
+    public static void send(String topic, String data) {
+        ProducerRecord<String, String> record = new ProducerRecord<>(topic, data);
+        logger.info("Sending string record to topic: " + topic);
+        stringProducer.send(record, LiveOverviewKafkaSender::logResult);
+        stringProducer.flush();
+    }
 
     public static void send(List<LiveOverview.Event> events) {
         events.forEach(event -> {
@@ -25,12 +36,12 @@ class LiveOverviewKafkaSender {
         producer.flush();
     }
 
-    private static Properties getProducerConfig(String kafkaHost) {
+    private static Properties getProducerConfig(String kafkaHost, String valueSerializer) {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaHost);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, "LiveOverviewMonitor");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, LiveOverviewEventSerializer.class.getName());
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer);
         return props;
     }
 
