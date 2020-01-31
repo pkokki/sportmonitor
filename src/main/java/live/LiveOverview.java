@@ -369,6 +369,7 @@ public class LiveOverview implements Serializable {
 
         public EventMaster(long id, long maxTimestamp, long durationMs, int numEvents, boolean expired) {
             this.id = id;
+            this.maxTimestamp = maxTimestamp;
             this.durationMs = durationMs;
             this.numEvents = numEvents;
             this.expired = expired;
