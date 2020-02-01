@@ -27,7 +27,7 @@ public class PipelineOverview {
         kafkaParams.put("key.deserializer", StringDeserializer.class);
         kafkaParams.put("value.deserializer", EventDeserializer.class);
         kafkaParams.put("group.id", "overviews_stream");
-        kafkaParams.put("auto.offset.reset", "latest"); // earliest, latest, none
+        kafkaParams.put("auto.offset.reset", "earliest"); // earliest, latest, none
         kafkaParams.put("enable.auto.commit", false);
 
         Collection<String> topics = Collections.singletonList("OVERVIEWS");

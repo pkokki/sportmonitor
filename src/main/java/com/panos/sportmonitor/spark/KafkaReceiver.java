@@ -2,6 +2,7 @@ package com.panos.sportmonitor.spark;
 
 import com.panos.sportmonitor.spark.pipelines.overview.PipelineOverview;
 import com.panos.sportmonitor.spark.pipelines.radar.PipelineRadar;
+import org.apache.log4j.Level;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.streaming.Duration;
@@ -15,7 +16,6 @@ import java.io.File;
 public class KafkaReceiver {
     private static final String CHECKPOINT_DIR = "/panos/docker/storage/spark/checkpoints/live-overview";
     private static final Duration BATCH_DURATION = Durations.seconds(5);
-    private final static Logger logger = LoggerFactory.getLogger(KafkaReceiver.class);
 
     public static void start() throws InterruptedException {
         // winutils.exe workaround
@@ -28,7 +28,6 @@ public class KafkaReceiver {
                 .appName("LiveOverview")
                 .getOrCreate();
         JavaSparkContext jsc = new JavaSparkContext(spark.sparkContext());
-        jsc.setLogLevel("WARN");
 
         // Configure and initialize the SparkStreamingContext
         JavaStreamingContext streamingContext = new JavaStreamingContext(jsc, BATCH_DURATION);
