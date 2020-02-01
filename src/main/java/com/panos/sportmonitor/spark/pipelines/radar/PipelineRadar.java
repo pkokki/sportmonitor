@@ -66,7 +66,7 @@ public class PipelineRadar {
                .mapToPair(r -> new Tuple2<>(r.event, 1))
                 .reduceByKey((a, b) -> a + b)
                 .print(100);
-        //processMatchTimelineEvents(spark, messageStream);
+        processMatchTimelineEvents(spark, messageStream);
         processMatchSituations(spark, messageStream);
     }
 

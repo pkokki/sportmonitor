@@ -34,7 +34,7 @@ public class KafkaReceiver {
         streamingContext.sparkContext().setLogLevel("WARN");
         streamingContext.checkpoint(CHECKPOINT_DIR);
 
-        PipelineRadar.run(spark, streamingContext);
+        //PipelineRadar.run(spark, streamingContext);
         PipelineOverview.run(spark, streamingContext);
 
         // Execute the Spark workflow defined above

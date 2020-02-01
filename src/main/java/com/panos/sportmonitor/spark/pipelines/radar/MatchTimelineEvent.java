@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.Serializable;
 
-class MatchTimelineEvent implements Serializable {
+public class MatchTimelineEvent implements Serializable {
     private long id;
     private long matchid;
     private long uts;
@@ -14,7 +14,7 @@ class MatchTimelineEvent implements Serializable {
     private String type;
     private String team;
 
-    MatchTimelineEvent(JsonNode source) {
+    public MatchTimelineEvent(JsonNode source) {
         this.setId(source.path("_id").asLong());
         this.setMatchid(source.path("matchid").asLong());
         this.setUts(source.path("uts").asLong());
