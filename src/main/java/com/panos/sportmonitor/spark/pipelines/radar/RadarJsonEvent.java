@@ -1,17 +1,17 @@
-package live;
+package com.panos.sportmonitor.spark.pipelines.radar;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.Serializable;
 
-public class RadarJsonEvent implements Serializable {
-    public String queryUrl;
+class RadarJsonEvent implements Serializable {
+    private String queryUrl;
     public String event;
-    public long dob;
-    public int maxage;
+    private long dob;
+    private int maxage;
     public JsonNode data;
 
-    public RadarJsonEvent(String queryUrl, String event, long dob, int maxage, JsonNode data) {
+    RadarJsonEvent(String queryUrl, String event, long dob, int maxage, JsonNode data) {
         this.queryUrl = queryUrl;
         this.event = event;
         this.dob = dob;

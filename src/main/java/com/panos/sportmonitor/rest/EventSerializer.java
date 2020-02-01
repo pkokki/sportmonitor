@@ -1,23 +1,24 @@
-package live;
+package com.panos.sportmonitor.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.panos.sportmonitor.dto.Event;
 import org.apache.kafka.common.serialization.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public class LiveOverviewEventSerializer implements Serializer<LiveOverview.Event> {
-    private final static Logger logger = LoggerFactory.getLogger(LiveOverviewEventSerializer.class);
+public class EventSerializer implements Serializer<Event> {
+    private final static Logger logger = LoggerFactory.getLogger(EventSerializer.class);
 
     @Override
     public void configure(Map configs, boolean isKey) {
     }
 
     @Override
-    public byte[] serialize(String topic, LiveOverview.Event data) {
+    public byte[] serialize(String topic, Event data) {
         ObjectWriter writer = new ObjectMapper().writer();
         byte[] jsonBytes = new byte[0];
 

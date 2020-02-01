@@ -1,6 +1,7 @@
-package live;
+package com.panos.sportmonitor.spark.pipelines.overview;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.panos.sportmonitor.dto.Event;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.slf4j.Logger;
@@ -9,20 +10,20 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Map;
 
-public class LiveOverviewEventDeserializer implements Deserializer<LiveOverview.Event> {
-    private final static Logger logger = LoggerFactory.getLogger(LiveOverviewEventDeserializer.class);
+public class EventDeserializer implements Deserializer<Event> {
+    private final static Logger logger = LoggerFactory.getLogger(EventDeserializer.class);
 
     @Override
     public void configure(Map<String, ?> configs, boolean isKey) {
     }
 
     @Override
-    public LiveOverview.Event deserialize(String topic, byte[] data) {
-        LiveOverview.Event event = null;
+    public Event deserialize(String topic, byte[] data) {
+        Event event = null;
 
         ObjectMapper mapper = new ObjectMapper();
         try {
-            event = mapper.readValue(data, LiveOverview.Event.class);
+            event = mapper.readValue(data, Event.class);
         } catch (IOException e) {
             logger.error("Failed to deserialize object: " + data.toString(), e);
         }
@@ -30,7 +31,7 @@ public class LiveOverviewEventDeserializer implements Deserializer<LiveOverview.
     }
 
     @Override
-    public LiveOverview.Event deserialize(String topic, Headers headers, byte[] data) {
+    public Event deserialize(String topic, Headers headers, byte[] data) {
         return deserialize(topic, data);
     }
 

@@ -1,5 +1,7 @@
-package live;
+package com.panos.sportmonitor.spark;
 
+import com.panos.sportmonitor.spark.pipelines.overview.PipelineOverview;
+import com.panos.sportmonitor.spark.pipelines.radar.PipelineRadar;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.streaming.Duration;
@@ -10,12 +12,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
-class LiveOverviewKafkaReceiver {
+public class KafkaReceiver {
     private static final String CHECKPOINT_DIR = "/panos/docker/storage/spark/checkpoints/live-overview";
     private static final Duration BATCH_DURATION = Durations.seconds(5);
-    private final static Logger logger = LoggerFactory.getLogger(LiveOverviewKafkaReceiver.class);
+    private final static Logger logger = LoggerFactory.getLogger(KafkaReceiver.class);
 
-    static void start() throws InterruptedException {
+    public static void start() throws InterruptedException {
         // winutils.exe workaround
         File workaround = new File(".");
         System.getProperties().put("hadoop.home.dir", workaround.getAbsolutePath());
@@ -34,7 +36,7 @@ class LiveOverviewKafkaReceiver {
         streamingContext.checkpoint(CHECKPOINT_DIR);
 
         PipelineRadar.run(spark, streamingContext);
-        //PipelineOverview.run(spark, streamingContext);
+        PipelineOverview.run(spark, streamingContext);
 
         // Execute the Spark workflow defined above
         streamingContext.start();

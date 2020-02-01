@@ -1,5 +1,6 @@
-package live;
+package com.panos.sportmonitor.rest;
 
+import com.panos.sportmonitor.dto.Event;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -11,27 +12,27 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Properties;
 
-class LiveOverviewKafkaSender {
-    private static final Logger logger = LoggerFactory.getLogger(LiveOverviewKafkaSender.class);
-    private static final KafkaProducer<String, LiveOverview.Event> producer = new KafkaProducer<>(
-            getProducerConfig("localhost:9092", LiveOverviewEventSerializer.class.getName())
+class KafkaSender {
+    private static final Logger logger = LoggerFactory.getLogger(KafkaSender.class);
+    private static final KafkaProducer<String, Event> producer = new KafkaProducer<>(
+            getProducerConfig("localhost:9092", EventSerializer.class.getName())
     );
     private static final KafkaProducer<String, String> stringProducer = new KafkaProducer<>(
             getProducerConfig("localhost:9092", StringSerializer.class.getName())
     );
 
-    public static void send(String topic, String data) {
+    static void send(String topic, String data) {
         ProducerRecord<String, String> record = new ProducerRecord<>(topic, data);
         logger.info("Sending string record to topic: " + topic);
-        stringProducer.send(record, LiveOverviewKafkaSender::logResult);
+        stringProducer.send(record, KafkaSender::logResult);
         stringProducer.flush();
     }
 
-    public static void send(List<LiveOverview.Event> events) {
+    static void send(List<Event> events) {
         events.forEach(event -> {
-            ProducerRecord<String, LiveOverview.Event> record = new ProducerRecord<>("OVERVIEWS", event);
+            ProducerRecord<String, Event> record = new ProducerRecord<>("OVERVIEWS", event);
             logSend(event);
-            producer.send(record, LiveOverviewKafkaSender::logResult);
+            producer.send(record, KafkaSender::logResult);
         });
         producer.flush();
     }
@@ -45,7 +46,7 @@ class LiveOverviewKafkaSender {
         return props;
     }
 
-    private static void logSend(LiveOverview.Event event) {
+    private static void logSend(Event event) {
         logger.info("Sending live overview for event: "
                 + event.getTitle() + "," + " at time: "
                 + event.getTimestamp());

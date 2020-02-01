@@ -1,10 +1,10 @@
-package live;
+package com.panos.sportmonitor.spark.pipelines.radar;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.Serializable;
 
-public class MatchTimelineEvent implements Serializable {
+class MatchTimelineEvent implements Serializable {
     private long id;
     private long matchid;
     private long uts;
@@ -14,7 +14,7 @@ public class MatchTimelineEvent implements Serializable {
     private String type;
     private String team;
 
-    public MatchTimelineEvent(JsonNode source) {
+    MatchTimelineEvent(JsonNode source) {
         this.setId(source.path("_id").asLong());
         this.setMatchid(source.path("matchid").asLong());
         this.setUts(source.path("uts").asLong());

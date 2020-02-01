@@ -11,8 +11,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.pkokki</groupId>
-    <artifactId>deep-sea-01</artifactId>
+    <groupId>com.panos</groupId>
+    <artifactId>sport-monitor</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>

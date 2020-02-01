@@ -1,4 +1,4 @@
-package live;
+package com.panos.sportmonitor.spark.pipelines.radar;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -29,7 +29,7 @@ import java.io.Serializable;
 }
  */
 
-public class MatchSituationEvent implements Serializable {
+class MatchSituationEvent implements Serializable {
     private long id;
     private long matchid;
     private int time;
@@ -49,7 +49,7 @@ public class MatchSituationEvent implements Serializable {
     private int awaydangerouscount;
     private int awaysafecount;
 
-    public MatchSituationEvent(long matchid, JsonNode node) {
+    MatchSituationEvent(long matchid, JsonNode node) {
         this.matchid = matchid;
         this.time = node.path("time").asInt();
         this.injurytime = node.path("injurytime").asInt();

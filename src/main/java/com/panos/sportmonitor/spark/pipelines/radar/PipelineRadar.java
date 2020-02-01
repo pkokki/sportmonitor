@@ -1,8 +1,9 @@
-package live;
+package com.panos.sportmonitor.spark.pipelines.radar;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.panos.sportmonitor.spark.PostgresHelper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.api.java.Optional;
@@ -22,7 +23,7 @@ import scala.Tuple2;
 import java.util.*;
 
 public class PipelineRadar {
-    static void run(SparkSession spark, JavaStreamingContext streamingContext) {
+    public static void run(SparkSession spark, JavaStreamingContext streamingContext) {
         Map<String, Object> kafkaParams = new HashMap<>();
         kafkaParams.put("bootstrap.servers", "localhost:9092");
         kafkaParams.put("key.deserializer", StringDeserializer.class);
@@ -91,7 +92,7 @@ public class PipelineRadar {
         matchSituationEvents.foreachRDD(rdd -> {
             if (!rdd.isEmpty()) {
                 Dataset<Row> ds = spark.createDataFrame(rdd, MatchSituationEvent.class);
-                LiveOverviewSql.appendDataset(ds, "match_situation_events");
+                PostgresHelper.appendDataset(ds, "match_situation_events");
             }
         });
     }
@@ -118,7 +119,7 @@ public class PipelineRadar {
         matchTimelineEvents.foreachRDD(rdd -> {
             if (!rdd.isEmpty()) {
                 Dataset<Row> ds = spark.createDataFrame(rdd, MatchTimelineEvent.class);
-                LiveOverviewSql.appendDataset(ds, "match_timeline_events");
+                PostgresHelper.appendDataset(ds, "match_timeline_events");
             }
         });
     }

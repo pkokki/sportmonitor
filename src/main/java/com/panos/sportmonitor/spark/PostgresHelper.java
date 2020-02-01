@@ -1,9 +1,9 @@
-package live;
+package com.panos.sportmonitor.spark;
 
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
-public class LiveOverviewSql {
+public class PostgresHelper {
     static {
         try {
             Class.forName("org.postgresql.Driver");
@@ -22,7 +22,7 @@ public class LiveOverviewSql {
     public static void appendDataset(Dataset<Row> ds, String tableName, Boolean truncate) {
         writeDataset(ds, tableName, "append", truncate);
     }
-    public static void writeDataset(Dataset<Row> ds, String tableName, String mode, Boolean truncate) {
+    private static void writeDataset(Dataset<Row> ds, String tableName, String mode, Boolean truncate) {
         ds.printSchema();
         ds.write()
                 .format("jdbc")

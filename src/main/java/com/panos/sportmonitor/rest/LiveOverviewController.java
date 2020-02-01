@@ -1,8 +1,8 @@
-package live;
+package com.panos.sportmonitor.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.panos.sportmonitor.dto.LiveOverview;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,13 +27,13 @@ public class LiveOverviewController {
         LiveOverview overviewObj = mapper.readValue(overview, LiveOverview.class);
 
         //LiveOverviewKafkaSender ks = new LiveOverviewKafkaSender("localhost:9092");
-        LiveOverviewKafkaSender.send(overviewObj.getEvents());
+        KafkaSender.send(overviewObj.getEvents());
         return "OK";
     }
 
     @PostMapping(value = "/sportradar", consumes = "text/plain")
     String sportradar(@RequestBody String data) {
-        LiveOverviewKafkaSender.send("RADAR", data);
+        KafkaSender.send("RADAR", data);
         return "OK";
     }
 }

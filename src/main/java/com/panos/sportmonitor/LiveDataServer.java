@@ -1,5 +1,6 @@
-package live;
+package com.panos.sportmonitor;
 
+import com.panos.sportmonitor.spark.KafkaReceiver;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
@@ -15,6 +16,6 @@ public class LiveDataServer {
         Logger.getLogger("org.apache.spark.streaming").setLevel(Level.WARN);
 
         SpringApplication.run(LiveDataServer.class, args);
-        LiveOverviewKafkaReceiver.start();
+        KafkaReceiver.start();
     }
 }
