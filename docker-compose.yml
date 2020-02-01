@@ -16,16 +16,14 @@ services:
       ADVERTISED_PORT: 9092
       LOG_RETENTION_HOURS: 1440
 
-  postgres:
-
-
-  graphite:
-    image: sitespeedio/graphite
-    container_name: graphite
+  timescaledb:
+    restart: always
+    image: timescale/timescaledb:latest-pg11
+    container_name: timescaledb
     ports:
-      - "4003:4003"
-      - "4004:4004"
-      - "8090:8090"
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: password
 
   grafana:
     image: grafana/grafana
@@ -35,5 +33,4 @@ services:
     ports:
       - "3000:3000"
     user: root
-    links:
-      - graphite
+
