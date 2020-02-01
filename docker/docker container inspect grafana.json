@@ -1,0 +1,244 @@
+[
+  {
+    "Id": "a372a6ef738e79b65b3fe4499081d80d3eb74ff98e441770f7f5350ce2f07e30",
+    "Created": "2020-02-01T12:05:47.702775202Z",
+    "Path": "/run.sh",
+    "Args": [],
+    "State": {
+      "Status": "running",
+      "Running": true,
+      "Paused": false,
+      "Restarting": false,
+      "OOMKilled": false,
+      "Dead": false,
+      "Pid": 6555,
+      "ExitCode": 0,
+      "Error": "",
+      "StartedAt": "2020-02-01T12:05:48.205076797Z",
+      "FinishedAt": "0001-01-01T00:00:00Z"
+    },
+    "Image": "sha256:0d48ef7001d72ad8dfd0aa29c26abbadd60e69f15648c8d8001e0dd5634d3567",
+    "ResolvConfPath": "/var/lib/docker/containers/a372a6ef738e79b65b3fe4499081d80d3eb74ff98e441770f7f5350ce2f07e30/resolv.conf",
+    "HostnamePath": "/var/lib/docker/containers/a372a6ef738e79b65b3fe4499081d80d3eb74ff98e441770f7f5350ce2f07e30/hostname",
+    "HostsPath": "/var/lib/docker/containers/a372a6ef738e79b65b3fe4499081d80d3eb74ff98e441770f7f5350ce2f07e30/hosts",
+    "LogPath": "/var/lib/docker/containers/a372a6ef738e79b65b3fe4499081d80d3eb74ff98e441770f7f5350ce2f07e30/a372a6ef738e79b65b3fe4499081d80d3eb74ff98e441770f7f5350ce2f07e30-json.log",
+    "Name": "/grafana",
+    "RestartCount": 0,
+    "Driver": "overlay2",
+    "Platform": "linux",
+    "MountLabel": "",
+    "ProcessLabel": "",
+    "AppArmorProfile": "",
+    "ExecIDs": null,
+    "HostConfig": {
+      "Binds": [
+        "/host_mnt/c/panos/docker/storage/grafana:/var/lib/grafana:rw"
+      ],
+      "ContainerIDFile": "",
+      "LogConfig": {
+        "Type": "json-file",
+        "Config": {}
+      },
+      "NetworkMode": "sportmonitor_default",
+      "PortBindings": {
+        "3000/tcp": [
+          {
+            "HostIp": "",
+            "HostPort": "3000"
+          }
+        ]
+      },
+      "RestartPolicy": {
+        "Name": "",
+        "MaximumRetryCount": 0
+      },
+      "AutoRemove": false,
+      "VolumeDriver": "",
+      "VolumesFrom": [],
+      "CapAdd": null,
+      "CapDrop": null,
+      "Capabilities": null,
+      "Dns": null,
+      "DnsOptions": null,
+      "DnsSearch": null,
+      "ExtraHosts": null,
+      "GroupAdd": null,
+      "IpcMode": "shareable",
+      "Cgroup": "",
+      "Links": null,
+      "OomScoreAdj": 0,
+      "PidMode": "",
+      "Privileged": false,
+      "PublishAllPorts": false,
+      "ReadonlyRootfs": false,
+      "SecurityOpt": null,
+      "UTSMode": "",
+      "UsernsMode": "",
+      "ShmSize": 67108864,
+      "Runtime": "runc",
+      "ConsoleSize": [
+        0,
+        0
+      ],
+      "Isolation": "",
+      "CpuShares": 0,
+      "Memory": 0,
+      "NanoCpus": 0,
+      "CgroupParent": "",
+      "BlkioWeight": 0,
+      "BlkioWeightDevice": null,
+      "BlkioDeviceReadBps": null,
+      "BlkioDeviceWriteBps": null,
+      "BlkioDeviceReadIOps": null,
+      "BlkioDeviceWriteIOps": null,
+      "CpuPeriod": 0,
+      "CpuQuota": 0,
+      "CpuRealtimePeriod": 0,
+      "CpuRealtimeRuntime": 0,
+      "CpusetCpus": "",
+      "CpusetMems": "",
+      "Devices": null,
+      "DeviceCgroupRules": null,
+      "DeviceRequests": null,
+      "KernelMemory": 0,
+      "KernelMemoryTCP": 0,
+      "MemoryReservation": 0,
+      "MemorySwap": 0,
+      "MemorySwappiness": null,
+      "OomKillDisable": false,
+      "PidsLimit": null,
+      "Ulimits": null,
+      "CpuCount": 0,
+      "CpuPercent": 0,
+      "IOMaximumIOps": 0,
+      "IOMaximumBandwidth": 0,
+      "MaskedPaths": [
+        "/proc/asound",
+        "/proc/acpi",
+        "/proc/kcore",
+        "/proc/keys",
+        "/proc/latency_stats",
+        "/proc/timer_list",
+        "/proc/timer_stats",
+        "/proc/sched_debug",
+        "/proc/scsi",
+        "/sys/firmware"
+      ],
+      "ReadonlyPaths": [
+        "/proc/bus",
+        "/proc/fs",
+        "/proc/irq",
+        "/proc/sys",
+        "/proc/sysrq-trigger"
+      ]
+    },
+    "GraphDriver": {
+      "Data": {
+        "LowerDir": "/var/lib/docker/overlay2/6592e9ab586cd758cd80c64311f3860eb628b5392667c7926ec7e8ce8cbf5282-init/diff:/var/lib/docker/overlay2/c2289ce7747a3c495d2385540837f6da9902837215291286b36acc25ef8781a0/diff:/var/lib/docker/overlay2/1f858aec5ac174367e32cb5033199249ce22db326716a6299c26b21d6adb1f6b/diff:/var/lib/docker/overlay2/2124c3c604f697cf6071d11228ee0cba8ce573cecefd711691cfbb979572556b/diff:/var/lib/docker/overlay2/f0205ee1c0fff00bb1ccba03632c965a43df5991d60ae36f28be6eb301de1643/diff:/var/lib/docker/overlay2/dac99ab53331956dc1ed68a7bc634d04d4c621772be9dd673e280fc3838b6d31/diff:/var/lib/docker/overlay2/a79d98a9dc222c221f5a8e843cbbf48bbb2ee57b2467c610d7e630844e569c43/diff:/var/lib/docker/overlay2/66a3fd738886af95d3899fe1e817c2ead8765f6883a14f5a7192dcbf2da414fc/diff:/var/lib/docker/overlay2/9ff6d5d43e6cc2cf81af72eb7075ac8ee59e8fb104685f69baf0e150a5f39604/diff",
+        "MergedDir": "/var/lib/docker/overlay2/6592e9ab586cd758cd80c64311f3860eb628b5392667c7926ec7e8ce8cbf5282/merged",
+        "UpperDir": "/var/lib/docker/overlay2/6592e9ab586cd758cd80c64311f3860eb628b5392667c7926ec7e8ce8cbf5282/diff",
+        "WorkDir": "/var/lib/docker/overlay2/6592e9ab586cd758cd80c64311f3860eb628b5392667c7926ec7e8ce8cbf5282/work"
+      },
+      "Name": "overlay2"
+    },
+    "Mounts": [
+      {
+        "Type": "bind",
+        "Source": "/host_mnt/c/panos/docker/storage/grafana",
+        "Destination": "/var/lib/grafana",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": "rprivate"
+      }
+    ],
+    "Config": {
+      "Hostname": "a372a6ef738e",
+      "Domainname": "",
+      "User": "root",
+      "AttachStdin": false,
+      "AttachStdout": false,
+      "AttachStderr": false,
+      "ExposedPorts": {
+        "3000/tcp": {}
+      },
+      "Tty": false,
+      "OpenStdin": false,
+      "StdinOnce": false,
+      "Env": [
+        "PATH=/usr/share/grafana/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "GF_PATHS_CONFIG=/etc/grafana/grafana.ini",
+        "GF_PATHS_DATA=/var/lib/grafana",
+        "GF_PATHS_HOME=/usr/share/grafana",
+        "GF_PATHS_LOGS=/var/log/grafana",
+        "GF_PATHS_PLUGINS=/var/lib/grafana/plugins",
+        "GF_PATHS_PROVISIONING=/etc/grafana/provisioning"
+      ],
+      "Cmd": null,
+      "Image": "grafana/grafana",
+      "Volumes": {
+        "/var/lib/grafana": {}
+      },
+      "WorkingDir": "/usr/share/grafana",
+      "Entrypoint": [
+        "/run.sh"
+      ],
+      "OnBuild": null,
+      "Labels": {
+        "com.docker.compose.config-hash": "0f45c4add284db9cead315a764cca7545fb9b7a2de2f189561edfd654c60dab7",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "sportmonitor",
+        "com.docker.compose.project.config_files": "docker-compose.yml",
+        "com.docker.compose.project.working_dir": "C:\\panos\\IdeaProjects\\deepsea01",
+        "com.docker.compose.service": "grafana",
+        "com.docker.compose.version": "1.25.2"
+      }
+    },
+    "NetworkSettings": {
+      "Bridge": "",
+      "SandboxID": "d6ddc1d1d21a3bdae112b7a458a158f840788a3bb25c484c39c3d65d603a3456",
+      "HairpinMode": false,
+      "LinkLocalIPv6Address": "",
+      "LinkLocalIPv6PrefixLen": 0,
+      "Ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "3000"
+          }
+        ]
+      },
+      "SandboxKey": "/var/run/docker/netns/d6ddc1d1d21a",
+      "SecondaryIPAddresses": null,
+      "SecondaryIPv6Addresses": null,
+      "EndpointID": "",
+      "Gateway": "",
+      "GlobalIPv6Address": "",
+      "GlobalIPv6PrefixLen": 0,
+      "IPAddress": "",
+      "IPPrefixLen": 0,
+      "IPv6Gateway": "",
+      "MacAddress": "",
+      "Networks": {
+        "sportmonitor_default": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": [
+            "a372a6ef738e",
+            "grafana"
+          ],
+          "NetworkID": "88440f3be82220f674fcd38c3284383fa9c5a8a774f9b9b8e69310fc7602f69a",
+          "EndpointID": "64a2cd13865a731208b490906fea3dbc76dc45ea0f10a25d79eedd78e669eab8",
+          "Gateway": "172.19.0.1",
+          "IPAddress": "172.19.0.3",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:13:00:03",
+          "DriverOpts": null
+        }
+      }
+    }
+  }
+]

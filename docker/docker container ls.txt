@@ -1,0 +1,5 @@
+C:\panos\docker>docker container ls
+CONTAINER ID        IMAGE                               COMMAND                  CREATED             STATUS              PORTS                                            NAMES
+8aa11b44d76b        spotify/kafka                       "supervisord -n"         About an hour ago   Up 5 minutes        0.0.0.0:2181->2181/tcp, 0.0.0.0:9092->9092/tcp   kafka
+a372a6ef738e        grafana/grafana                     "/run.sh"                2 hours ago         Up 8 minutes        0.0.0.0:3000->3000/tcp                           grafana
+74035e14a0e6        timescale/timescaledb:latest-pg11   "docker-entrypoint.s…"   2 hours ago         Up 10 minutes       0.0.0.0:5432->5432/tcp                           timescaledb

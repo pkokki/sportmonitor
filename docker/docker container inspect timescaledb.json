@@ -1,0 +1,249 @@
+[
+  {
+    "Id": "74035e14a0e646d4ab431bbb599c4467985d2e5b38ec5834586dd5fde8589d85",
+    "Created": "2020-02-01T12:04:22.259440285Z",
+    "Path": "docker-entrypoint.sh",
+    "Args": [
+      "postgres"
+    ],
+    "State": {
+      "Status": "running",
+      "Running": true,
+      "Paused": false,
+      "Restarting": false,
+      "OOMKilled": false,
+      "Dead": false,
+      "Pid": 6345,
+      "ExitCode": 0,
+      "Error": "",
+      "StartedAt": "2020-02-01T12:04:22.750289096Z",
+      "FinishedAt": "0001-01-01T00:00:00Z"
+    },
+    "Image": "sha256:dd16408e76307a22591f8ffd6855af5ad1f1225c9a88a073964f5b7f6df3f7f5",
+    "ResolvConfPath": "/var/lib/docker/containers/74035e14a0e646d4ab431bbb599c4467985d2e5b38ec5834586dd5fde8589d85/resolv.conf",
+    "HostnamePath": "/var/lib/docker/containers/74035e14a0e646d4ab431bbb599c4467985d2e5b38ec5834586dd5fde8589d85/hostname",
+    "HostsPath": "/var/lib/docker/containers/74035e14a0e646d4ab431bbb599c4467985d2e5b38ec5834586dd5fde8589d85/hosts",
+    "LogPath": "/var/lib/docker/containers/74035e14a0e646d4ab431bbb599c4467985d2e5b38ec5834586dd5fde8589d85/74035e14a0e646d4ab431bbb599c4467985d2e5b38ec5834586dd5fde8589d85-json.log",
+    "Name": "/timescaledb",
+    "RestartCount": 0,
+    "Driver": "overlay2",
+    "Platform": "linux",
+    "MountLabel": "",
+    "ProcessLabel": "",
+    "AppArmorProfile": "",
+    "ExecIDs": null,
+    "HostConfig": {
+      "Binds": [],
+      "ContainerIDFile": "",
+      "LogConfig": {
+        "Type": "json-file",
+        "Config": {}
+      },
+      "NetworkMode": "sportmonitor_default",
+      "PortBindings": {
+        "5432/tcp": [
+          {
+            "HostIp": "",
+            "HostPort": "5432"
+          }
+        ]
+      },
+      "RestartPolicy": {
+        "Name": "always",
+        "MaximumRetryCount": 0
+      },
+      "AutoRemove": false,
+      "VolumeDriver": "",
+      "VolumesFrom": [],
+      "CapAdd": null,
+      "CapDrop": null,
+      "Capabilities": null,
+      "Dns": null,
+      "DnsOptions": null,
+      "DnsSearch": null,
+      "ExtraHosts": null,
+      "GroupAdd": null,
+      "IpcMode": "shareable",
+      "Cgroup": "",
+      "Links": null,
+      "OomScoreAdj": 0,
+      "PidMode": "",
+      "Privileged": false,
+      "PublishAllPorts": false,
+      "ReadonlyRootfs": false,
+      "SecurityOpt": null,
+      "UTSMode": "",
+      "UsernsMode": "",
+      "ShmSize": 67108864,
+      "Runtime": "runc",
+      "ConsoleSize": [
+        0,
+        0
+      ],
+      "Isolation": "",
+      "CpuShares": 0,
+      "Memory": 0,
+      "NanoCpus": 0,
+      "CgroupParent": "",
+      "BlkioWeight": 0,
+      "BlkioWeightDevice": null,
+      "BlkioDeviceReadBps": null,
+      "BlkioDeviceWriteBps": null,
+      "BlkioDeviceReadIOps": null,
+      "BlkioDeviceWriteIOps": null,
+      "CpuPeriod": 0,
+      "CpuQuota": 0,
+      "CpuRealtimePeriod": 0,
+      "CpuRealtimeRuntime": 0,
+      "CpusetCpus": "",
+      "CpusetMems": "",
+      "Devices": null,
+      "DeviceCgroupRules": null,
+      "DeviceRequests": null,
+      "KernelMemory": 0,
+      "KernelMemoryTCP": 0,
+      "MemoryReservation": 0,
+      "MemorySwap": 0,
+      "MemorySwappiness": null,
+      "OomKillDisable": false,
+      "PidsLimit": null,
+      "Ulimits": null,
+      "CpuCount": 0,
+      "CpuPercent": 0,
+      "IOMaximumIOps": 0,
+      "IOMaximumBandwidth": 0,
+      "MaskedPaths": [
+        "/proc/asound",
+        "/proc/acpi",
+        "/proc/kcore",
+        "/proc/keys",
+        "/proc/latency_stats",
+        "/proc/timer_list",
+        "/proc/timer_stats",
+        "/proc/sched_debug",
+        "/proc/scsi",
+        "/sys/firmware"
+      ],
+      "ReadonlyPaths": [
+        "/proc/bus",
+        "/proc/fs",
+        "/proc/irq",
+        "/proc/sys",
+        "/proc/sysrq-trigger"
+      ]
+    },
+    "GraphDriver": {
+      "Data": {
+        "LowerDir": "/var/lib/docker/overlay2/6e56ab66db4aa31f5e7eea1fa1cbc325ce96812bff4a2f0aa2b058eb75f072b2-init/diff:/var/lib/docker/overlay2/d31fa8dac89672526c04d932cffe3993cfcbe03053b441e99c792584aa70ec5d/diff:/var/lib/docker/overlay2/9dc4a76876ba1a6f7fcdade66e721d97573dd45d1cd3d9ca64c32f14a80254ad/diff:/var/lib/docker/overlay2/0e5f1142d806ddda807059db3c8d13ad3e257e4670f9183ae80c65ed32028245/diff:/var/lib/docker/overlay2/f882832f6c4545f03234d99f4a5722bfb0403d1d0672dfdcd58a70d807701c59/diff:/var/lib/docker/overlay2/421062f1317b4433185a9f896404fa14359c318445da32a5a8beaa50d415bcd2/diff:/var/lib/docker/overlay2/836aa2844b2e89df2b524b2ede7808a8c48bec3902fba8b53a7f90acc838e62b/diff:/var/lib/docker/overlay2/30db7fc579d0ccfbb6491b9245e5410751bf1a23cfbf831928c88254b1207283/diff:/var/lib/docker/overlay2/981f48adddfcfb127345f9c0c0c594ff5d7bf3c99c437264ee87a69c0a448a02/diff:/var/lib/docker/overlay2/6fe9bb341492826f1695c186cf5a73fb5a3b58267c0e10882ad8f24bc67e1823/diff:/var/lib/docker/overlay2/919fbf8531ea44f89a0b7b6798a7576aac026c510f3e0bc707736b6f025b4482/diff:/var/lib/docker/overlay2/f0ded5a11a56a90760ed53caae306f23723bc451eafc30db5fa6f2def7771a2a/diff:/var/lib/docker/overlay2/85a240ba014444d655756fe49716860cae651d11d235a8c499579d252d906ae5/diff:/var/lib/docker/overlay2/30a78ec8b0bbcec9bac46bc2cd5432684dd6dd3882d4cb0c35c613296aaf5b42/diff:/var/lib/docker/overlay2/9ff6d5d43e6cc2cf81af72eb7075ac8ee59e8fb104685f69baf0e150a5f39604/diff",
+        "MergedDir": "/var/lib/docker/overlay2/6e56ab66db4aa31f5e7eea1fa1cbc325ce96812bff4a2f0aa2b058eb75f072b2/merged",
+        "UpperDir": "/var/lib/docker/overlay2/6e56ab66db4aa31f5e7eea1fa1cbc325ce96812bff4a2f0aa2b058eb75f072b2/diff",
+        "WorkDir": "/var/lib/docker/overlay2/6e56ab66db4aa31f5e7eea1fa1cbc325ce96812bff4a2f0aa2b058eb75f072b2/work"
+      },
+      "Name": "overlay2"
+    },
+    "Mounts": [
+      {
+        "Type": "volume",
+        "Name": "caaba34cc459e41a1a1ddd7d72c39a8476f580bcbe332d52a0958b9189ab9f78",
+        "Source": "/var/lib/docker/volumes/caaba34cc459e41a1a1ddd7d72c39a8476f580bcbe332d52a0958b9189ab9f78/_data",
+        "Destination": "/var/lib/postgresql/data",
+        "Driver": "local",
+        "Mode": "",
+        "RW": true,
+        "Propagation": ""
+      }
+    ],
+    "Config": {
+      "Hostname": "74035e14a0e6",
+      "Domainname": "",
+      "User": "",
+      "AttachStdin": false,
+      "AttachStdout": false,
+      "AttachStderr": false,
+      "ExposedPorts": {
+        "5432/tcp": {}
+      },
+      "Tty": false,
+      "OpenStdin": false,
+      "StdinOnce": false,
+      "Env": [
+        "POSTGRES_PASSWORD=password",
+        "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "LANG=en_US.utf8",
+        "PG_MAJOR=11",
+        "PG_VERSION=11.6",
+        "PG_SHA256=49924f7ff92965fdb20c86e0696f2dc9f8553e1563124ead7beedf8910c13170",
+        "PGDATA=/var/lib/postgresql/data",
+        "TIMESCALEDB_VERSION=1.6.0"
+      ],
+      "Cmd": [
+        "postgres"
+      ],
+      "Image": "timescale/timescaledb:latest-pg11",
+      "Volumes": {
+        "/var/lib/postgresql/data": {}
+      },
+      "WorkingDir": "",
+      "Entrypoint": [
+        "docker-entrypoint.sh"
+      ],
+      "OnBuild": null,
+      "Labels": {
+        "com.docker.compose.config-hash": "855118c684b63af7c6684bc12fe2c892842ea18bd28fe896f7ed8e2ef519bc51",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "sportmonitor",
+        "com.docker.compose.project.config_files": "docker-compose.yml",
+        "com.docker.compose.project.working_dir": "C:\\panos\\IdeaProjects\\deepsea01",
+        "com.docker.compose.service": "timescaledb",
+        "com.docker.compose.version": "1.25.2"
+      }
+    },
+    "NetworkSettings": {
+      "Bridge": "",
+      "SandboxID": "30d62a336528f567bfe7206e46d04bfa63b7c807d2145dd16eca803a476aede8",
+      "HairpinMode": false,
+      "LinkLocalIPv6Address": "",
+      "LinkLocalIPv6PrefixLen": 0,
+      "Ports": {
+        "5432/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "5432"
+          }
+        ]
+      },
+      "SandboxKey": "/var/run/docker/netns/30d62a336528",
+      "SecondaryIPAddresses": null,
+      "SecondaryIPv6Addresses": null,
+      "EndpointID": "",
+      "Gateway": "",
+      "GlobalIPv6Address": "",
+      "GlobalIPv6PrefixLen": 0,
+      "IPAddress": "",
+      "IPPrefixLen": 0,
+      "IPv6Gateway": "",
+      "MacAddress": "",
+      "Networks": {
+        "sportmonitor_default": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": [
+            "timescaledb",
+            "74035e14a0e6"
+          ],
+          "NetworkID": "88440f3be82220f674fcd38c3284383fa9c5a8a774f9b9b8e69310fc7602f69a",
+          "EndpointID": "6913d923be128977808095b04b401d55fae1cd49a06d9eef108cf36c11df5bff",
+          "Gateway": "172.19.0.1",
+          "IPAddress": "172.19.0.2",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:13:00:02",
+          "DriverOpts": null
+        }
+      }
+    }
+  }
+]

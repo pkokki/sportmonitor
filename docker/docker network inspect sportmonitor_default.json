@@ -1,0 +1,56 @@
+[
+  {
+    "Name": "sportmonitor_default",
+    "Id": "88440f3be82220f674fcd38c3284383fa9c5a8a774f9b9b8e69310fc7602f69a",
+    "Created": "2020-02-01T11:27:57.608273794Z",
+    "Scope": "local",
+    "Driver": "bridge",
+    "EnableIPv6": false,
+    "IPAM": {
+      "Driver": "default",
+      "Options": null,
+      "Config": [
+        {
+          "Subnet": "172.19.0.0/16",
+          "Gateway": "172.19.0.1"
+        }
+      ]
+    },
+    "Internal": false,
+    "Attachable": true,
+    "Ingress": false,
+    "ConfigFrom": {
+      "Network": ""
+    },
+    "ConfigOnly": false,
+    "Containers": {
+      "74035e14a0e646d4ab431bbb599c4467985d2e5b38ec5834586dd5fde8589d85": {
+        "Name": "timescaledb",
+        "EndpointID": "6913d923be128977808095b04b401d55fae1cd49a06d9eef108cf36c11df5bff",
+        "MacAddress": "02:42:ac:13:00:02",
+        "IPv4Address": "172.19.0.2/16",
+        "IPv6Address": ""
+      },
+      "8aa11b44d76b151c030436cbe953ee383d66e1f4325ff5236fda2b04d56b822c": {
+        "Name": "kafka",
+        "EndpointID": "7871fe8aba90fccb682b0011be4f770914210731af3ed3d2573c45e0aa279fdc",
+        "MacAddress": "02:42:ac:13:00:04",
+        "IPv4Address": "172.19.0.4/16",
+        "IPv6Address": ""
+      },
+      "a372a6ef738e79b65b3fe4499081d80d3eb74ff98e441770f7f5350ce2f07e30": {
+        "Name": "grafana",
+        "EndpointID": "64a2cd13865a731208b490906fea3dbc76dc45ea0f10a25d79eedd78e669eab8",
+        "MacAddress": "02:42:ac:13:00:03",
+        "IPv4Address": "172.19.0.3/16",
+        "IPv6Address": ""
+      }
+    },
+    "Options": {},
+    "Labels": {
+      "com.docker.compose.network": "default",
+      "com.docker.compose.project": "sportmonitor",
+      "com.docker.compose.version": "1.25.2"
+    }
+  }
+]
