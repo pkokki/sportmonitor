@@ -7,11 +7,11 @@ import org.apache.spark.streaming.State;
 
 class StateFunctions {
 
-    static Function3<Long, Optional<Event>, State<EventState>, EventMaster> MappingFunc =
-            (Function3<Long, Optional<Event>, State<EventState>, EventMaster>) (eventId, event, state) -> {
+    static Function3<Long, Optional<Event>, State<EventState>, LiveEvent> MappingFunc =
+            (Function3<Long, Optional<Event>, State<EventState>, LiveEvent>) (eventId, event, state) -> {
                 // If timed out, then remove event and send final update
                 if (state.isTimingOut()) {
-                    return new EventMaster(eventId, 0, 0, 0, true);
+                    return new LiveEvent(eventId, 0, 0, 0, true);
                 }
                 else {
                     // Find max and min timestamps in events
@@ -36,7 +36,7 @@ class StateFunctions {
                         newState.setEndTimestampMs(maxTimestampMs);
                     }
                     state.update(newState);
-                    return new EventMaster(
+                    return new LiveEvent(
                             eventId, maxTimestampMs, state.get().calculateDuration(), state.get().getNumEvents(), false);
                 }
             };

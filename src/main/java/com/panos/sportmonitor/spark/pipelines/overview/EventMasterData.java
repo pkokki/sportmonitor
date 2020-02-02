@@ -1,44 +1,48 @@
-package com.panos.sportmonitor.dto;
+package com.panos.sportmonitor.spark.pipelines.overview;
+
+import com.panos.sportmonitor.dto.Event;
 
 import java.io.Serializable;
-import java.util.List;
 
-public class Event implements Serializable {
-    private String id;
-    private Long timestamp;
+public class EventMasterData implements Serializable {
+    private Long eventId;
     private String regionId;
     private String regionName;
     private String leagueId;
     private String leagueName;
     private Long betRadarId;
     private String betRadarLink;
-    private String clockTime;
     private String shortTitle;
     private String title;
     private String startTime;
     private Long startTimeTicks;
-    private Boolean isSuspended;
     private String liveEventLink;
     private String homeTeam;
-    private String homeScore;
-    private Integer homeRedCards;
     private String awayTeam;
-    private String awayScore;
-    private Integer awayRedCards;
-    private List<Market> markets;
 
-    public Long getTimestamp() { return timestamp; }
-    public void setTimestamp(Long timestamp) { this.timestamp = timestamp; }
+    public EventMasterData(Event e) {
+        this.eventId = e.getEventId();
+        this.regionId = e.getRegionId();
+        this.regionName = e.getRegionName();
+        this.leagueId = e.getLeagueId();
+        this.leagueName = e.getLeagueName();
+        this.betRadarId = e.getBetRadarId();
+        this.betRadarLink = e.getBetRadarLink();
+        this.shortTitle = e.getShortTitle();
+        this.title = e.getTitle();
+        this.startTime = e.getStartTime();
+        this.startTimeTicks = e.getStartTimeTicks();
+        this.liveEventLink = e.getLiveEventLink();
+        this.homeTeam = e.getHomeTeam();
+        this.awayTeam = e.getAwayTeam();
+    }
+
 
     public Long getEventId() {
-        return Long.parseLong(this.id);
+        return eventId;
     }
-
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
     }
 
     public String getRegionId() {
@@ -115,14 +119,6 @@ public class Event implements Serializable {
         this.startTimeTicks = startTimeTicks;
     }
 
-    public Boolean getIsSuspended() {
-        return isSuspended;
-    }
-
-    public void setIsSuspended(Boolean suspended) {
-        isSuspended = suspended;
-    }
-
     public String getLiveEventLink() {
         return liveEventLink;
     }
@@ -139,22 +135,6 @@ public class Event implements Serializable {
         this.homeTeam = homeTeam;
     }
 
-    public String getHomeScore() {
-        return homeScore;
-    }
-
-    public void setHomeScore(String homeScore) {
-        this.homeScore = homeScore;
-    }
-
-    public int getHomeRedCards() {
-        return homeRedCards;
-    }
-
-    public void setHomeRedCards(int homeRedCards) {
-        this.homeRedCards = homeRedCards;
-    }
-
     public String getAwayTeam() {
         return awayTeam;
     }
@@ -163,39 +143,8 @@ public class Event implements Serializable {
         this.awayTeam = awayTeam;
     }
 
-    public int getAwayRedCards() {
-        return awayRedCards;
-    }
-
-    public void setAwayRedCards(int awayRedCards) {
-        this.awayRedCards = awayRedCards;
-    }
-
-    public List<Market> getMarkets() {
-        return markets;
-    }
-
-    public void setMarkets(List<Market> markets) {
-        this.markets = markets;
-    }
-
-    public String getClockTime() {
-        return clockTime;
-    }
-
-    public void setClockTime(String clockTime) {
-        this.clockTime = clockTime;
-    }
-
-    public String getAwayScore() {
-        return awayScore;
-    }
-
-    public void setAwayScore(String awayScore) {
-        this.awayScore = awayScore;
-    }
 
     @Override public String toString() {
-        return "Event(id = " + id + " " + clockTime + " " + shortTitle + " " + homeScore + "-" + awayScore + ")";
+        return "Event(id = " + eventId + " " + shortTitle + ")";
     }
 }

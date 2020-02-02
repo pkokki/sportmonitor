@@ -5,15 +5,15 @@ import java.io.Serializable;
 /**
  * User-defined data type representing the update information returned by mapGroupsWithState.
  */
-class EventMaster implements Serializable {
+class LiveEvent implements Serializable {
     private long id, maxTimestamp;
     private long durationMs;
     private int numEvents;
     private boolean expired;
 
-    public EventMaster() { }
+    public LiveEvent() { }
 
-    EventMaster(long id, long maxTimestamp, long durationMs, int numEvents, boolean expired) {
+    LiveEvent(long id, long maxTimestamp, long durationMs, int numEvents, boolean expired) {
         this.id = id;
         this.maxTimestamp = maxTimestamp;
         this.durationMs = durationMs;

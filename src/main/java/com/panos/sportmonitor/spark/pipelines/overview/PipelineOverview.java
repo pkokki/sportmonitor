@@ -4,10 +4,12 @@ import com.panos.sportmonitor.dto.*;
 import com.panos.sportmonitor.spark.PostgresHelper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.spark.api.java.Optional;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.streaming.Durations;
+import org.apache.spark.streaming.State;
 import org.apache.spark.streaming.StateSpec;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
@@ -41,7 +43,18 @@ public class PipelineOverview {
                 );
 
         JavaDStream<Event> eventsDS = eventRecordDS.map(r -> r.value());
-        eventsDS.print();
+
+        eventsDS
+                .mapToPair(e -> new Tuple2<>(e.getId(), e))
+                .mapWithState(StateSpec.function(PipelineOverview::onlyOneEventSpec))
+                .filter(r -> r.isPresent())
+                .map(r -> new EventMasterData(r.get()))
+                .foreachRDD(rdd -> {
+                    Dataset<Row> ds = spark.createDataFrame(rdd, EventMasterData.class);
+                    PostgresHelper.appendDataset(ds, "event_master_data");
+                });
+        if (true)
+            return;
 
         // Append to db event_data
         eventsDS
@@ -87,7 +100,7 @@ public class PipelineOverview {
         });
 
         // Apply the state update function to the events streaming Dataset grouped by eventId
-        JavaMapWithStateDStream<Long, Event, EventState, EventMaster> eventUpdates = eventsDS
+        JavaMapWithStateDStream<Long, Event, EventState, LiveEvent> eventUpdates = eventsDS
                 .mapToPair(e -> new Tuple2<>(Long.parseLong(e.getId()), e))
                 .mapWithState(StateSpec.function(StateFunctions.MappingFunc).timeout(Durations.minutes(1)));
         eventUpdates.print();
@@ -95,9 +108,19 @@ public class PipelineOverview {
         // Overwrite db table event_master_data
         eventUpdates.foreachRDD(rdd -> {
             if (!rdd.isEmpty()) {
-                Dataset<Row> ds = spark.createDataFrame(rdd, EventMaster.class);
+                Dataset<Row> ds = spark.createDataFrame(rdd, LiveEvent.class);
                 PostgresHelper.overwriteDataset(ds, "event_master_data");
             }
         });
+    }
+
+    private static Optional<Event> onlyOneEventSpec(String id, Optional<Event> item, State<String> state) {
+        if (state.isTimingOut() || state.exists()) {
+            return Optional.empty();
+        }
+        else {
+            state.update(id);
+            return item;
+        }
     }
 }
