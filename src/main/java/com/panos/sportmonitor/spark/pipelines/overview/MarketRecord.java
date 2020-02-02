@@ -11,6 +11,7 @@ class MarketRecord implements Serializable {
     private String description;
     private String type;
     private Boolean isSuspended;
+    private Float handicap;
 
     MarketRecord(String eventId, Long timestamp, Market market) {
         this.marketId = Long.parseLong(market.getId());
@@ -18,6 +19,7 @@ class MarketRecord implements Serializable {
         this.timestamp = timestamp;
         this.description = market.getDescription();
         this.type = market.getType();
+        this.handicap = market.getHandicap();
         this.isSuspended = market.getIsSuspended();
     }
 
@@ -54,6 +56,14 @@ class MarketRecord implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Float getHandicap() {
+        return handicap;
+    }
+
+    public void setHandicap(Float handicap) {
+        this.handicap = handicap;
     }
 
     public Boolean getIsSuspended() {

@@ -7,6 +7,7 @@ public class Market implements Serializable {
     private String id;
     private String description;
     private String type;
+    private Float handicap;
     private Boolean isSuspended;
     private List<Selection> selections;
 
@@ -32,6 +33,14 @@ public class Market implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Float getHandicap() {
+        return handicap;
+    }
+
+    public void setHandicap(Float handicap) {
+        this.handicap = handicap;
     }
 
     public Boolean getIsSuspended() {
