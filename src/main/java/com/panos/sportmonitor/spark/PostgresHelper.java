@@ -19,11 +19,7 @@ public class PostgresHelper {
     public static void appendDataset(Dataset<Row> ds, String tableName) {
         writeDataset(ds, tableName, "append", false);
     }
-    public static void appendDataset(Dataset<Row> ds, String tableName, Boolean truncate) {
-        writeDataset(ds, tableName, "append", truncate);
-    }
     private static void writeDataset(Dataset<Row> ds, String tableName, String mode, Boolean truncate) {
-        ds.printSchema();
         ds.write()
                 .format("jdbc")
                 .mode(mode)
@@ -32,6 +28,7 @@ public class PostgresHelper {
                 .option("dbtable", "public." + tableName)
                 .option("user", "postgres")
                 .option("password", "password")
+                .option("isolationLevel", "READ_COMMITTED")
                 .save();
     }
 }

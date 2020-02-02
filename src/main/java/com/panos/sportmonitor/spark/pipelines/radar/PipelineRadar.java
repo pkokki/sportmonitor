@@ -29,7 +29,7 @@ public class PipelineRadar {
         kafkaParams.put("key.deserializer", StringDeserializer.class);
         kafkaParams.put("value.deserializer", StringDeserializer.class);
         kafkaParams.put("group.id", "overviews_stream");
-        kafkaParams.put("auto.offset.reset", "earliest"); // earliest, latest, none
+        kafkaParams.put("auto.offset.reset", "latest"); // earliest, latest, none
         kafkaParams.put("enable.auto.commit", false);
 
         Collection<String> topics = Collections.singletonList("RADAR");
@@ -87,8 +87,6 @@ public class PipelineRadar {
                 .mapWithState(StateSpec.function(PipelineRadar::onlyOneMatchSituationEventSpec))
                 .filter(r -> r.isPresent())
                 .map(r -> r.get());
-        matchSituationEvents.print();
-        matchSituationEvents.count().print();
         matchSituationEvents.foreachRDD(rdd -> {
             if (!rdd.isEmpty()) {
                 Dataset<Row> ds = spark.createDataFrame(rdd, MatchSituationEvent.class);
@@ -114,8 +112,6 @@ public class PipelineRadar {
                 .filter(r -> r.isPresent())
                 .map(r -> r.get());
 
-        matchTimelineEvents.print();
-        matchTimelineEvents.count().print();
         matchTimelineEvents.foreachRDD(rdd -> {
             if (!rdd.isEmpty()) {
                 Dataset<Row> ds = spark.createDataFrame(rdd, MatchTimelineEvent.class);

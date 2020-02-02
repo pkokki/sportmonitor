@@ -29,7 +29,7 @@ public class PipelineOverview {
         kafkaParams.put("key.deserializer", StringDeserializer.class);
         kafkaParams.put("value.deserializer", EventDeserializer.class);
         kafkaParams.put("group.id", "overviews_stream");
-        kafkaParams.put("auto.offset.reset", "earliest"); // earliest, latest, none
+        kafkaParams.put("auto.offset.reset", "latest"); // earliest, latest, none
         kafkaParams.put("enable.auto.commit", false);
 
         Collection<String> topics = Collections.singletonList("OVERVIEWS");
@@ -41,7 +41,6 @@ public class PipelineOverview {
                         LocationStrategies.PreferConsistent(),
                         ConsumerStrategies.Subscribe(topics, kafkaParams)
                 );
-
         JavaDStream<Event> eventsDS = eventRecordDS.map(r -> r.value());
 
         eventsDS
@@ -53,8 +52,6 @@ public class PipelineOverview {
                     Dataset<Row> ds = spark.createDataFrame(rdd, EventMasterData.class);
                     PostgresHelper.appendDataset(ds, "event_master_data");
                 });
-        if (true)
-            return;
 
         // Append to db event_data
         eventsDS
@@ -73,8 +70,6 @@ public class PipelineOverview {
                     e.getMarkets().forEach(m -> list.add(new MarketRecord(e.getId(), e.getTimestamp(), m)));
                     return list.iterator();
                 });
-        marketRecords.print();
-
         marketRecords.foreachRDD(rdd -> {
             if (!rdd.isEmpty()) {
                 Dataset<Row> ds = spark.createDataFrame(rdd, MarketRecord.class);
@@ -91,13 +86,14 @@ public class PipelineOverview {
                     }));
                     return list.iterator();
                 });
-        selectionRecords.print();
         selectionRecords.foreachRDD(rdd -> {
             if (!rdd.isEmpty()) {
                 Dataset<Row> ds = spark.createDataFrame(rdd, SelectionRecord.class);
                 PostgresHelper.appendDataset(ds, "selection_data");
             }
         });
+
+        if (true) return;
 
         // Apply the state update function to the events streaming Dataset grouped by eventId
         JavaMapWithStateDStream<Long, Event, EventState, LiveEvent> eventUpdates = eventsDS

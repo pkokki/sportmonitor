@@ -36,6 +36,8 @@
         background:             white;
     }`);
 
+    var sb = window.eval('sportsbook');
+
     var lastRadarEvents = {};
     var activeRadarEvents = [];
     var sparkTimer = null, activeRadarTimer = null;
@@ -83,8 +85,7 @@
     }
 
     function processActiveRadarEvents() {
-        //console.log('processActiveRadarEvents', captureXHR, activeRadarEvents, lastRadarEvents);
-        var sb = window.eval('sportsbook');
+        console.log('processActiveRadarEvents', captureXHR);
         if (sb.mainlive && sb.mainlive.event) {
             var events = [prepareEvent(sb.mainlive.event)];
             sendLiveRequest(events);
@@ -129,8 +130,7 @@
     }
 
     function processMatches_v2(noSend) {
-        console.log('processMatches');
-        var sb = window.eval('sportsbook');
+        console.log('processMatches', noSend);
         if (sb) {
             var events = [];
             var radarEvents = [];
@@ -139,9 +139,9 @@
                 if (sport.id == 'FOOT') {
                     var regions = sport.regions();
                     regions.forEach(region => {
-                        var events = region.events();
-                        events.forEach(src => {
-                            var ev = prepareEvent(src);
+                        var regionEvents = region.events();
+                        regionEvents.forEach(regionEvent => {
+                            var ev = prepareEvent(regionEvent);
                             events.push(ev);
                             if (ev.betRadarId && ev.liveEventLink) {
                                 radarEvents.push(ev.liveEventLink);
@@ -160,22 +160,28 @@
     }
 
     function sendLiveRequest(events) {
-        var request = {
-            events: events
-        };
-        console.log('Sending data', events);
-        GM_xmlhttpRequest({
-            method: 'POST',
-            url: 'http://localhost:8080/live',
-            headers: { 'Content-Type': 'text/plain' },
-            data: JSON.stringify(request),
-            onload: function(response) {
-                console.log('sendLiveRequest', response.responseText, events);
-            },
-            onerror: function(response) {
-                console.error(response);
-            }
-        });
+        if (events && events.length) {
+            var request = {
+                events: events
+            };
+            console.log('/live request', events);
+            GM_xmlhttpRequest({
+                method: 'POST',
+                url: 'http://localhost:8080/live',
+                headers: { 'Content-Type': 'text/plain' },
+                data: JSON.stringify(request),
+                onload: function(response) {
+                    //console.log('/live response', response.responseText);
+                },
+                onerror: function(response) {
+                    console.error(response);
+                }
+            });
+        }
+    }
+
+    function funcOrValue(that, obj) {
+        return (obj && {}.toString.call(obj) === '[object Function]') ? obj.call(that) : obj;
     }
 
     function prepareEvent(src) {
@@ -187,19 +193,19 @@
             leagueId: src.leagueId,
             leagueName: src.leagueName,
             betRadarId: src.betRadarId,
-            betRadarLink: src.betRadarLink(),
+            betRadarLink: funcOrValue(src, src.betRadarLink),
             shortTitle: src.shortTitle,
             title: src.title,
-            startTime: src.startTime(),
-            startTimeTicks: src.startTimeTicks(),
-            clockTime: src.clockTime(),
-            isSuspended: src.isSuspended(),
-            liveEventLink: src.liveEventLink(),
-            homeTeam: src.teams ? src.teams.home : null,
-            homeScore: src.score.home(),
+            startTime: funcOrValue(src, src.startTime),
+            startTimeTicks: funcOrValue(src, src.startTimeTicks),
+            clockTime: funcOrValue(src, src.clockTime),
+            isSuspended: funcOrValue(src, src.isSuspended),
+            liveEventLink: funcOrValue(src, src.liveEventLink),
+            homeTeam: (src.teams ? src.teams.home : null),
+            homeScore: funcOrValue(src, src.score.home),
             homeRedCards: src.footballStats.redcards.home(),
-            awayTeam: src.teams ? src.teams.away : null,
-            awayScore: src.score.away(),
+            awayTeam: (src.teams ? src.teams.away : null),
+            awayScore: funcOrValue(src, src.score.away),
             awayRedCards: src.footballStats.redcards.away(),
             markets: []
         };
@@ -228,13 +234,14 @@
 
     function sendSportRadar(response) {
         if (captureXHR && response.readyState == 4 && response.status == 200 && response.responseURL.indexOf('sportradar.com') > 0) {
+            console.log('XHR request', response.responseText.substring(0, 100));
             GM_xmlhttpRequest({
                 method: 'POST',
                 url: 'http://localhost:8080/sportradar',
                 headers: { 'Content-Type': 'text/plain' },
                 data: response.responseText,
                 onload: function(response) {
-                    console.log('XHR', response.responseURL, response.responseText);
+                    //console.log('XHR response', response.responseText);
                 },
                 onerror: function(response) {
                     console.error(response);

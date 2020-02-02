@@ -4,7 +4,7 @@ import com.panos.sportmonitor.dto.Selection;
 
 import java.io.Serializable;
 
-class SelectionRecord implements Serializable {
+public class SelectionRecord implements Serializable {
     private Long selectionId;
     private Long marketId;
     private Long eventId;
@@ -12,7 +12,7 @@ class SelectionRecord implements Serializable {
     private String description;
     private Float price;
 
-    SelectionRecord(String eventId, Long timestamp, String marketId, Selection s) {
+    public SelectionRecord(String eventId, Long timestamp, String marketId, Selection s) {
         this.selectionId = Long.parseLong(s.getId());
         this.marketId = Long.parseLong(marketId);
         this.eventId = Long.parseLong(eventId);

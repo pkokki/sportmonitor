@@ -1,5 +1,6 @@
 package com.panos.sportmonitor.spark.pipelines.overview;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.panos.sportmonitor.dto.Event;
 import org.apache.kafka.common.header.Headers;
@@ -22,6 +23,7 @@ public class EventDeserializer implements Deserializer<Event> {
         Event event = null;
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         try {
             event = mapper.readValue(data, Event.class);
         } catch (IOException e) {
