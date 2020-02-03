@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.panos.sportmonitor.spark.PostgresHelper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.api.java.Optional;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -18,21 +17,23 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import scala.Tuple2;
 
 import java.util.*;
 
+@Service
 public class PipelineRadar {
-    public static void run(SparkSession spark, JavaStreamingContext streamingContext) {
-        Map<String, Object> kafkaParams = new HashMap<>();
-        kafkaParams.put("bootstrap.servers", "localhost:9092");
-        kafkaParams.put("key.deserializer", StringDeserializer.class);
-        kafkaParams.put("value.deserializer", StringDeserializer.class);
-        kafkaParams.put("group.id", "overviews_stream");
-        kafkaParams.put("auto.offset.reset", "latest"); // earliest, latest, none
-        kafkaParams.put("enable.auto.commit", false);
+    @Value(value = "${spark.radar.kafka.topic}")
+    private String topic;
 
-        Collection<String> topics = Collections.singletonList("RADAR");
+    @Autowired
+    private PipelineRadarKafkaParams kafkaParams;
+
+    public void run(SparkSession spark, JavaStreamingContext streamingContext) {
+        Collection<String> topics = Collections.singletonList(topic);
 
         // Create radar events stream from kafka
         JavaInputDStream<ConsumerRecord<String, String>> kafkaStream =
@@ -70,7 +71,7 @@ public class PipelineRadar {
         processMatchSituations(spark, messageStream);
     }
 
-    private static void processMatchSituations(SparkSession spark, JavaDStream<RadarJsonEvent> messageStream) {
+    private void processMatchSituations(SparkSession spark, JavaDStream<RadarJsonEvent> messageStream) {
         JavaDStream<MatchSituationEvent> matchSituationEvents = messageStream
                 .filter(r -> r.event.equals("stats_match_situation"))
                 .flatMap(r -> {
@@ -94,7 +95,7 @@ public class PipelineRadar {
             }
         });
     }
-    private static void processMatchTimelineEvents(SparkSession spark, JavaDStream<RadarJsonEvent> messageStream) {
+    private void processMatchTimelineEvents(SparkSession spark, JavaDStream<RadarJsonEvent> messageStream) {
         JavaDStream<MatchTimelineEvent> matchTimelineEvents = messageStream
                 .filter(r -> r.event.equals("match_timeline"))
                 .flatMap(r -> {

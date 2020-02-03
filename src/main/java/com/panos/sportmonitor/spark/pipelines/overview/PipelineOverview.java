@@ -3,7 +3,6 @@ package com.panos.sportmonitor.spark.pipelines.overview;
 import com.panos.sportmonitor.dto.*;
 import com.panos.sportmonitor.spark.PostgresHelper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.api.java.Optional;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -18,21 +17,24 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import scala.Tuple2;
 
 import java.util.*;
 
+@Service
 public class PipelineOverview {
-    public static void run(SparkSession spark, JavaStreamingContext streamingContext) {
-        Map<String, Object> kafkaParams = new HashMap<>();
-        kafkaParams.put("bootstrap.servers", "localhost:9092");
-        kafkaParams.put("key.deserializer", StringDeserializer.class);
-        kafkaParams.put("value.deserializer", EventDeserializer.class);
-        kafkaParams.put("group.id", "overviews_stream");
-        kafkaParams.put("auto.offset.reset", "latest"); // earliest, latest, none
-        kafkaParams.put("enable.auto.commit", false);
+    @Value(value = "${spark.overview.kafka.topic}")
+    private String topic;
 
-        Collection<String> topics = Collections.singletonList("OVERVIEWS");
+    @Autowired
+    private PipelineOverviewKafkaParams kafkaParams;
+
+    public void run(SparkSession spark, JavaStreamingContext streamingContext) {
+
+        Collection<String> topics = Collections.singletonList(topic);
 
         // Create live events stream from kafka
         JavaInputDStream<ConsumerRecord<String, Event>> eventRecordDS =
