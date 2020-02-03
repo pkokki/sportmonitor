@@ -130,7 +130,6 @@
     }
 
     function processMatches_v2(noSend) {
-        console.log('processMatches', noSend);
         if (sb) {
             var events = [];
             var radarEvents = [];
@@ -153,8 +152,9 @@
                     }
                 }
             }
+            console.log('processMatches:', events.length, 'matches found.');
             activeRadarEvents.splice(0, activeRadarEvents.length, ...radarEvents);
-            if (!!noSend) {
+            if (!!!noSend) {
                 sendLiveRequest(events);
             }
         } else {
