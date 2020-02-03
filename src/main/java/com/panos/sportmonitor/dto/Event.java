@@ -196,6 +196,6 @@ public class Event implements Serializable {
     }
 
     @Override public String toString() {
-        return "Event(id = " + id + " " + clockTime + " " + shortTitle + " " + homeScore + "-" + awayScore + ")";
+        return "Event(id = " + id + "/" + betRadarId + " " + clockTime + " " + shortTitle + " " + homeScore + "-" + awayScore + ")";
     }
 }
