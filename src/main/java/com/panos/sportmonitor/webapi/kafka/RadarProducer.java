@@ -1,4 +1,4 @@
-package com.panos.sportmonitor.kafka;
+package com.panos.sportmonitor.webapi.kafka;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

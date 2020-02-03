@@ -1,6 +1,6 @@
 package com.panos.sportmonitor.spark.pipelines.overview;
 
-import com.panos.sportmonitor.dto.Market;
+import com.panos.sportmonitor.common.Market;
 
 import java.io.Serializable;
 

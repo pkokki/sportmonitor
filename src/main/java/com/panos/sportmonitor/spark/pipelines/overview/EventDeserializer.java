@@ -2,7 +2,7 @@ package com.panos.sportmonitor.spark.pipelines.overview;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.panos.sportmonitor.dto.Event;
+import com.panos.sportmonitor.common.Event;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.slf4j.Logger;

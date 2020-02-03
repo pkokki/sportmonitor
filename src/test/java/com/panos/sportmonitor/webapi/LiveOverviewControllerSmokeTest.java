@@ -1,4 +1,4 @@
-package com.panos.sportmonitor.rest;
+package com.panos.sportmonitor.webapi;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

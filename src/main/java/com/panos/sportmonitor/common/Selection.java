@@ -1,4 +1,4 @@
-package com.panos.sportmonitor.dto;
+package com.panos.sportmonitor.common;
 
 import java.io.Serializable;
 

@@ -1,6 +1,6 @@
 package com.panos.sportmonitor.spark.pipelines.overview;
 
-import com.panos.sportmonitor.dto.*;
+import com.panos.sportmonitor.common.*;
 import com.panos.sportmonitor.spark.PostgresHelper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.spark.api.java.Optional;

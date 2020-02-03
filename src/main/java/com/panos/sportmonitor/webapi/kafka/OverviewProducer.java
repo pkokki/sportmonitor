@@ -1,6 +1,6 @@
-package com.panos.sportmonitor.kafka;
+package com.panos.sportmonitor.webapi.kafka;
 
-import com.panos.sportmonitor.dto.Event;
+import com.panos.sportmonitor.common.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

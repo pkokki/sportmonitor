@@ -1,6 +1,6 @@
 package com.panos.sportmonitor.spark.pipelines.overview;
 
-import com.panos.sportmonitor.dto.Event;
+import com.panos.sportmonitor.common.Event;
 
 import java.io.Serializable;
 

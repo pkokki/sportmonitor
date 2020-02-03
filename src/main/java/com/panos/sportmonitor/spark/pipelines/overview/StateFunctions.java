@@ -1,6 +1,6 @@
 package com.panos.sportmonitor.spark.pipelines.overview;
 
-import com.panos.sportmonitor.dto.Event;
+import com.panos.sportmonitor.common.Event;
 import org.apache.spark.api.java.Optional;
 import org.apache.spark.api.java.function.Function3;
 import org.apache.spark.streaming.State;

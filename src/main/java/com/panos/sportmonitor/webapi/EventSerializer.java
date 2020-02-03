@@ -1,9 +1,9 @@
-package com.panos.sportmonitor.rest;
+package com.panos.sportmonitor.webapi;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.panos.sportmonitor.dto.Event;
+import com.panos.sportmonitor.common.Event;
 import org.apache.kafka.common.serialization.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
