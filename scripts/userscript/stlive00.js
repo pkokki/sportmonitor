@@ -135,21 +135,24 @@
             var events = [];
             var radarEvents = [];
             var sports = sb.liveoverview ? sb.liveoverview.sports() : sb.liveevents.sports();
-            sports.forEach(sport => {
+            for (var i = 0; i < sports.length; i++) {
+                var sport = sports[i];
                 if (sport.id == 'FOOT') {
                     var regions = sport.regions();
-                    regions.forEach(region => {
+                    for (var j = 0; j < regions.length; j++) {
+                        var region = regions[j];
                         var regionEvents = region.events();
-                        regionEvents.forEach(regionEvent => {
+                        for (var k = 0; k < regionEvents.length; k++) {
+                            var regionEvent = regionEvents[k];
                             var ev = prepareEvent(regionEvent);
                             events.push(ev);
                             if (ev.betRadarId && ev.liveEventLink) {
                                 radarEvents.push(ev.liveEventLink);
                             }
-                        });
-                    });
+                        }
+                    }
                 }
-            });
+            }
             activeRadarEvents.splice(0, activeRadarEvents.length, ...radarEvents);
             if (!!noSend) {
                 sendLiveRequest(events);
