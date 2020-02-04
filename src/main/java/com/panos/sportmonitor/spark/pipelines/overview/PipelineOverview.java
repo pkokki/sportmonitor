@@ -7,12 +7,10 @@ import org.apache.spark.api.java.Optional;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.State;
 import org.apache.spark.streaming.StateSpec;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
-import org.apache.spark.streaming.api.java.JavaMapWithStateDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
@@ -95,21 +93,7 @@ public class PipelineOverview {
             }
         });
 
-        if (true) return;
-
-        // Apply the state update function to the events streaming Dataset grouped by eventId
-        JavaMapWithStateDStream<Long, Event, EventState, LiveEvent> eventUpdates = eventsDS
-                .mapToPair(e -> new Tuple2<>(Long.parseLong(e.getId()), e))
-                .mapWithState(StateSpec.function(StateFunctions.MappingFunc).timeout(Durations.minutes(1)));
-        eventUpdates.print();
-
-        // Overwrite db table event_master_data
-        eventUpdates.foreachRDD(rdd -> {
-            if (!rdd.isEmpty()) {
-                Dataset<Row> ds = spark.createDataFrame(rdd, LiveEvent.class);
-                PostgresHelper.overwriteDataset(ds, "event_master_data");
-            }
-        });
+        System.out.println("PipelineOverview is running");
     }
 
     private static Optional<Event> onlyOneEventSpec(String id, Optional<Event> item, State<String> state) {

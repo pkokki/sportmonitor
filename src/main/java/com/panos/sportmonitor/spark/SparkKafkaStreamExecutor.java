@@ -58,5 +58,8 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
 
         // Execute the Spark workflow defined above
         streamingContext.start();
+
+        System.out.println("Spark Streaming Context is started");
+
     }
 }

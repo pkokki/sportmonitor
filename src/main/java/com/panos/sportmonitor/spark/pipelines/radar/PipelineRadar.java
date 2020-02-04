@@ -9,6 +9,7 @@ import org.apache.spark.api.java.Optional;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.State;
 import org.apache.spark.streaming.StateSpec;
 import org.apache.spark.streaming.api.java.JavaDStream;
@@ -69,6 +70,8 @@ public class PipelineRadar {
                 .print(100);
         processMatchTimelineEvents(spark, messageStream);
         processMatchSituations(spark, messageStream);
+
+        System.out.println("PipelineRadar is running");
     }
 
     private void processMatchSituations(SparkSession spark, JavaDStream<RadarJsonEvent> messageStream) {
@@ -85,7 +88,7 @@ public class PipelineRadar {
                     return list.iterator();
                 })
                 .mapToPair(mse -> new Tuple2<>(mse.getId(), mse))
-                .mapWithState(StateSpec.function(PipelineRadar::onlyOneMatchSituationEventSpec))
+                .mapWithState(StateSpec.function(PipelineRadar::onlyOneMatchSituationEventSpec).timeout(Durations.minutes(5)))
                 .filter(r -> r.isPresent())
                 .map(r -> r.get());
         matchSituationEvents.foreachRDD(rdd -> {
@@ -109,7 +112,7 @@ public class PipelineRadar {
                     return list.iterator();
                 })
                 .mapToPair(mte -> new Tuple2<>(mte.getId(), mte))
-                .mapWithState(StateSpec.function(PipelineRadar::onlyOneMatchTimelineEventSpec))
+                .mapWithState(StateSpec.function(PipelineRadar::onlyOneMatchTimelineEventSpec).timeout(Durations.minutes(5)))
                 .filter(r -> r.isPresent())
                 .map(r -> r.get());
 

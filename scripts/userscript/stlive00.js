@@ -85,7 +85,6 @@
     }
 
     function processActiveRadarEvents() {
-        console.log('processActiveRadarEvents', captureXHR);
         if (sb.mainlive && sb.mainlive.event) {
             var events = [prepareEvent(sb.mainlive.event)];
             sendLiveRequest(events);
@@ -98,6 +97,14 @@
             if (link) {
                 lastRadarEvents[link] = now;
                 selectMatch(link);
+            } else {
+                if (window.location.pathname != '/live/') {
+                    console.log('Redirecting to live overview...');
+                    var overviewLink = document.querySelector("a.js-live-navheader-link");
+                    overviewLink.click();
+                } else {
+                    console.log('Already in live overview...');
+                }
             }
         }
     }
@@ -119,6 +126,16 @@
                                     if (targetLink == href) {
                                         console.log('selectMatch', targetLink);
                                         a.click();
+                                        window.setTimeout(function() {
+                                            var link1 = document.querySelector('#js-navheader-stats > a');
+                                            if (link1) {
+                                                link1.click();
+                                                window.setTimeout(function() {
+                                                    var link2 = document.querySelector('.sr-lmt-plus-tabs__tab.srm-tab-btm.srm-tab-2');
+                                                    if (link2) link2.click();
+                                                }, 1000);
+                                            }
+                                        }, 1000);
                                     }
                                 });
                             }
@@ -145,14 +162,14 @@
                             var regionEvent = regionEvents[k];
                             var ev = prepareEvent(regionEvent);
                             events.push(ev);
-                            if (ev.betRadarId && ev.liveEventLink) {
+                            if (ev.betRadarId && ev.liveEventLink && ev.clockTime != '00:00' && ev.clockTime != '45:00') {
                                 radarEvents.push(ev.liveEventLink);
                             }
                         }
                     }
                 }
             }
-            console.log('processMatches:', events.length, 'matches found.');
+            console.log('processMatches:', events.length, 'matches found.', radarEvents.length, 'matches with radar.');
             activeRadarEvents.splice(0, activeRadarEvents.length, ...radarEvents);
             if (!!!noSend) {
                 sendLiveRequest(events);
@@ -236,7 +253,8 @@
     }
 
     function sendSportRadar(response) {
-        if (captureXHR && response.readyState == 4 && response.status == 200 && response.responseURL.indexOf('sportradar.com') > 0) {
+        if (captureXHR && response.readyState == 4 && response.status == 200
+            && response.responseURL.indexOf('sportradar.com') > 0 && response.responseURL.indexOf('match_info') == -1) {
             console.log('XHR request', response.responseText.substring(0, 100));
             GM_xmlhttpRequest({
                 method: 'POST',
