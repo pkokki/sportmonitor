@@ -1,0 +1,489 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 1,
+  "iteration": 1581002935979,
+  "links": [],
+  "panels": [
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "sadasdsa a sda sdsa",
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "id": 6,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": true,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 1,
+      "points": true,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": true,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [],
+          "hide": false,
+          "metricColumn": "description",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  \"timestamp\"/1000 AS \"time\",\n  description AS metric,\n  price\nFROM selection_data\nWHERE $__unixEpochFilter(\"timestamp\"/1000)\n  AND selectionid IN ($selectionId)\nORDER BY 1,2",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "eventid"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "selection_data",
+          "timeColumn": "\"timestamp\"",
+          "timeColumnType": "int8",
+          "where": [
+            {
+              "name": "$__unixEpochFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "$eventId: $marketId",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": null,
+          "format": "short",
+          "label": null,
+          "logBase": 2,
+          "max": "10",
+          "min": "1",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 9
+      },
+      "hiddenSeries": false,
+      "id": 2,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "title",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  uts AS \"time\",\n  count(distinct id) as \"match timeline events\"\nFROM match_timeline_events\nWHERE\n  $__unixEpochFilter(uts)\nGROUP BY uts",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "\"homeScore\""
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "event_data",
+          "timeColumn": "\"timestamp\"",
+          "timeColumnType": "int8",
+          "where": [
+            {
+              "name": "$__unixEpochFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Radar statistics",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "columns": [],
+      "datasource": null,
+      "fontSize": "80%",
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "id": 4,
+      "options": {},
+      "pageSize": null,
+      "showHeader": true,
+      "sort": {
+        "col": 2,
+        "desc": true
+      },
+      "styles": [],
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT m1.starttime, m1.title, e1.clocktime, e1.homescore || '-' || e1.awayscore as score, e1.issuspended, m1.eventid, m1.betradarid\r\n    FROM event_master_data AS m1\r\n    INNER JOIN event_data AS e1 ON m1.eventid = e1.eventid\r\n    INNER JOIN \r\n        (SELECT live.eventid, MAX(live.timestamp) as max_ts\r\n            FROM\r\n            (SELECT m.eventid, ev.timestamp \r\n            FROM event_master_data AS m\r\n                INNER JOIN (SELECT \r\n                        eventid,\r\n                        timestamp, \r\n                        to_timestamp(timestamp/1000) as time, \r\n                        clocktime\r\n                    FROM event_data) AS ev\r\n                ON m.eventid = ev.eventid\r\n            WHERE $__timeFilter(ev.time)\r\n            --WHERE ev.time BETWEEN '2020-02-03T11:41:20.018Z' AND '2020-02-04T11:41:20.018Z'\r\n            ) AS live\r\n        GROUP BY live.eventid) AS a1 ON e1.eventid = a1.eventid AND e1.timestamp = a1.max_ts\r\n    ORDER BY 1 desc \r\n;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Live Matches",
+      "transform": "table",
+      "transparent": true,
+      "type": "table"
+    },
+    {
+      "columns": [],
+      "datasource": null,
+      "fontSize": "80%",
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 15
+      },
+      "id": 8,
+      "options": {},
+      "pageSize": null,
+      "showHeader": true,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
+      "styles": [],
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT  \n  to_timestamp(t.uts) AS time1,\n  m.title,\n  CASE WHEN t.team='H' THEN m.hometeam END AS home,\n  CASE WHEN t.team='A' THEN m.awayteam END AS away\n  FROM match_timeline_events as t\n  INNER JOIN event_master_data as m on t.matchid = m.betradarid \n  WHERE t.type = 'goal' AND $__unixEpochFilter(t.uts)\n  ORDER BY time1 DESC\n  LIMIT 15\n",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Latest goals",
+      "transform": "table",
+      "type": "table"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 21,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "text": "Aμπα U19 - Αλ Γουέντα U19",
+          "value": "4836423"
+        },
+        "datasource": "PostgreSQL-Pipeline",
+        "definition": "SELECT m1.eventid AS __value, m1.title  AS __text\n    FROM event_master_data AS m1\n    INNER JOIN event_data AS e1 ON m1.eventid = e1.eventid\n    INNER JOIN \n        (SELECT live.eventid, MAX(live.timestamp) as max_ts\n            FROM\n            (SELECT m.eventid, ev.timestamp \n            FROM event_master_data AS m\n                INNER JOIN (SELECT \n                        eventid,\n                        timestamp, \n                        to_timestamp(timestamp/1000) as time, \n                        clocktime\n                    FROM event_data) AS ev\n                ON m.eventid = ev.eventid\n            WHERE $__timeFilter(ev.time)\n            ) AS live\n        GROUP BY live.eventid) AS a1 ON e1.eventid = a1.eventid AND e1.timestamp = a1.max_ts",
+        "hide": 0,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "eventId",
+        "options": [],
+        "query": "SELECT m1.eventid AS __value, m1.title  AS __text\n    FROM event_master_data AS m1\n    INNER JOIN event_data AS e1 ON m1.eventid = e1.eventid\n    INNER JOIN \n        (SELECT live.eventid, MAX(live.timestamp) as max_ts\n            FROM\n            (SELECT m.eventid, ev.timestamp \n            FROM event_master_data AS m\n                INNER JOIN (SELECT \n                        eventid,\n                        timestamp, \n                        to_timestamp(timestamp/1000) as time, \n                        clocktime\n                    FROM event_data) AS ev\n                ON m.eventid = ev.eventid\n            WHERE $__timeFilter(ev.time)\n            ) AS live\n        GROUP BY live.eventid) AS a1 ON e1.eventid = a1.eventid AND e1.timestamp = a1.max_ts",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "text": "0",
+          "value": "0"
+        },
+        "datasource": "PostgreSQL-Pipeline",
+        "definition": "SELECT betradarid FROM event_master_data WHERE eventid=$eventId",
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "radarId",
+        "options": [],
+        "query": "SELECT betradarid FROM event_master_data WHERE eventid=$eventId",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "text": "DBLC_0:  Διπλή ευκαιρία",
+          "value": "192571219"
+        },
+        "datasource": "PostgreSQL-Pipeline",
+        "definition": "SELECT marketid AS __value, type || '_' || handicap || ':  ' || description AS __text\nFROM market_data \nWHERE eventid=$eventId\nGROUP BY marketid, type, handicap, description\nORDER BY marketid",
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": true,
+        "name": "marketId",
+        "options": [],
+        "query": "SELECT marketid AS __value, type || '_' || handicap || ':  ' || description AS __text\nFROM market_data \nWHERE eventid=$eventId\nGROUP BY marketid, type, handicap, description\nORDER BY marketid",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "text": "2X",
+          "value": "821866526"
+        },
+        "datasource": "PostgreSQL-Pipeline",
+        "definition": "SELECT DISTINCT * FROM (SELECT s.selectionid AS __value, s.description as __text\nFROM selection_data AS s\nWHERE s.marketid IN ($marketId)\n) AS source\nORDER BY __value DESC",
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": true,
+        "name": "selectionId",
+        "options": [],
+        "query": "SELECT DISTINCT * FROM (SELECT s.selectionid AS __value, s.description as __text\nFROM selection_data AS s\nWHERE s.marketid IN ($marketId)\n) AS source\nORDER BY __value DESC",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "",
+  "title": "Live Dashboard #1",
+  "uid": "mFvLq1sWk",
+  "version": 43
+}
