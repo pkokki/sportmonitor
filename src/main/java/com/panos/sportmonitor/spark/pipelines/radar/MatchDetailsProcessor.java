@@ -2,6 +2,7 @@ package com.panos.sportmonitor.spark.pipelines.radar;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.panos.sportmonitor.spark.PostgresHelper;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
@@ -27,24 +28,27 @@ public class MatchDetailsProcessor {
             return list.iterator();
         });
 
-        Dataset<MatchDetailsType> existingDetailTypesDS = PostgresHelper
+        // Append missing types
+        List<MatchDetailsType> existingDetailTypes = PostgresHelper
                 .readTable(spark, "match_detail_types")
                 .map((MapFunction<Row, MatchDetailsType>) row -> new MatchDetailsType(row.getString(0), row.getString(1)), Encoders.bean(MatchDetailsType.class))
+                .collectAsList()
                 ;
-        existingDetailTypesDS.printSchema();
-
         JavaDStream<MatchDetailsType> newDetailTypesDS = jsonEntriesDS
                 .mapToPair(e -> new Tuple2<>(e._2.getKey(), new MatchDetailsType(e._2.getKey(), e._2.getValue().path("name").asText())))
                 .reduceByKey((k, n) -> n)
                 .map(r -> r._2);
-        //Seq<String> usingColumns = asScalaIteratorConverter(Arrays.asList("key").iterator()).asScala().toSeq();
         newDetailTypesDS.foreachRDD(rdd -> {
             if (!rdd.isEmpty()) {
-                Dataset<Row> newDetailTypes = spark.createDataFrame(rdd, MatchDetailsType.class);
-                PostgresHelper.overwriteDataset(newDetailTypes, "match_detail_types");
+                List<MatchDetailsType> newDetailTypes = rdd.collect();
+                Collection missingDetailTypes = CollectionUtils.subtract(newDetailTypes, existingDetailTypes);
+                System.out.println(String.format("Adding %d new types", missingDetailTypes.size()));
+                Dataset<Row> missingDetailTypesDF = spark.createDataFrame(new ArrayList<>(missingDetailTypes), MatchDetailsType.class);
+                PostgresHelper.appendDataset(missingDetailTypesDF, "match_detail_types");
             }
         });
 
+        // Append detail events
         JavaDStream<MatchDetailsEvent> detailsDS = jsonEntriesDS
                 .map(r -> {
                     long matchid = r._1.data.path("_matchid").asLong();
