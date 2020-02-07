@@ -29,9 +29,21 @@ import java.util.*;
 public class PipelineRadar {
     @Value(value = "${spark.radar.kafka.topic}")
     private String topic;
+    @Value("${spark.radar.matchTimelineEvents}")
+    private Boolean matchTimelineEvents;
+    @Value("${spark.radar.matchSituations}")
+    private Boolean matchSituations;
+    @Value("${spark.radar.matchDetails}")
+    private Boolean matchDetails;
 
     @Autowired
     private PipelineRadarKafkaParams kafkaParams;
+    @Autowired
+    private MatchDetailsProcessor matchDetailsProcessor;
+    @Autowired
+    private MatchTimelineProcessor matchTimelineProcessor;
+    @Autowired
+    private MatchSituationsProcessor matchSituationsProcessor;
 
     public void run(SparkSession spark, JavaStreamingContext streamingContext) {
         Collection<String> topics = Collections.singletonList(topic);
@@ -68,80 +80,19 @@ public class PipelineRadar {
                .mapToPair(r -> new Tuple2<>(r.event, 1))
                 .reduceByKey((a, b) -> a + b)
                 .print(100);
-        processMatchTimelineEvents(spark, messageStream);
-        processMatchSituations(spark, messageStream);
-
         System.out.println("PipelineRadar is running");
-    }
 
-    private void processMatchSituations(SparkSession spark, JavaDStream<RadarJsonEvent> messageStream) {
-        JavaDStream<MatchSituationEvent> matchSituationEvents = messageStream
-                .filter(r -> r.event.equals("stats_match_situation"))
-                .flatMap(r -> {
-                    List<MatchSituationEvent> list = new ArrayList<>();
-                    long matchid = Long.parseLong(r.data.path("matchid").asText());
-                    Iterator<JsonNode> nodes = r.data.path("data").elements();
-                    while (nodes.hasNext()) {
-                        JsonNode node = nodes.next();
-                        list.add(new MatchSituationEvent(matchid, node));
-                    }
-                    return list.iterator();
-                })
-                .mapToPair(mse -> new Tuple2<>(mse.getId(), mse))
-                .mapWithState(StateSpec.function(PipelineRadar::onlyOneMatchSituationEventSpec).timeout(Durations.minutes(5)))
-                .filter(r -> r.isPresent())
-                .map(r -> r.get());
-        matchSituationEvents.foreachRDD(rdd -> {
-            if (!rdd.isEmpty()) {
-                Dataset<Row> ds = spark.createDataFrame(rdd, MatchSituationEvent.class);
-                PostgresHelper.appendDataset(ds, "match_situation_events");
-            }
-        });
-    }
-    private void processMatchTimelineEvents(SparkSession spark, JavaDStream<RadarJsonEvent> messageStream) {
-        JavaDStream<MatchTimelineEvent> matchTimelineEvents = messageStream
-                .filter(r -> r.event.equals("match_timeline"))
-                .flatMap(r -> {
-                    List<MatchTimelineEvent> list = new ArrayList<>();
-                    Iterator<JsonNode> events = r.data.path("events").elements();
-                    while (events.hasNext()) {
-                        JsonNode evNode = events.next();
-                        if (evNode != null)
-                            list.add(new MatchTimelineEvent(evNode));
-                    }
-                    return list.iterator();
-                })
-                .mapToPair(mte -> new Tuple2<>(mte.getId(), mte))
-                .mapWithState(StateSpec.function(PipelineRadar::onlyOneMatchTimelineEventSpec).timeout(Durations.minutes(5)))
-                .filter(r -> r.isPresent())
-                .map(r -> r.get());
-
-        matchTimelineEvents.foreachRDD(rdd -> {
-            if (!rdd.isEmpty()) {
-                Dataset<Row> ds = spark.createDataFrame(rdd, MatchTimelineEvent.class);
-                PostgresHelper.appendDataset(ds, "match_timeline_events");
-            }
-        });
-    }
-
-    private static Optional<MatchTimelineEvent> onlyOneMatchTimelineEventSpec(Long id, Optional<MatchTimelineEvent> item, State<Long> state) {
-        if (state.isTimingOut() || state.exists()) {
-            return Optional.empty();
+        if (matchTimelineEvents) {
+            matchTimelineProcessor.run(spark, messageStream);
+            System.out.println("MatchTimelineProcessor is running");
         }
-        else {
-            state.update(id);
-            return item;
+        if (matchSituations) {
+            matchSituationsProcessor.run(spark, messageStream);
+            System.out.println("MatchSituationsProcessor is running");
+        }
+        if (matchDetails) {
+            matchDetailsProcessor.run(spark, streamingContext, messageStream);
+            System.out.println("MatchDetailsProcessor is running");
         }
     }
-
-    private static Optional<MatchSituationEvent> onlyOneMatchSituationEventSpec(Long id, Optional<MatchSituationEvent> item, State<Long> state) {
-        if (state.isTimingOut() || state.exists()) {
-            return Optional.empty();
-        }
-        else {
-            state.update(id);
-            return item;
-        }
-    }
-
 }

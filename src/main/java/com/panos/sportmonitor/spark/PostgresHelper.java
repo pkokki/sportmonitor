@@ -1,7 +1,9 @@
 package com.panos.sportmonitor.spark;
 
+import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
 
 public class PostgresHelper {
     static {
@@ -30,5 +32,15 @@ public class PostgresHelper {
                 .option("password", "password")
                 .option("isolationLevel", "READ_COMMITTED")
                 .save();
+    }
+
+    public static Dataset<Row> readTable(SparkSession session, String tableName){
+        return session.read()
+                .format("jdbc")
+                .option("url", "jdbc:postgresql://localhost:5432/livedb")
+                .option("dbtable", "public." + tableName)
+                .option("user", "postgres")
+                .option("password", "password")
+                .load();
     }
 }

@@ -30,3 +30,19 @@ CREATE TABLE match_situation_events (
   awaysafecount INT
 );
 
+CREATE TABLE match_detail_events (
+  id        SERIAL PRIMARY KEY,
+  matchid   BIGINT NOT NULL,
+  timestamp BIGINT NOT NULL,
+  key       VARCHAR(64) NOT NULL,
+  home      INT,
+  away      INT,
+  hometext  VARCHAR(64),
+  awaytext  VARCHAR(64)
+);
+
+CREATE TABLE match_detail_types (
+  key           VARCHAR(64) PRIMARY KEY,
+  name          VARCHAR(128) NOT NULL
+);
+

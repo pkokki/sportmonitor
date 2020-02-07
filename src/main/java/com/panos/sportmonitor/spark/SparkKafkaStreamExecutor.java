@@ -30,6 +30,10 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
     private String appName;
     @Value("${spark.master-url}")
     private String masterUrl;
+    @Value("${spark.overview}")
+    private Boolean sparkOverview;
+    @Value("${spark.radar}")
+    private Boolean sparkRadar;
 
     @Autowired
     private PipelineRadar pipelineRadar;
@@ -53,8 +57,13 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
         streamingContext.sparkContext().setLogLevel(logLevel);
         streamingContext.checkpoint(checkpointDir);
 
-        pipelineRadar.run(spark, streamingContext);
-        pipelineOverview.run(spark, streamingContext);
+
+        if (sparkRadar) {
+            pipelineRadar.run(spark, streamingContext);
+        }
+        if (sparkOverview) {
+            pipelineOverview.run(spark, streamingContext);
+        }
 
         // Execute the Spark workflow defined above
         streamingContext.start();

@@ -7,7 +7,7 @@ import java.io.Serializable;
 class RadarJsonEvent implements Serializable {
     private String queryUrl;
     public String event;
-    private long dob;
+    public long dob;
     private int maxage;
     public JsonNode data;
 
