@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class MatchTimelineEvent implements Serializable {
     private long id;
     private long matchid;
-    private long uts;
+    private long timestamp;
     private int time;
     private long seconds;
     private String typeid;
@@ -17,7 +17,7 @@ public class MatchTimelineEvent implements Serializable {
     public MatchTimelineEvent(JsonNode source) {
         this.setId(source.path("_id").asLong());
         this.setMatchid(source.path("matchid").asLong());
-        this.setUts(source.path("uts").asLong());
+        this.setTimestamp(source.path("uts").asLong());
         this.setSeconds(source.path("seconds").asLong());
         this.setTime(source.path("time").asInt());
         this.setTypeid(source.path("_typeid").asText());
@@ -49,12 +49,12 @@ public class MatchTimelineEvent implements Serializable {
         this.matchid = matchid;
     }
 
-    public long getUts() {
-        return uts;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setUts(long uts) {
-        this.uts = uts;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public int getTime() {

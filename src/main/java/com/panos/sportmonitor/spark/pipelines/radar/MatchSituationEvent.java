@@ -32,6 +32,7 @@ import java.io.Serializable;
 public class MatchSituationEvent implements Serializable {
     private long id;
     private long matchid;
+    private long timestamp;
     private int time;
     private int injurytime;
     private int safe;
@@ -49,8 +50,9 @@ public class MatchSituationEvent implements Serializable {
     private int awaydangerouscount;
     private int awaysafecount;
 
-    public MatchSituationEvent(long matchid, JsonNode node) {
+    public MatchSituationEvent(long matchid, long timestamp, JsonNode node) {
         this.matchid = matchid;
+        this.timestamp = timestamp;
         this.time = node.path("time").asInt();
         this.injurytime = node.path("injurytime").asInt();
         this.safe = node.path("safe").asInt();
@@ -81,6 +83,14 @@ public class MatchSituationEvent implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public long getMatchid() {

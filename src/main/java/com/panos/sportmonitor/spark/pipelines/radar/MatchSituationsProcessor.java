@@ -25,10 +25,11 @@ public class MatchSituationsProcessor {
                 .flatMap(r -> {
                     List<MatchSituationEvent> list = new ArrayList<>();
                     long matchid = Long.parseLong(r.data.path("matchid").asText());
+                    long timestamp = r.dob;
                     Iterator<JsonNode> nodes = r.data.path("data").elements();
                     while (nodes.hasNext()) {
                         JsonNode node = nodes.next();
-                        list.add(new MatchSituationEvent(matchid, node));
+                        list.add(new MatchSituationEvent(matchid, timestamp, node));
                     }
                     return list.iterator();
                 })
