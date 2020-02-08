@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1581002935979,
+  "iteration": 1581145925513,
   "links": [],
   "panels": [
     {
@@ -182,7 +182,7 @@
           "group": [],
           "metricColumn": "title",
           "rawQuery": true,
-          "rawSql": "SELECT\n  uts AS \"time\",\n  count(distinct id) as \"match timeline events\"\nFROM match_timeline_events\nWHERE\n  $__unixEpochFilter(uts)\nGROUP BY uts",
+          "rawSql": "SELECT\n  timestamp AS \"time\",\n  count(distinct id) as \"match timeline events\"\nFROM match_timeline_events\nWHERE\n  $__unixEpochFilter(timestamp)\nGROUP BY timestamp",
           "refId": "A",
           "select": [
             [
@@ -327,7 +327,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT  \n  to_timestamp(t.uts) AS time1,\n  m.title,\n  CASE WHEN t.team='H' THEN m.hometeam END AS home,\n  CASE WHEN t.team='A' THEN m.awayteam END AS away\n  FROM match_timeline_events as t\n  INNER JOIN event_master_data as m on t.matchid = m.betradarid \n  WHERE t.type = 'goal' AND $__unixEpochFilter(t.uts)\n  ORDER BY time1 DESC\n  LIMIT 15\n",
+          "rawSql": "SELECT  \n  to_timestamp(t.timestamp) AS time1,\n  m.title,\n  CASE WHEN t.team='H' THEN m.hometeam END AS home,\n  CASE WHEN t.team='A' THEN m.awayteam END AS away\n  FROM match_timeline_events as t\n  INNER JOIN event_master_data as m on t.matchid = m.betradarid \n  WHERE t.type = 'goal' AND $__unixEpochFilter(t.timestamp)\n  ORDER BY time1 DESC\n  LIMIT 15\n",
           "refId": "A",
           "select": [
             [
@@ -365,8 +365,10 @@
       {
         "allValue": null,
         "current": {
-          "text": "Aμπα U19 - Αλ Γουέντα U19",
-          "value": "4836423"
+          "isNone": true,
+          "selected": false,
+          "text": "None",
+          "value": ""
         },
         "datasource": "PostgreSQL-Pipeline",
         "definition": "SELECT m1.eventid AS __value, m1.title  AS __text\n    FROM event_master_data AS m1\n    INNER JOIN event_data AS e1 ON m1.eventid = e1.eventid\n    INNER JOIN \n        (SELECT live.eventid, MAX(live.timestamp) as max_ts\n            FROM\n            (SELECT m.eventid, ev.timestamp \n            FROM event_master_data AS m\n                INNER JOIN (SELECT \n                        eventid,\n                        timestamp, \n                        to_timestamp(timestamp/1000) as time, \n                        clocktime\n                    FROM event_data) AS ev\n                ON m.eventid = ev.eventid\n            WHERE $__timeFilter(ev.time)\n            ) AS live\n        GROUP BY live.eventid) AS a1 ON e1.eventid = a1.eventid AND e1.timestamp = a1.max_ts",
@@ -390,8 +392,8 @@
       {
         "allValue": null,
         "current": {
-          "text": "0",
-          "value": "0"
+          "text": "20239541",
+          "value": "20239541"
         },
         "datasource": "PostgreSQL-Pipeline",
         "definition": "SELECT betradarid FROM event_master_data WHERE eventid=$eventId",
@@ -415,8 +417,11 @@
       {
         "allValue": null,
         "current": {
-          "text": "DBLC_0:  Διπλή ευκαιρία",
-          "value": "192571219"
+          "tags": [],
+          "text": "DBLC_0:  Διπλή ευκαιρία (73)",
+          "value": [
+            "177747141"
+          ]
         },
         "datasource": "PostgreSQL-Pipeline",
         "definition": "SELECT marketid AS __value, type || '_' || handicap || ':  ' || description AS __text\nFROM market_data \nWHERE eventid=$eventId\nGROUP BY marketid, type, handicap, description\nORDER BY marketid",
@@ -441,7 +446,7 @@
         "allValue": null,
         "current": {
           "text": "2X",
-          "value": "821866526"
+          "value": "771448636"
         },
         "datasource": "PostgreSQL-Pipeline",
         "definition": "SELECT DISTINCT * FROM (SELECT s.selectionid AS __value, s.description as __text\nFROM selection_data AS s\nWHERE s.marketid IN ($marketId)\n) AS source\nORDER BY __value DESC",
@@ -485,5 +490,5 @@
   "timezone": "",
   "title": "Live Dashboard #1",
   "uid": "mFvLq1sWk",
-  "version": 43
+  "version": 45
 }
