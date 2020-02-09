@@ -43,6 +43,14 @@ public class PipelineOverview {
                 );
         JavaDStream<Event> eventsDS = eventRecordDS.map(r -> r.value());
 
+        EventScoreChangeProcessor eventScoreChangeProcessor = new EventScoreChangeProcessor();
+        eventScoreChangeProcessor
+                .run(streamingContext, eventsDS)
+                .foreachRDD(rdd -> {
+                    Dataset<Row> ds = spark.createDataFrame(rdd, EventScoreChange.class);
+                    PostgresHelper.appendDataset(ds, "event_score_changes");
+                });
+
         eventsDS
                 .mapToPair(e -> new Tuple2<>(e.getId(), e))
                 .mapWithState(StateSpec.function(PipelineOverview::onlyOneEventSpec))

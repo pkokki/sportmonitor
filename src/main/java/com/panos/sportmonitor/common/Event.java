@@ -27,6 +27,16 @@ public class Event implements Serializable {
     private Integer awayRedCards;
     private List<Market> markets;
 
+    public Event() {}
+
+    public Event(String id, long timestamp, String clockTime, String homeScore, String awayScore) {
+        this.id = id;
+        this.timestamp = timestamp;
+        this.clockTime = clockTime;
+        this.homeScore = homeScore;
+        this.awayScore = awayScore;
+    }
+
     public Long getTimestamp() { return timestamp; }
     public void setTimestamp(Long timestamp) { this.timestamp = timestamp; }
 

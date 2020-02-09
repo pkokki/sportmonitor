@@ -41,9 +41,8 @@
     var lastRadarEvents = {};
     var activeRadarEvents = [];
     var sparkTimer = null, activeRadarTimer = null;
-    var captureXHR = false;
     var zNode = document.createElement ('div');
-    zNode.innerHTML = '<button id="sparkBtn1" type="button">Snapshot</button>&nbsp;<button id="sparkBtn2" type="button">Start</button>&nbsp;<button id="sparkBtn3" type="button">Capture XHR</button>';
+    zNode.innerHTML = '<button id="sparkBtn1" type="button">Snapshot</button>&nbsp;<button id="sparkBtn2" type="button">Start events</button>&nbsp;<button id="sparkBtn3" type="button">Start auto-select</button>';
     zNode.setAttribute ('id', 'myContainer');
     document.body.appendChild (zNode);
 
@@ -55,42 +54,37 @@
         "click", toggleSparkProcess, false
     );
     document.getElementById ("sparkBtn3").addEventListener (
-        "click", toggleCaptureXHR, false
+        "click", toggleAutoSelect, false
     );
 
-    function toggleCaptureXHR() {
-        captureXHR = !captureXHR;
-        document.getElementById ("sparkBtn3").innerText = captureXHR ? "Stop XHR" : "Capture XHR";
-        if (captureXHR) {
-            processMatches_v2(true);
-            activeRadarTimer = setInterval(processActiveRadarEvents, 4000);
+    function toggleAutoSelect() {
+        document.getElementById ("sparkBtn3").innerText = "Start auto-select";
+        if (activeRadarTimer) {
+            document.getElementById ("sparkBtn3").innerText = captureXHR ? "Stop auto-select" : "Start auto-select";
+            clearInterval(activeRadarTimer);
+            activeRadarTimer = null;
         }
         else {
-            clearInterval(activeRadarTimer);
+            document.getElementById ("sparkBtn3").innerText = "Stop auto-select";
+            processMatches_v2(true);
+            activeRadarTimer = setInterval(processActiveRadarEvents, 4000);
         }
     }
 
     function toggleSparkProcess() {
         if (sparkTimer) {
-            document.getElementById ("sparkBtn2").innerText = "Start";
+            document.getElementById ("sparkBtn2").innerText = "Capture events";
             clearInterval(sparkTimer);
             sparkTimer = null;
-            if (captureXHR) toggleCaptureXHR();
         }
         else {
             sparkTimer = setInterval(processMatches_v2, 5000);
-            document.getElementById ("sparkBtn2").innerText = "Stop";
-            if (!captureXHR) toggleCaptureXHR();
+            document.getElementById ("sparkBtn2").innerText = "Stop events";
         }
     }
 
     function processActiveRadarEvents() {
-        if (sb.mainlive && sb.mainlive.event) {
-            var events = [prepareEvent(sb.mainlive.event)];
-            sendLiveRequest(events);
-        }
-
-        if (captureXHR) {
+        if (activeRadarTimer) {
             var now = new Date().getTime();
             var limit = now - 60000;
             var link = activeRadarEvents.find(v => lastRadarEvents[v] === undefined || (lastRadarEvents[v] > 0 && lastRadarEvents[v] < limit));
@@ -161,6 +155,9 @@
                         for (var k = 0; k < regionEvents.length; k++) {
                             var regionEvent = regionEvents[k];
                             var ev = prepareEvent(regionEvent);
+                            if (sb.mainlive && sb.mainlive.event && sb.mainlive.event.id == regionEvent.id) {
+                                ev = prepareEvent(sb.mainlive.event);
+                            }
                             events.push(ev);
                             if (ev.betRadarId && ev.liveEventLink && ev.clockTime != '00:00' && ev.clockTime != '45:00') {
                                 radarEvents.push(ev.liveEventLink);
@@ -169,6 +166,7 @@
                     }
                 }
             }
+
             console.log('processMatches:', events.length, 'matches found.', radarEvents.length, 'matches with radar.');
             activeRadarEvents.splice(0, activeRadarEvents.length, ...radarEvents);
             if (!!!noSend) {
@@ -206,7 +204,7 @@
 
     function prepareEvent(src) {
         var ev = {
-            timestamp: new Date().valueOf(),
+            timestamp: Math.round(new Date().valueOf()/1000),
             id: src.id,
             regionId: src.regionId,
             regionName: src.regionName,
@@ -253,7 +251,7 @@
     }
 
     function sendSportRadar(response) {
-        if (captureXHR && response.readyState == 4 && response.status == 200
+        if ((sparkTimer || activeRadarTimer) && response.readyState == 4 && response.status == 200
             && response.responseURL.indexOf('sportradar.com') > 0 && response.responseURL.indexOf('match_info') == -1) {
             console.log('XHR request', response.responseText.substring(0, 100));
             GM_xmlhttpRequest({

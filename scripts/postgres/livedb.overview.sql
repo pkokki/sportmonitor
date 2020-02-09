@@ -43,3 +43,13 @@ CREATE TABLE selection_data (
     description VARCHAR(128),
     price    REAL
 );
+
+CREATE TABLE event_score_changes (
+    eventid     INT,
+    timestamp   INT,
+    clocktime   VARCHAR(8),
+    home        INT,
+    away        INT,
+    homediff    INT,
+    awaydiff    INT
+);
