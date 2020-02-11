@@ -2,6 +2,7 @@ package com.panos.sportmonitor.spark;
 
 import com.panos.sportmonitor.spark.pipelines.overview.PipelineOverview;
 import com.panos.sportmonitor.spark.pipelines.radar.PipelineRadar;
+import com.panos.sportmonitor.spark.pipelines.sessions.SessionPipeline;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.streaming.Duration;
@@ -34,11 +35,15 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
     private Boolean sparkOverview;
     @Value("${spark.radar}")
     private Boolean sparkRadar;
+    @Value("${spark.session}")
+    private Boolean sparkSession;
 
     @Autowired
     private PipelineRadar pipelineRadar;
     @Autowired
     private PipelineOverview pipelineOverview;
+    @Autowired
+    SessionPipeline sessionPipeline;
 
     @Override
     public void run() {
@@ -63,6 +68,9 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
         }
         if (sparkOverview) {
             pipelineOverview.run(spark, streamingContext);
+        }
+        if (sparkSession) {
+            sessionPipeline.run(spark, streamingContext);
         }
 
         // Execute the Spark workflow defined above
