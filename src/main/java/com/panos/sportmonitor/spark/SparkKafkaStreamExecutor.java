@@ -1,5 +1,6 @@
 package com.panos.sportmonitor.spark;
 
+import com.panos.sportmonitor.spark.pipelines.cashout.CashOutPipeline;
 import com.panos.sportmonitor.spark.pipelines.overview.PipelineOverview;
 import com.panos.sportmonitor.spark.pipelines.radar.PipelineRadar;
 import com.panos.sportmonitor.spark.pipelines.sessions.SessionPipeline;
@@ -37,13 +38,17 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
     private Boolean sparkRadar;
     @Value("${spark.session}")
     private Boolean sparkSession;
+    @Value("${spark.cash-out}")
+    private Boolean sparkCashOut;
 
     @Autowired
     private PipelineRadar pipelineRadar;
     @Autowired
     private PipelineOverview pipelineOverview;
     @Autowired
-    SessionPipeline sessionPipeline;
+    private SessionPipeline sessionPipeline;
+    @Autowired
+    private CashOutPipeline cashOutPipeline;
 
     @Override
     public void run() {
@@ -62,7 +67,6 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
         streamingContext.sparkContext().setLogLevel(logLevel);
         streamingContext.checkpoint(checkpointDir);
 
-
         if (sparkRadar) {
             pipelineRadar.run(spark, streamingContext);
         }
@@ -71,6 +75,9 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
         }
         if (sparkSession) {
             sessionPipeline.run(spark, streamingContext);
+        }
+        if (sparkCashOut) {
+            cashOutPipeline.run(spark, streamingContext);
         }
 
         // Execute the Spark workflow defined above
