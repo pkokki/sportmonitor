@@ -1,10 +1,6 @@
 package com.panos.sportmonitor.spark.pipelines.cashout;
 
 import org.apache.commons.math3.util.Precision;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
 import scala.Tuple2;
 
 import java.util.*;
@@ -12,8 +8,7 @@ import java.util.*;
 public class BetGenerator {
     private static final Random random = new Random(new Date().getTime());
 
-    public static void createBetSlips(SparkSession spark, JavaRDD<SelectionEvent> rdd, long count) {
-        List<SelectionEvent> odds = rdd.collect();
+    public static Tuple2<List<Bet>, List<BetSelection>> createBetSlips(List<SelectionEvent> odds, long count) {
         List<Bet> bets = new ArrayList<>();
         List<BetSelection> betSelections = new ArrayList<>();
         for (int i = 0; i < count; i++) {
@@ -23,22 +18,7 @@ public class BetGenerator {
                 betSelections.addAll(t._2);
             }
         }
-
-        appendOrCreateView(spark, "bets", spark.createDataFrame(bets, Bet.class));
-        appendOrCreateView(spark, "betSelections", spark.createDataFrame(betSelections, BetSelection.class));
-    }
-
-    private static void appendOrCreateView(SparkSession spark, String viewName, Dataset<Row> newData) {
-        if (spark.catalog().tableExists(viewName)) {
-            Dataset<Row> existingData = spark.table(viewName);
-            Dataset<Row> union = existingData.union(newData);
-            union.createOrReplaceTempView(viewName);
-            //System.out.println(String.format("TempView %s contains %d rows (%d new)", viewName, union.count(), newData.count()));
-        }
-        else {
-            newData.createOrReplaceTempView(viewName);
-            System.out.println(String.format("TempView %s created with %d rows", viewName, newData.count()));
-        }
+        return new Tuple2<>(bets, betSelections);
     }
 
     private static Tuple2<Bet, List<BetSelection>> createBetSlip(List<SelectionEvent> odds, int numBets) {
@@ -48,15 +28,18 @@ public class BetGenerator {
         int actualSelections = Math.min(numBets, odds.size());
         Iterator<Integer> it= getRandomIndexes(actualSelections, odds.size());
         float totalOdd = 1;
+        long betStamp = Long.MAX_VALUE;
         while (it.hasNext()) {
             SelectionEvent se = odds.get(it.next());
-            selections.add(new BetSelection(betId, se.getSelectionId(), se.getPrice()));
-            totalOdd *= se.getPrice();
+            betStamp = Long.min(betStamp, se.getTimestamp());
+            selections.add(new BetSelection(betId, se.getSelectionId(), se.getCurrentPrice()));
+            totalOdd *= se.getCurrentPrice();
         }
 
         float cashOutRatio =  0.75F;
         Bet bet = new Bet();
         bet.setBetId(betId);
+        bet.setBetStamp(betStamp);
         bet.setAmount(random.nextInt(5) + 5);
         bet.setSelections(actualSelections);
         bet.setTotalOdd(Precision.round(totalOdd, 2));

@@ -1,5 +1,7 @@
 package com.panos.sportmonitor.spark.pipelines.cashout;
 
+import org.apache.commons.math3.util.Precision;
+
 import java.io.Serializable;
 
 public class SelectionEvent implements Serializable {
@@ -7,20 +9,22 @@ public class SelectionEvent implements Serializable {
     private long marketId;
     private long eventId;
     private long timestamp;
-    private float price;
+    private float currentPrice;
     private boolean isEventSuspended;
     private boolean isMarketSuspended;
+    private float prevPrice;
+    private float priceDiff;
 
     public SelectionEvent() {
     }
-    public SelectionEvent(String eventId, Long timestamp, boolean isEventSuspended, String marketId, boolean isMarketSuspended, String selectionId, float price) {
+    public SelectionEvent(String eventId, Long timestamp, boolean isEventSuspended, String marketId, boolean isMarketSuspended, String selectionId, float currentPrice) {
         this.setSelectionId(Long.parseLong(selectionId));
         this.setMarketId(Long.parseLong(marketId));
         this.setEventId(Long.parseLong(eventId));
         this.setTimestamp(timestamp);
-        this.setPrice(price);
-        this.setEventSuspended(isEventSuspended);
-        this.setMarketSuspended(isMarketSuspended);
+        this.setCurrentPrice(currentPrice);
+        this.setIsEventSuspended(isEventSuspended);
+        this.setIsMarketSuspended(isMarketSuspended);
     }
 
     public long getSelectionId() {
@@ -33,18 +37,12 @@ public class SelectionEvent implements Serializable {
     public long getMarketId() {
         return marketId;
     }
-    public float getPrice() {
-        return price;
-    }
-    public boolean getIsEventSuspended() {
-        return isEventSuspended();
-    }
-    public boolean getIsMarketSuspended() {
-        return isMarketSuspended();
+    public float getCurrentPrice() {
+        return currentPrice;
     }
 
     @Override public String toString() {
-        return "SelectionEvent(eventId = " + getEventId() + ", marketId = " + getMarketId() + ", selectionId = " + getSelectionId() + ", price = " + getPrice() + ")";
+        return "SelectionEvent(eventId = " + getEventId() + ", marketId = " + getMarketId() + ", selectionId = " + getSelectionId() + ", price = " + getCurrentPrice() + ")";
     }
 
     public void setSelectionId(long selectionId) {
@@ -63,23 +61,36 @@ public class SelectionEvent implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public void setPrice(float price) {
-        this.price = price;
+    public void setCurrentPrice(float currentPrice) {
+        this.currentPrice = currentPrice;
     }
 
-    public boolean isEventSuspended() {
+    public boolean getIsEventSuspended() {
         return isEventSuspended;
     }
 
-    public void setEventSuspended(boolean eventSuspended) {
+    public void setIsEventSuspended(boolean eventSuspended) {
         isEventSuspended = eventSuspended;
     }
 
-    public boolean isMarketSuspended() {
+    public boolean getIsMarketSuspended() {
         return isMarketSuspended;
     }
 
-    public void setMarketSuspended(boolean marketSuspended) {
+    public void setIsMarketSuspended(boolean marketSuspended) {
         isMarketSuspended = marketSuspended;
+    }
+
+    public float getPrevPrice() {
+        return prevPrice;
+    }
+    public void setPrevPrice(float prevPrice) {
+        if (prevPrice != 0) {
+            this.prevPrice = prevPrice;
+            this.priceDiff = Precision.round(this.currentPrice - prevPrice, 2);
+        }
+    }
+    public float getPriceDiff() {
+        return priceDiff;
     }
 }

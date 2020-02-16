@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class Bet implements Serializable {
     private String betId;
+    private long betStamp;
     private float amount;
     private float totalOdd;
     private float totalReturn;
@@ -68,5 +69,13 @@ public class Bet implements Serializable {
 
     public void setSelections(int selections) {
         this.selections = selections;
+    }
+
+    public long getBetStamp() {
+        return betStamp;
+    }
+
+    public void setBetStamp(long betStamp) {
+        this.betStamp = betStamp;
     }
 }
