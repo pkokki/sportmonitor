@@ -40,12 +40,9 @@ public class BetGenerator {
         Bet bet = new Bet();
         bet.setBetId(betId);
         bet.setBetStamp(betStamp);
-        bet.setAmount(random.nextInt(5) + 5);
         bet.setSelections(actualSelections);
-        bet.setTotalOdd(Precision.round(totalOdd, 2));
-        bet.setTotalReturn(Precision.round(totalOdd * bet.getAmount(), 2));
-        bet.setCashOut(Precision.round(bet.getTotalReturn() * cashOutRatio, 2));
-        bet.setCashOutOdd(Precision.round(totalOdd * cashOutRatio, 2));
+        bet.setInitialPrice(Precision.round(totalOdd, 2));
+        bet.setCashOutPrice(Precision.round(totalOdd * cashOutRatio, 2));
         return new Tuple2<>(bet, selections);
     }
 

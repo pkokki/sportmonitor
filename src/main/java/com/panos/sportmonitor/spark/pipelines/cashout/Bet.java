@@ -1,18 +1,26 @@
 package com.panos.sportmonitor.spark.pipelines.cashout;
 
+import org.apache.commons.math3.util.Precision;
+
 import java.io.Serializable;
 
 public class Bet implements Serializable {
     private String betId;
     private long betStamp;
-    private float amount;
-    private float totalOdd;
-    private float totalReturn;
-    private float cashOut;
-    private float cashOutOdd;
     private int selections;
+    private double initialPrice;
+    private double cashOutPrice;
+    private double logCashOutPrice;
 
     public Bet() {
+    }
+
+    public Bet(String betId, long betStamp, int selections, double totalOdd, double cashOutOdd) {
+        this.betId = betId;
+        this.betStamp = betStamp;
+        this.selections = selections;
+        setInitialPrice(totalOdd);
+        setCashOutPrice(cashOutOdd);
     }
 
     public String getBetId() {
@@ -23,44 +31,24 @@ public class Bet implements Serializable {
         this.betId = betId;
     }
 
-    public float getAmount() {
-        return amount;
+    public double getInitialPrice() {
+        return initialPrice;
     }
 
-    public void setAmount(float amount) {
-        this.amount = amount;
+    public void setInitialPrice(double initialPrice) {
+        this.initialPrice = Precision.round(initialPrice, 2);
     }
 
-    public float getTotalReturn() {
-        return totalReturn;
+    public double getCashOutPrice() {
+        return cashOutPrice;
+    }
+    public double getLogCashOutPrice() {
+        return logCashOutPrice;
     }
 
-    public void setTotalReturn(float totalReturn) {
-        this.totalReturn = totalReturn;
-    }
-
-    public float getCashOut() {
-        return cashOut;
-    }
-
-    public void setCashOut(float cashOut) {
-        this.cashOut = cashOut;
-    }
-
-    public float getTotalOdd() {
-        return totalOdd;
-    }
-
-    public void setTotalOdd(float totalOdd) {
-        this.totalOdd = totalOdd;
-    }
-
-    public float getCashOutOdd() {
-        return cashOutOdd;
-    }
-
-    public void setCashOutOdd(float cashOutOdd) {
-        this.cashOutOdd = cashOutOdd;
+    public void setCashOutPrice(double cashOutPrice) {
+        this.cashOutPrice = Precision.round(cashOutPrice, 2);
+        this.logCashOutPrice = Math.log(cashOutPrice);
     }
 
     public int getSelections() {

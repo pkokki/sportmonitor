@@ -3,10 +3,9 @@ package com.panos.sportmonitor.spark.pipelines.cashout;
 import com.google.common.collect.Lists;
 import com.panos.sportmonitor.spark.pipelines.sessions.sources.KafkaOverviewSource;
 import org.apache.spark.api.java.Optional;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.functions;
+import org.apache.spark.api.java.function.MapFunction;
+import org.apache.spark.broadcast.Broadcast;
+import org.apache.spark.sql.*;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.State;
 import org.apache.spark.streaming.StateSpec;
@@ -22,7 +21,6 @@ import scala.collection.JavaConversions;
 
 import static org.apache.spark.sql.functions.col;
 
-import java.time.Duration;
 import java.util.*;
 
 @Service
@@ -33,6 +31,7 @@ public class CashOutPipeline implements Serializable {
     public void run(SparkSession spark, JavaStreamingContext streamingContext) {
         LongAccumulator betsAccum = streamingContext.sparkContext().sc().longAccumulator();
         LongAccumulator betSelectionsAccum = streamingContext.sparkContext().sc().longAccumulator();
+        Broadcast<List<String>> cashedOutBetsVar = streamingContext.sparkContext().broadcast(new ArrayList<>());
 
         JavaDStream<SelectionEvent> currentSelectionsStream = kafkaOverviewSource
                 .run(streamingContext)
@@ -40,9 +39,9 @@ public class CashOutPipeline implements Serializable {
                     List<SelectionEvent> list = new ArrayList<>();
                     e.getMarkets().forEach(m -> m.getSelections().forEach(s -> {
                         list.add(new SelectionEvent(
-                                e.getId(), e.getTimestamp(), e.getIsSuspended(),
-                                m.getId(), m.getIsSuspended(),
-                                s.getId(), s.getPrice()
+                                        e.getId(), e.getTimestamp(), e.getIsSuspended(),
+                                        m.getId(), m.getIsSuspended(),
+                                        s.getId(), s.getPrice()
                                 )
                         );
                     }));
@@ -53,81 +52,84 @@ public class CashOutPipeline implements Serializable {
                 .filter(Objects::nonNull);
 
         currentSelectionsStream.foreachRDD((rdd, time) -> {
-            rdd.cache();
+            if (rdd.isEmpty())
+                return;
 
             // Generate random bets
-            List<SelectionEvent> odds = rdd
-                    .filter(e -> !e.getIsEventSuspended() && !e.getIsMarketSuspended())
-                    .collect();
-            Tuple2<List<Bet>, List<BetSelection>> result = BetGenerator.createBetSlips(odds, 2); //rdd.count());
-            appendOrCreateView(spark, "bets", spark.createDataFrame(result._1, Bet.class));
-            appendOrCreateView(spark, "betSelections", spark.createDataFrame(result._2, BetSelection.class));
-            int newBets = result._1.size();
-            betsAccum.add(newBets);
-            betSelectionsAccum.add(result._2.size());
-            //System.out.println(String.format("Generate %d random bets (totals: %d %d): %s",
-            //        newBets,
-            //        betsAccum.value(),
-            //        betSelectionsAccum.value(),
-            //        new Time(new Date().getTime()).minus(time)));
+            if (!spark.catalog().tableExists("bets")) {
+                int BETS = 20000;
+                List<SelectionEvent> odds = rdd
+                        .filter(s -> s.getIsActive())
+                        .collect();
+                Tuple2<List<Bet>, List<BetSelection>> result = BetGenerator.createBetSlips(odds, BETS);
+                appendOrCreateView(spark, "bets", spark.createDataFrame(result._1, Bet.class), time);
+                appendOrCreateView(spark, "betSelections", spark.createDataFrame(result._2, BetSelection.class), time);
+                betsAccum.add(result._1.size());
+                betSelectionsAccum.add(result._2.size());
+            }
 
-            // Current selections
-            Dataset<Row> currentSelectionsDF = spark.createDataFrame(rdd, SelectionEvent.class);
+            // Cache RDD
+            rdd.cache();
+
             // Changed selections
-            Dataset<Row> changedSelectionsDF = currentSelectionsDF.filter(col("priceDiff").notEqual(0F));
-            // All generated bets
-            Dataset<Row> betsDF = spark.table("bets");
-            // All generated bet selections
-            Dataset<Row> betSelectionsDF = spark.table("betSelections");
-            // Bets with changes
-            Dataset<Row> betsWithChangesDF = changedSelectionsDF
-                    .join(betSelectionsDF, "selectionId")
-                    .select("betId")
-                    .distinct()
-                    .join(betsDF, "betId")
-                    .join(betSelectionsDF, "betId")
-                    .join(currentSelectionsDF, "selectionId")
-                    ;
-            //System.out.println(String.format("Bets with changes: %s", new Time(new Date().getTime()).minus(time)));
+            Dataset<Row> changedSelectionsDF = spark.createDataFrame(rdd, SelectionEvent.class);
 
-            // Find bets to auto cashout
-            Dataset<Row> betsToCashOutDF = betsWithChangesDF
-                    .select("betId", "currentPrice")
-                    .groupBy("betId")
-                    .agg(functions.exp(functions.sum(functions.log(col("currentPrice")))).as("currentOdd"))
-                    .join(betsDF, "betId")
-                    .withColumn("autoCashOut", col("currentOdd").minus(col("cashOutOdd")).leq(0))
-                    .filter(col("autoCashOut").equalTo(true))
-                    .join(betSelectionsDF, "betId")
-                    .join(currentSelectionsDF, "selectionId")
-                    .orderBy("betId")
+            // All generated bets (except already cached out) and bet selections
+            Dataset<Row> betsDF = spark.table("bets")
+                    .select("betId", "betStamp", "selections", "initialPrice", "cashOutPrice", "logCashOutPrice")
+                    .filter(functions.not(col("betId").isInCollection(cashedOutBetsVar.value())))
+                    .join(spark
+                            .table("betSelections")
+                            .select("betId", "selectionId", "price", "logPrice")
+                            , "betId")
+                    .cache();
                     ;
-            betsToCashOutDF.show();
-            System.out.println(String.format("Find bets (total=%d, selections=%d) to auto cashout: %s",
-                    betsAccum.value(),
-                    betSelectionsAccum.value(),
-                    new Time(new Date().getTime()).minus(time)));
 
+            // Query to find bets to cashout
+            Dataset<Row> betsToCashOutDF = betsDF
+                    .join(functions.broadcast(changedSelectionsDF.filter(col("priceDiff").leq(0))),
+                            JavaConversions.asScalaBuffer(Lists.newArrayList("selectionId")), "left_outer")
+                    .withColumn("logCurrentPrice", functions.coalesce(col("logCurrentPrice"), col("logPrice")))
+                    .groupBy("betId", "logCashOutPrice")
+                    .agg(functions.sum(col("logCurrentPrice")).as("logCurrentTotal"))
+                    .filter(col("logCurrentTotal").leq(col("logCashOutPrice")))
+                    ;
+
+            // Output
+            if (betsToCashOutDF.isEmpty()) {
+                System.out.println(String.format("No bets found to auto cashout in %s.",
+                        new Time(new Date().getTime()).minus(time)));
+            } else {
+                List<String> betIds = betsToCashOutDF
+                        .select("betId")
+                        .distinct()
+                        .map((MapFunction<Row, String>) r -> r.getString(0), Encoders.STRING())
+                        .collectAsList();
+                cashedOutBetsVar.value().addAll(betIds);
+
+                System.out.println(String.format("Found %d new cashouts (total=%d out of %d bets with %d selections) in %s.",
+                        betsToCashOutDF.count(),
+                        cashedOutBetsVar.value().size(),
+                        betsAccum.value(),
+                        betSelectionsAccum.value(),
+                        new Time(new Date().getTime()).minus(time)));
+                betsDF
+                        .drop("logCashOutPrice", "logPrice")
+                        //.select("betId", "betStamp", "selections", "initialPrice", "cashOutPrice", "selectionId", "price")
+                        .filter(col("betId").isInCollection(betIds))
+                        .join(functions.broadcast(changedSelectionsDF
+                                        .select("selectionId", "eventId", "marketId", "timestamp", "isActive", "prevPrice", "currentPrice", "priceDiff")),
+                                JavaConversions.asScalaBuffer(Lists.newArrayList("selectionId")), "left_outer")
+                        .orderBy("betId")
+                        .show();
+            }
+
+            // Remove RDD from cache
             rdd.unpersist();
         });
-
-        System.out.println("CashOutPipeline is running");
     }
 
-    private static void mergeView(SparkSession spark, String viewName, Dataset<Row> newData, String usingColumn) {
-        if (spark.catalog().tableExists(viewName)) {
-            spark.table(viewName)
-                    .join(newData, JavaConversions.asScalaBuffer(Lists.newArrayList(usingColumn)), "left_anti")
-                    .union(newData)
-                    .createOrReplaceTempView(viewName);
-        }
-        else {
-            newData.createOrReplaceTempView(viewName);
-            System.out.println(String.format("TempView %s created with %d rows", viewName, newData.count()));
-        }
-    }
-
-    private static void appendOrCreateView(SparkSession spark, String viewName, Dataset<Row> newData) {
+    private static void appendOrCreateView(SparkSession spark, String viewName, Dataset<Row> newData, Time time) {
         if (spark.catalog().tableExists(viewName)) {
             Dataset<Row> existingData = spark.table(viewName);
             Dataset<Row> union = existingData.union(newData);
@@ -136,16 +138,19 @@ public class CashOutPipeline implements Serializable {
         }
         else {
             newData.createOrReplaceTempView(viewName);
-            System.out.println(String.format("TempView %s created with %d rows", viewName, newData.count()));
+            System.out.println(String.format("TempView %s created with %d rows in %s",
+                    viewName,
+                    newData.count(),
+                    new Time(new Date().getTime()).minus(time)));
         }
     }
 
-    private static SelectionEvent selectionEventMapping(long selectionId, Optional<SelectionEvent> newSelection, State<Float> state) {
+    private static SelectionEvent selectionEventMapping(long selectionId, Optional<SelectionEvent> newSelection, State<Double> state) {
         if (!state.isTimingOut() && newSelection.isPresent()) {
             SelectionEvent newEvent = newSelection.get();
-            float newPrice = newEvent.getCurrentPrice();
+            double newPrice = newEvent.getCurrentPrice();
             if (state.exists()) {
-                float prevPrice = state.get();
+                double prevPrice = state.get();
                 if (prevPrice != newPrice) {
                     state.update(newPrice);
                     newEvent.setPrevPrice(prevPrice);

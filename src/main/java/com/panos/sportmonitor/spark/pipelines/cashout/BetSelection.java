@@ -1,15 +1,18 @@
 package com.panos.sportmonitor.spark.pipelines.cashout;
 
+import org.apache.commons.math3.util.Precision;
+
 import java.io.Serializable;
 
 public class BetSelection implements Serializable {
     private String betId;
     private long selectionId;
-    private float price;
+    private double price;
+    private double logPrice;
 
     public BetSelection() {
     }
-    public BetSelection(String betId, long selectionId, float price) {
+    public BetSelection(String betId, long selectionId, double price) {
         this.setBetId(betId);
         this.setSelectionId(selectionId);
         this.setPrice(price);
@@ -23,12 +26,16 @@ public class BetSelection implements Serializable {
         this.selectionId = selectionId;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
+    public double getLogPrice() {
+        return logPrice;
+    }
 
-    public void setPrice(float price) {
-        this.price = price;
+    public void setPrice(double price) {
+        this.price = Precision.round(price, 2);
+        this.logPrice = Math.log(price);
     }
 
     public String getBetId() {
