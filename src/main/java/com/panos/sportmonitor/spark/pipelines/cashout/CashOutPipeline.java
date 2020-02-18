@@ -1,6 +1,11 @@
 package com.panos.sportmonitor.spark.pipelines.cashout;
 
 import com.google.common.collect.Lists;
+import com.panos.sportmonitor.spark.PostgresHelper;
+import com.panos.sportmonitor.spark.pipelines.overview.EventMasterData;
+import com.panos.sportmonitor.spark.pipelines.overview.EventRecord;
+import com.panos.sportmonitor.spark.pipelines.overview.MarketRecord;
+import com.panos.sportmonitor.spark.pipelines.sessions.models.RawOverviewEvent;
 import com.panos.sportmonitor.spark.pipelines.sessions.sources.KafkaOverviewSource;
 import org.apache.spark.api.java.Optional;
 import org.apache.spark.api.java.function.MapFunction;
@@ -19,9 +24,9 @@ import scala.Serializable;
 import scala.Tuple2;
 import scala.collection.JavaConversions;
 
-import static org.apache.spark.sql.functions.col;
-
 import java.util.*;
+
+import static org.apache.spark.sql.functions.*;
 
 @Service
 public class CashOutPipeline implements Serializable {
@@ -29,6 +34,90 @@ public class CashOutPipeline implements Serializable {
     private KafkaOverviewSource kafkaOverviewSource;
 
     public void run(SparkSession spark, JavaStreamingContext streamingContext) {
+        JavaDStream<RawOverviewEvent> rawEvents = kafkaOverviewSource
+                .run(streamingContext);
+
+        rawEvents
+                .flatMap(e -> {
+                    List<SelectionEvent> list = new ArrayList<>();
+                    e.getMarkets().forEach(m -> m.getSelections().forEach(s -> {
+                        list.add(new SelectionEvent(
+                                        e.getId(), e.getTimestamp(), e.getIsSuspended(),
+                                        m.getId(), m.getIsSuspended(),
+                                        s.getId(), s.getDescription(), s.getPrice()
+                                )
+                        );
+                    }));
+                    return list.iterator();
+                })
+                .mapToPair(e -> new Tuple2<>(e.getSelectionId(), e))
+                .mapWithState(StateSpec.function(CashOutPipeline::selectionEventMapping).timeout(Durations.minutes(120)))
+                .filter(Objects::nonNull)
+                .foreachRDD(rdd -> {
+                    if (rdd.isEmpty())
+                        return;
+
+                    // Overwrite active_selections
+                    Dataset<Row> activeSelections = spark.createDataFrame(rdd, SelectionEvent.class);
+                    //activeSelections.show();
+                    Arrays.stream(activeSelections.columns()).forEach(col -> activeSelections.withColumnRenamed(col, col.toLowerCase()));
+                    PostgresHelper.overwriteDataset(activeSelections, "active_selections");
+                    System.out.println(String.format("There are %d active selections.", activeSelections.count()));
+
+                    // Generate random bets
+                    final int BETS = 100;
+                    List<SelectionEvent> odds = rdd
+                            .filter(SelectionEvent::getIsActive)
+                            .collect();
+                    Tuple2<List<Bet>, List<BetSelection>> result = BetGenerator.createBetSlips(odds, BETS);
+                    Dataset<Row> bets = spark.createDataFrame(result._1, Bet.class);
+                    Arrays.stream(bets.columns()).forEach(c -> bets.withColumnRenamed(c, c.toLowerCase()));
+                    PostgresHelper.appendDataset(bets, "bets");
+
+                    Dataset<Row> betSelections = spark.createDataFrame(result._2, BetSelection.class);
+                    Arrays.stream(betSelections.columns()).forEach(c -> betSelections.withColumnRenamed(c, c.toLowerCase()));
+                    PostgresHelper.appendDataset(betSelections, "bet_selections");
+
+                    System.out.println(String.format("Generated %d random bets.", result._1.size()));
+                });
+
+        rawEvents
+                .mapToPair(e -> new Tuple2<>(e.getId(), e))
+                .mapWithState(StateSpec.function(CashOutPipeline::onlyOneEventSpec))
+                .filter(r -> r.isPresent())
+                .map(r -> new EventMasterData(r.get()))
+                .foreachRDD(rdd -> {
+                    Dataset<Row> ds = spark.createDataFrame(rdd, EventMasterData.class);
+                    PostgresHelper.appendDataset(ds, "event_master_data");
+                });
+
+        // Append to db event_data
+        rawEvents
+                .map(e -> new EventRecord(e))
+                .foreachRDD(rdd -> {
+                    if (!rdd.isEmpty()) {
+                        Dataset<Row> ds = spark.createDataFrame(rdd, EventRecord.class);
+                        PostgresHelper.appendDataset(ds, "event_data");
+                    }
+                });
+        // Append to db market_data
+        rawEvents
+                .flatMap(e -> {
+                    List<MarketRecord> list = new ArrayList<>();
+                    e.getMarkets().forEach(m -> list.add(new MarketRecord(e.getId(), e.getTimestamp(), m)));
+                    return list.iterator();
+                })
+                .foreachRDD(rdd -> {
+                    if (!rdd.isEmpty()) {
+                        Dataset<Row> ds = spark.createDataFrame(rdd, MarketRecord.class);
+                        PostgresHelper.appendDataset(ds, "market_data");
+                    }
+                });
+
+        System.out.println("CashOutPipeline is running");
+    }
+
+    public void run_v1(SparkSession spark, JavaStreamingContext streamingContext) {
         LongAccumulator betsAccum = streamingContext.sparkContext().sc().longAccumulator();
         LongAccumulator betSelectionsAccum = streamingContext.sparkContext().sc().longAccumulator();
         Broadcast<List<String>> cashedOutBetsVar = streamingContext.sparkContext().broadcast(new ArrayList<>());
@@ -41,7 +130,7 @@ public class CashOutPipeline implements Serializable {
                         list.add(new SelectionEvent(
                                         e.getId(), e.getTimestamp(), e.getIsSuspended(),
                                         m.getId(), m.getIsSuspended(),
-                                        s.getId(), s.getPrice()
+                                        s.getId(), s.getDescription(), s.getPrice()
                                 )
                         );
                     }));
@@ -153,8 +242,8 @@ public class CashOutPipeline implements Serializable {
                 double prevPrice = state.get();
                 if (prevPrice != newPrice) {
                     state.update(newPrice);
-                    newEvent.setPrevPrice(prevPrice);
                 }
+                newEvent.setPrevPrice(prevPrice);
             }
             else {
                 state.update(newPrice);
@@ -162,5 +251,15 @@ public class CashOutPipeline implements Serializable {
             return newEvent;
         }
         return null;
+    }
+
+    private static Optional<RawOverviewEvent> onlyOneEventSpec(String id, Optional<RawOverviewEvent> item, State<String> state) {
+        if (state.isTimingOut() || state.exists()) {
+            return Optional.empty();
+        }
+        else {
+            state.update(id);
+            return item;
+        }
     }
 }

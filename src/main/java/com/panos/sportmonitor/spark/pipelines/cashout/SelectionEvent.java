@@ -15,17 +15,19 @@ public class SelectionEvent implements Serializable {
     private double currentPrice;
     private double logCurrentPrice;
     private double priceDiff;
+    private String description;
 
     public SelectionEvent() {
     }
 
-    public SelectionEvent(String eventId, Long timestamp, boolean isEventSuspended, String marketId, boolean isMarketSuspended, String selectionId, double currentPrice, double prevPrice) {
-        this(eventId, timestamp, isEventSuspended, marketId, isMarketSuspended, selectionId, currentPrice);
+    public SelectionEvent(String eventId, Long timestamp, boolean isEventSuspended, String marketId, boolean isMarketSuspended, String selectionId, String description, double currentPrice, double prevPrice) {
+        this(eventId, timestamp, isEventSuspended, marketId, isMarketSuspended, selectionId, description, currentPrice);
         this.setPrevPrice(prevPrice);
     }
 
-    public SelectionEvent(String eventId, Long timestamp, boolean isEventSuspended, String marketId, boolean isMarketSuspended, String selectionId, double currentPrice) {
+    public SelectionEvent(String eventId, Long timestamp, boolean isEventSuspended, String marketId, boolean isMarketSuspended, String selectionId, String description, double currentPrice) {
         this.setSelectionId(Long.parseLong(selectionId));
+        this.setDescription(description);
         this.setMarketId(Long.parseLong(marketId));
         this.setEventId(Long.parseLong(eventId));
         this.setTimestamp(timestamp);
@@ -96,5 +98,13 @@ public class SelectionEvent implements Serializable {
     }
     public double getPriceDiff() {
         return priceDiff;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

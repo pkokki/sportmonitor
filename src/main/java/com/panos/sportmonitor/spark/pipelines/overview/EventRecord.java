@@ -1,6 +1,7 @@
 package com.panos.sportmonitor.spark.pipelines.overview;
 
 import com.panos.sportmonitor.common.Event;
+import com.panos.sportmonitor.spark.pipelines.sessions.models.RawOverviewEvent;
 
 import java.io.Serializable;
 
@@ -15,6 +16,17 @@ public class EventRecord implements Serializable {
     private Integer awayRedCards;
 
     public EventRecord(Event e) {
+        this.eventId = Long.parseLong(e.getId());
+        this.timestamp = e.getTimestamp();
+        this.clockTime = e.getClockTime();
+        this.isSuspended = e.getIsSuspended();
+        this.homeScore = e.getHomeScore();
+        this.homeRedCards = e.getHomeRedCards();
+        this.awayScore = e.getAwayScore();
+        this.awayRedCards = e.getAwayRedCards();
+    }
+
+    public EventRecord(RawOverviewEvent e) {
         this.eventId = Long.parseLong(e.getId());
         this.timestamp = e.getTimestamp();
         this.clockTime = e.getClockTime();

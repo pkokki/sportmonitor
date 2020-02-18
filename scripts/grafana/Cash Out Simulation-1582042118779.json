@@ -1,0 +1,139 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 2,
+  "links": [],
+  "panels": [
+    {
+      "columns": [],
+      "datasource": null,
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {},
+      "pageSize": null,
+      "showHeader": true,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
+      "styles": [
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "/.*price/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "delta",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT b.betid, b.betstamp, \r\n       b.initialprice AS totalBetPrice, \r\n       b.cashoutprice,\r\n       r.active_bet_price AS activePrice,\r\n       b.selections, \r\n       a.eventid || ': ' || COALESCE(me.title, '?') as event,\r\n       a.marketid || ': ' || COALESCE(m.description, '?') as market, \r\n       bs.selectionid || ': ' || COALESCE(a.description, '?') as selection, \r\n       --a.timestamp, \r\n       a.isactive,\r\n       bs.price AS oddPrice,\r\n       a.prevprice, a.currentprice, a.pricediff as delta, a.currentprice - bs.price AS diffPrice\r\nFROM bets AS b\r\n  INNER JOIN\r\n    (\r\n      SELECT  b.betid\r\n              --, EXP(b.logcashoutprice) as target_bet_price\r\n              , EXP(SUM(a.logcurrentprice)) as active_bet_price \r\n              --, COUNT(bs.selectionid) as total_bet_selections\r\n              --, COUNT(CASE WHEN a.isactive THEN 1 END) AS active_bet_selections\r\n      FROM bets AS b\r\n          INNER JOIN bet_selections AS bs ON b.betid = bs.betid\r\n          LEFT JOIN active_selections AS a ON bs.selectionid = a.selectionid\r\n      GROUP BY b.betid\r\n      HAVING COUNT(bs.selectionid) = COUNT(CASE WHEN a.isactive THEN 1 END)\r\n             AND SUM(a.logcurrentprice) < b.logcashoutprice\r\n    ) AS r ON b.betid = r.betid\r\n  INNER JOIN bet_selections AS bs ON b.betid = bs.betid\r\n  LEFT JOIN active_selections AS a ON bs.selectionid = a.selectionid\r\n  LEFT JOIN event_master_data AS me ON a.eventid = me.eventid\r\n  LEFT JOIN market_data AS m ON a.timestamp = m.timestamp AND a.marketid = m.marketid\r\nORDER BY b.betid",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "currentprice"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "active_selections",
+          "timeColumn": "currentprice",
+          "timeColumnType": "float4",
+          "where": [
+            {
+              "name": "$__unixEpochFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Bets to cashout",
+      "transform": "table",
+      "type": "table"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 21,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "2020-02-18T14:47:56.786Z",
+    "to": "2020-02-18T16:47:56.786Z"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "",
+  "title": "Cash Out Simulation",
+  "uid": "tVvN4dwWk",
+  "version": 11
+}

@@ -1,6 +1,7 @@
 package com.panos.sportmonitor.spark.pipelines.overview;
 
 import com.panos.sportmonitor.common.Market;
+import com.panos.sportmonitor.spark.pipelines.sessions.models.RawOverviewMarket;
 
 import java.io.Serializable;
 
@@ -14,6 +15,16 @@ public class MarketRecord implements Serializable {
     private Float handicap;
 
     public MarketRecord(String eventId, Long timestamp, Market market) {
+        this.marketId = Long.parseLong(market.getId());
+        this.eventId = Long.parseLong(eventId);
+        this.timestamp = timestamp;
+        this.description = market.getDescription();
+        this.type = market.getType();
+        this.handicap = market.getHandicap();
+        this.isSuspended = market.getIsSuspended();
+    }
+
+    public MarketRecord(String eventId, Long timestamp, RawOverviewMarket market) {
         this.marketId = Long.parseLong(market.getId());
         this.eventId = Long.parseLong(eventId);
         this.timestamp = timestamp;

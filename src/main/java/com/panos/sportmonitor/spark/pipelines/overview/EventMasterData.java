@@ -1,6 +1,7 @@
 package com.panos.sportmonitor.spark.pipelines.overview;
 
 import com.panos.sportmonitor.common.Event;
+import com.panos.sportmonitor.spark.pipelines.sessions.models.RawOverviewEvent;
 
 import java.io.Serializable;
 
@@ -21,6 +22,23 @@ public class EventMasterData implements Serializable {
     private String awayTeam;
 
     public EventMasterData(Event e) {
+        this.eventId = e.getEventId();
+        this.regionId = e.getRegionId();
+        this.regionName = e.getRegionName();
+        this.leagueId = e.getLeagueId();
+        this.leagueName = e.getLeagueName();
+        this.betRadarId = e.getBetRadarId();
+        this.betRadarLink = e.getBetRadarLink();
+        this.shortTitle = e.getShortTitle();
+        this.title = e.getTitle();
+        this.startTime = e.getStartTime();
+        this.startTimeTicks = e.getStartTimeTicks();
+        this.liveEventLink = e.getLiveEventLink();
+        this.homeTeam = e.getHomeTeam();
+        this.awayTeam = e.getAwayTeam();
+    }
+
+    public EventMasterData(RawOverviewEvent e) {
         this.eventId = e.getEventId();
         this.regionId = e.getRegionId();
         this.regionName = e.getRegionName();

@@ -45,4 +45,5 @@ public class BetSelection implements Serializable {
     public void setBetId(String betId) {
         this.betId = betId;
     }
+
 }
