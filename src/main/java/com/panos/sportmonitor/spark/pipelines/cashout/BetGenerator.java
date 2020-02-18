@@ -32,7 +32,7 @@ public class BetGenerator {
         while (it.hasNext()) {
             SelectionEvent se = odds.get(it.next());
             betStamp = Long.min(betStamp, se.getTimestamp());
-            selections.add(new BetSelection(betId, se.getSelectionId(), se.getDescription(), se.getCurrentPrice()));
+            selections.add(new BetSelection(betId, se.getSelectionId(), se.getCurrentPrice()));
             totalOdd *= se.getCurrentPrice();
         }
 
