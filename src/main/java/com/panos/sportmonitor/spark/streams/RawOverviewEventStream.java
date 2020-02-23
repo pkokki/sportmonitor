@@ -1,6 +1,7 @@
 package com.panos.sportmonitor.spark.streams;
 
 import com.panos.sportmonitor.spark.dto.*;
+import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.Optional;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.State;
@@ -18,9 +19,13 @@ public class RawOverviewEventStream extends AbstractJavaStream<RawOverviewEvent>
     }
 
     public EventMasterDataStream createEventMasterDataStream() {
+        JavaPairRDD<String, String> initialRDD = null;
         JavaDStream<EventMasterData> stream = this
                 .mapToPair(e -> new Tuple2<>(e.getId(), e))
-                .mapWithState(StateSpec.function(RawOverviewEventStream::onlyOneEventSpec))
+                .mapWithState(StateSpec
+                        .function(RawOverviewEventStream::onlyOneEventSpec)
+                        //.initialState(initialRDD)
+                )
                 .filter(Optional::isPresent)
                 .map(r -> r.get())
                 .map(r -> new EventMasterData(
@@ -36,7 +41,7 @@ public class RawOverviewEventStream extends AbstractJavaStream<RawOverviewEvent>
         return new EventMasterDataStream(stream);
     }
 
-    private static Optional<RawOverviewEvent> onlyOneEventSpec(String id, Optional<RawOverviewEvent> item, State<String> state) {
+    public static Optional<RawOverviewEvent> onlyOneEventSpec(String id, Optional<RawOverviewEvent> item, State<String> state) {
         if (state.isTimingOut() || state.exists()) {
             return Optional.empty();
         }

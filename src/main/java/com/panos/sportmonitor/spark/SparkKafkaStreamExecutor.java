@@ -8,6 +8,7 @@ import com.panos.sportmonitor.spark.streams.RawOverviewEventStream;
 import com.panos.sportmonitor.spark.streams.RawRadarEventStream;
 import com.panos.sportmonitor.spark.util.PostgresHelper;
 import com.panos.sportmonitor.spark.util.SparkStreamingListener;
+import com.panos.sportmonitor.spark.util.TempViewHelper;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.streaming.Duration;
@@ -60,8 +61,6 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
         SparkSession spark = SparkSession.builder()
                 .master(masterUrl)
                 .appName(appName)
-                .config("spark.executor.extraJavaOptions", "-Dlog4j.configuration=spark-log4j.properties")
-                .config("spark.driver.extraJavaOptions",   "-Dlog4j.configuration=spark-log4j.properties")
                 .getOrCreate();
         JavaSparkContext jsc = new JavaSparkContext(spark.sparkContext());
 
@@ -74,6 +73,8 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
         streamingContext.addStreamingListener(listener);
         // Postgres
         PostgresHelper.init();
+        // TempView
+        TempViewHelper.init();
 
         // Source streams
         RawOverviewEventStream rawOverviewEventStream = kafkaOverviewSource.createRawOverviewEventStream(streamingContext);

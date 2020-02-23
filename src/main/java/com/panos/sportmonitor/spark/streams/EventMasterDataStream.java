@@ -24,9 +24,9 @@ public class EventMasterDataStream extends AbstractJavaStream<EventMasterData> {
             SparkSession spark = SparkSession.active();
             Dataset<Row> currentEvents = spark.createDataFrame(rdd, EventMasterData.class);
             if (!spark.catalog().tableExists("tmp_current_events")) {
-                long minStartTimeTicks = time.minus(Durations.minutes(120)).milliseconds();
-                Dataset<Row> dbEvents = PostgresHelper.readQuery(spark,
-                        String.format("select eventid, starttimeticks from event_master_data where starttimeticks >= %d", minStartTimeTicks));
+                long minStartTimeTicks = time.minus(Durations.minutes(120)).milliseconds() / 1000;
+                String query = String.format("select eventid, starttimeticks from event_master_data where starttimeticks >= %d", minStartTimeTicks);
+                Dataset<Row> dbEvents = PostgresHelper.readQuery(spark, query);
                 TempViewHelper.appendOrCreateView("tmp_current_events", dbEvents, time);
                 //System.out.println(String.format("Created tmp_current_events with %d rows", dbEvents.count()));
             }

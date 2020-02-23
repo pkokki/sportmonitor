@@ -1,12 +1,19 @@
 package com.panos.sportmonitor.spark.pipelines;
 
+import com.panos.sportmonitor.spark.dto.EventMasterData;
+import com.panos.sportmonitor.spark.dto.RawOverviewEvent;
 import com.panos.sportmonitor.spark.dto.SelectionData;
 import com.panos.sportmonitor.spark.streams.*;
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.Optional;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.streaming.StateSpec;
+import org.apache.spark.streaming.api.java.JavaDStream;
 import org.springframework.stereotype.Service;
 import scala.Serializable;
+import scala.Tuple2;
 
 @Service
 public class RawOverviewEventPipeline implements Serializable {
@@ -35,7 +42,6 @@ public class RawOverviewEventPipeline implements Serializable {
         EventScoreChangeStream eventScoreChangeStream = eventData.createEventScoreChangeStream();
         eventScoreChangeStream.output(eventScoreChangeStream::appendToEventScoreChangesTable);
     }
-
 }
 /*
     public void run_v2(SparkSession spark, JavaStreamingContext streamingContext) {

@@ -8,6 +8,9 @@ import org.apache.spark.streaming.Time;
 import java.util.Date;
 
 public class TempViewHelper {
+    public static void init() {
+    }
+
     public static void appendOrCreateView(String viewName, Dataset<Row> newData, Time time) {
         SparkSession spark = SparkSession.active();
         if (spark.catalog().tableExists(viewName)) {
