@@ -1,6 +1,6 @@
 package com.panos.sportmonitor.webapi.kafka;
 
-import com.panos.sportmonitor.common.Event;
+import com.panos.sportmonitor.webapi.Event;
 import com.panos.sportmonitor.webapi.EventSerializer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

@@ -1,8 +1,10 @@
 package com.panos.sportmonitor.spark.pipelines.sessions;
 
+import com.panos.sportmonitor.spark.dto.RawOverviewEvent;
+import com.panos.sportmonitor.spark.dto.RawRadarEvent;
 import com.panos.sportmonitor.spark.pipelines.sessions.models.*;
-import com.panos.sportmonitor.spark.pipelines.sessions.sources.KafkaOverviewSource;
-import com.panos.sportmonitor.spark.pipelines.sessions.sources.KafkaRadarSource;
+import com.panos.sportmonitor.spark.sources.KafkaOverviewSource;
+import com.panos.sportmonitor.spark.sources.KafkaRadarSource;
 import org.apache.spark.api.java.Optional;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.streaming.Durations;
@@ -29,7 +31,7 @@ public class SessionPipeline {
 
     public void run(SparkSession spark, JavaStreamingContext streamingContext) {
         // Sources
-        JavaDStream<RawOverviewEvent> rawOverviewEvents = kafkaOverviewSource.run(streamingContext);
+        JavaDStream<RawOverviewEvent> rawOverviewEvents = kafkaOverviewSource.createRawOverviewEventStream(streamingContext);
         JavaDStream<RawRadarEvent> rawRadarEvents = kafkaRadarSource.run(streamingContext);
 
         // Processors

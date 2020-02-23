@@ -1,6 +1,8 @@
 package com.panos.sportmonitor.spark.pipelines.sessions.models;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.panos.sportmonitor.spark.dto.RawOverviewEvent;
+import com.panos.sportmonitor.spark.dto.RawRadarEvent;
 
 public class MatchRadarEventFactory {
     public static MatchEvent create(RawRadarEvent raw) {

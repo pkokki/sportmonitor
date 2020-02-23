@@ -1,7 +1,7 @@
 package com.panos.sportmonitor.spark.pipelines.radar;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.panos.sportmonitor.spark.PostgresHelper;
+import com.panos.sportmonitor.spark.util.PostgresHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.sql.Dataset;

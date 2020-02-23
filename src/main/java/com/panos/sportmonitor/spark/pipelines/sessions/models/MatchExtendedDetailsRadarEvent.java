@@ -1,5 +1,7 @@
 package com.panos.sportmonitor.spark.pipelines.sessions.models;
 
+import com.panos.sportmonitor.spark.dto.RawRadarEvent;
+
 public class MatchExtendedDetailsRadarEvent extends MatchEvent {
     private String key;
     private Integer home;

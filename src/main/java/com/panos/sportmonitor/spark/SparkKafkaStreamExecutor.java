@@ -1,13 +1,18 @@
 package com.panos.sportmonitor.spark;
 
-import com.panos.sportmonitor.spark.pipelines.cashout.CashOutPipeline;
-import com.panos.sportmonitor.spark.pipelines.overview.PipelineOverview;
-import com.panos.sportmonitor.spark.pipelines.radar.PipelineRadar;
-import com.panos.sportmonitor.spark.pipelines.sessions.SessionPipeline;
+import com.panos.sportmonitor.spark.pipelines.RawOverviewEventPipeline;
+import com.panos.sportmonitor.spark.pipelines.RawRadarEventPipeline;
+import com.panos.sportmonitor.spark.sources.KafkaRadarSource;
+import com.panos.sportmonitor.spark.sources.KafkaOverviewSource;
+import com.panos.sportmonitor.spark.streams.RawOverviewEventStream;
+import com.panos.sportmonitor.spark.streams.RawRadarEventStream;
+import com.panos.sportmonitor.spark.util.PostgresHelper;
+import com.panos.sportmonitor.spark.util.SparkStreamingListener;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
+import org.apache.spark.streaming.scheduler.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +28,7 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
     private static final Logger log = LoggerFactory.getLogger(SparkKafkaStreamExecutor.class);
 
     @Value("${spark.batch-duration-millis}")
-    private Long batchDurationMillis;
+    private long batchDurationMillis;
     @Value("${spark.checkpoint-directory}")
     private String checkpointDir;
     @Value("${spark.log-level}")
@@ -32,26 +37,22 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
     private String appName;
     @Value("${spark.master-url}")
     private String masterUrl;
-    @Value("${spark.overview}")
-    private Boolean sparkOverview;
-    @Value("${spark.radar}")
-    private Boolean sparkRadar;
-    @Value("${spark.session}")
-    private Boolean sparkSession;
-    @Value("${spark.cash-out}")
-    private Boolean sparkCashOut;
+
 
     @Autowired
-    private PipelineRadar pipelineRadar;
+    private KafkaOverviewSource kafkaOverviewSource;
     @Autowired
-    private PipelineOverview pipelineOverview;
+    private KafkaRadarSource kafkaRadarSource;
+
     @Autowired
-    private SessionPipeline sessionPipeline;
+    private RawRadarEventPipeline rawRadarEventPipeline;
     @Autowired
-    private CashOutPipeline cashOutPipeline;
+    private RawOverviewEventPipeline rawOverviewEventPipeline;
 
     @Override
     public void run() {
+        System.out.println("Initializing Spark");
+
         // winutils.exe workaround
         System.setProperty("hadoop.home.dir", new File(".").getAbsolutePath());
 
@@ -59,6 +60,8 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
         SparkSession spark = SparkSession.builder()
                 .master(masterUrl)
                 .appName(appName)
+                .config("spark.executor.extraJavaOptions", "-Dlog4j.configuration=spark-log4j.properties")
+                .config("spark.driver.extraJavaOptions",   "-Dlog4j.configuration=spark-log4j.properties")
                 .getOrCreate();
         JavaSparkContext jsc = new JavaSparkContext(spark.sparkContext());
 
@@ -66,24 +69,21 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
         JavaStreamingContext streamingContext = new JavaStreamingContext(jsc, new Duration(batchDurationMillis));
         streamingContext.sparkContext().setLogLevel(logLevel);
         streamingContext.checkpoint(checkpointDir);
+        // Listener setup
+        StreamingListener listener = new SparkStreamingListener(batchDurationMillis);
+        streamingContext.addStreamingListener(listener);
+        // Postgres
+        PostgresHelper.init();
 
-        if (sparkRadar) {
-            pipelineRadar.run(spark, streamingContext);
-        }
-        if (sparkOverview) {
-            pipelineOverview.run(spark, streamingContext);
-        }
-        if (sparkSession) {
-            sessionPipeline.run(spark, streamingContext);
-        }
-        if (sparkCashOut) {
-            cashOutPipeline.run(spark, streamingContext);
-        }
+        // Source streams
+        RawOverviewEventStream rawOverviewEventStream = kafkaOverviewSource.createRawOverviewEventStream(streamingContext);
+        RawRadarEventStream rawRadarEventStream = kafkaRadarSource.run(streamingContext);
+
+        // Processing pipelines
+        rawOverviewEventPipeline.run(rawOverviewEventStream);
+        rawRadarEventPipeline.run(rawOverviewEventStream, rawRadarEventStream);
 
         // Execute the Spark workflow defined above
         streamingContext.start();
-
-        System.out.println("Spark Streaming Context is started");
-
     }
 }

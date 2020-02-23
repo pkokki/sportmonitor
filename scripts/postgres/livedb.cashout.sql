@@ -1,15 +1,7 @@
 CREATE TABLE active_selections (
   selectionid       INT PRIMARY KEY,
-  description       VARCHAR(64),
-  eventid           INT NOT NULL,
-  marketid          INT NOT NULL,
   timestamp         INT NOT NULL,
-  isactive          BOOLEAN NOT NULL,
-  prevprice         REAL NOT NULL,
-  logprevprice      REAL NOT NULL,
-  currentprice      REAL NOT NULL,
-  logcurrentprice   REAL NOT NULL,
-  pricediff         REAL NOT NULL
+  currentprice      REAL NOT NULL
 );
 
 CREATE TABLE bets (

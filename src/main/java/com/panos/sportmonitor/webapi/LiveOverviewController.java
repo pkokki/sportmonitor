@@ -2,8 +2,6 @@ package com.panos.sportmonitor.webapi;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.panos.sportmonitor.common.Event;
-import com.panos.sportmonitor.common.LiveOverview;
 import com.panos.sportmonitor.webapi.kafka.OverviewProducer;
 import com.panos.sportmonitor.webapi.kafka.RadarProducer;
 import org.springframework.beans.factory.annotation.Autowired;
