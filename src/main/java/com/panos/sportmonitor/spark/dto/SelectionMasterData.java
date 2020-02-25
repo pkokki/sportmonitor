@@ -4,13 +4,13 @@ import java.io.Serializable;
 
 public class SelectionMasterData implements Serializable {
     private long selectionId;
-    private long timestamp;
+    private long sessionStamp;
     private String description;
     private long marketId;
 
-    public SelectionMasterData(long selectionId, long timestamp, String description, long marketId) {
+    public SelectionMasterData(long selectionId, long sessionStamp, String description, long marketId) {
         this.selectionId = selectionId;
-        this.setTimestamp(timestamp);
+        this.setSessionStamp(sessionStamp);
         this.description = description;
         this.marketId = marketId;
     }
@@ -39,11 +39,11 @@ public class SelectionMasterData implements Serializable {
         this.marketId = marketId;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public long getSessionStamp() {
+        return sessionStamp;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setSessionStamp(long sessionStamp) {
+        this.sessionStamp = sessionStamp;
     }
 }

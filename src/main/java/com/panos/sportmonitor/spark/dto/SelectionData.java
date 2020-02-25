@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class SelectionData implements Serializable {
     private long selectionId;
-    private long timestamp;
+    private long eventStamp;
     private boolean active;
     private double prevPrice;
     private double logPrevPrice;
@@ -12,9 +12,9 @@ public class SelectionData implements Serializable {
     private double logCurrentPrice;
     private double priceDiff;
 
-    public SelectionData(long selectionId, long timestamp, boolean active, double currentPrice) {
+    public SelectionData(long selectionId, long eventStamp, boolean active, double currentPrice) {
         this.setSelectionId(selectionId);
-        this.setTimestamp(timestamp);
+        this.setEventStamp(eventStamp);
         this.setActive(active);
         this.setCurrentPrice(currentPrice);
     }
@@ -27,12 +27,12 @@ public class SelectionData implements Serializable {
         this.selectionId = selectionId;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public long getEventStamp() {
+        return eventStamp;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setEventStamp(long eventStamp) {
+        this.eventStamp = eventStamp;
     }
 
     public boolean getActive() {

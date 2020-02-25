@@ -4,15 +4,15 @@ import java.io.Serializable;
 
 public class MarketMasterData implements Serializable {
     private long marketId;
-    private long timestamp;
+    private long sessionStamp;
     private long eventId;
     private String description;
     private String type;
     private double handicap;
 
-    public MarketMasterData(long marketId, long timestamp, long eventId, String description, String type, double handicap) {
+    public MarketMasterData(long marketId, long sessionStamp, long eventId, String description, String type, double handicap) {
         this.setMarketId(marketId);
-        this.setTimestamp(timestamp);
+        this.setSessionStamp(sessionStamp);
         this.setEventId(eventId);
         this.setDescription(description);
         this.setType(type);
@@ -28,12 +28,12 @@ public class MarketMasterData implements Serializable {
         this.marketId = marketId;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public long getSessionStamp() {
+        return sessionStamp;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setSessionStamp(long sessionStamp) {
+        this.sessionStamp = sessionStamp;
     }
 
     public long getEventId() {

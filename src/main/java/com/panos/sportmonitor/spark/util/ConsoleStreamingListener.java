@@ -6,11 +6,11 @@ import org.apache.spark.util.Utils;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class SparkStreamingListener implements StreamingListener {
+public class ConsoleStreamingListener implements StreamingListener {
     private final long batchDurationMillis;
     private long firstBatchMillis;
 
-    public SparkStreamingListener(long batchDurationMillis) {
+    public ConsoleStreamingListener(long batchDurationMillis) {
         this.batchDurationMillis = batchDurationMillis;
         this.firstBatchMillis = 0;
     }

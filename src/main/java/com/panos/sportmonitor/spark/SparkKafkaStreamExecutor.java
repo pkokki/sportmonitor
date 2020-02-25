@@ -7,7 +7,7 @@ import com.panos.sportmonitor.spark.sources.KafkaOverviewSource;
 import com.panos.sportmonitor.spark.streams.RawOverviewEventStream;
 import com.panos.sportmonitor.spark.streams.RawRadarEventStream;
 import com.panos.sportmonitor.spark.util.PostgresHelper;
-import com.panos.sportmonitor.spark.util.SparkStreamingListener;
+import com.panos.sportmonitor.spark.util.ConsoleStreamingListener;
 import com.panos.sportmonitor.spark.util.TempViewHelper;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
@@ -57,24 +57,24 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
         // winutils.exe workaround
         System.setProperty("hadoop.home.dir", new File(".").getAbsolutePath());
 
-        // Create a SparkSession and a JavaSparkContext
+        // Create a SparkSession and a SparkContext
         SparkSession spark = SparkSession.builder()
                 .master(masterUrl)
                 .appName(appName)
                 .getOrCreate();
         JavaSparkContext jsc = new JavaSparkContext(spark.sparkContext());
+        jsc.setLogLevel(logLevel);
 
-        // Configure and initialize the SparkStreamingContext
+        // Configure and initialize the StreamingContext
         JavaStreamingContext streamingContext = new JavaStreamingContext(jsc, new Duration(batchDurationMillis));
-        streamingContext.sparkContext().setLogLevel(logLevel);
         streamingContext.checkpoint(checkpointDir);
-        // Listener setup
-        StreamingListener listener = new SparkStreamingListener(batchDurationMillis);
-        streamingContext.addStreamingListener(listener);
-        // Postgres
+        // Initialize Postgres
         PostgresHelper.init();
-        // TempView
-        TempViewHelper.init();
+        // Setup console streaming listener
+        streamingContext.addStreamingListener(new ConsoleStreamingListener(batchDurationMillis));
+
+        // Initialize pipelines
+        rawOverviewEventPipeline.init(streamingContext);
 
         // Source streams
         RawOverviewEventStream rawOverviewEventStream = kafkaOverviewSource.createRawOverviewEventStream(streamingContext);
@@ -84,7 +84,7 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
         rawOverviewEventPipeline.run(rawOverviewEventStream);
         rawRadarEventPipeline.run(rawOverviewEventStream, rawRadarEventStream);
 
-        // Execute the Spark workflow defined above
+        // Execute the Spark workflow defined in the pipelines
         streamingContext.start();
     }
 }

@@ -51,7 +51,7 @@ public class EventDataStream extends AbstractJavaStream<EventData>  {
                     state.update(new Tuple2<>(homeScore, awayScore));
                     EventScoreChange change = new EventScoreChange(
                             event.getEventId(),
-                            event.getTimestamp(),
+                            event.getEventStamp(),
                             event.getClockTime(),
                             homeScore, awayScore,
                             homeDiff, awayDiff

@@ -64,7 +64,7 @@ public class SelectionDataStream extends AbstractJavaStream<SelectionData> {
         while (it.hasNext()) {
             SelectionData s = activeSelections.get(it.next());
             long selectionId = s.getSelectionId();
-            long timestamp = s.getTimestamp();
+            long timestamp = s.getEventStamp();
             double currentPrice = s.getCurrentPrice();
             betStamp = Long.min(betStamp, timestamp);
             selections.add(new BetSelection(betId, selectionId, currentPrice));

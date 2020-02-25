@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class EventData implements Serializable {
     private long eventId;
-    private long timestamp;
+    private long eventStamp;
     private String clockTime;
     private boolean suspended;
     private int homeScore;
@@ -12,9 +12,9 @@ public class EventData implements Serializable {
     private int awayScore;
     private int awayRedCards;
 
-    public EventData(long eventId, long timestamp, String clockTime, boolean suspended, int homeScore, int homeRedCards, int awayScore, int awayRedCards) {
+    public EventData(long eventId, long eventStamp, String clockTime, boolean suspended, int homeScore, int homeRedCards, int awayScore, int awayRedCards) {
         this.setEventId(eventId);
-        this.setTimestamp(timestamp);
+        this.setEventStamp(eventStamp);
         this.setClockTime(clockTime);
         this.setSuspended(suspended);
         this.setHomeScore(homeScore);
@@ -32,12 +32,12 @@ public class EventData implements Serializable {
         this.eventId = eventId;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public long getEventStamp() {
+        return eventStamp;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setEventStamp(long eventStamp) {
+        this.eventStamp = eventStamp;
     }
 
     public String getClockTime() {

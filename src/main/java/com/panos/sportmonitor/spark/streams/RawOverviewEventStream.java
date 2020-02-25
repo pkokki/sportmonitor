@@ -3,6 +3,7 @@ package com.panos.sportmonitor.spark.streams;
 import com.panos.sportmonitor.spark.dto.*;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.Optional;
+import org.apache.spark.api.java.function.Function0;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.State;
 import org.apache.spark.streaming.StateSpec;
@@ -18,7 +19,7 @@ public class RawOverviewEventStream extends AbstractJavaStream<RawOverviewEvent>
         super(stream);
     }
 
-    public EventMasterDataStream createEventMasterDataStream() {
+    public EventMasterDataStream createEventMasterDataStream(Function0<Long> sessionStamp) {
         JavaPairRDD<String, String> initialRDD = null;
         JavaDStream<EventMasterData> stream = this
                 .mapToPair(e -> new Tuple2<>(e.getId(), e))
@@ -30,7 +31,7 @@ public class RawOverviewEventStream extends AbstractJavaStream<RawOverviewEvent>
                 .map(r -> r.get())
                 .map(r -> new EventMasterData(
                         Long.parseLong(r.getId()),
-                        r.getTimestamp(),
+                        sessionStamp.call(),
                         r.getRegionId(), r.getRegionName(),
                         r.getLeagueId(), r.getLeagueName(),
                         r.getBetRadarId(),
@@ -75,19 +76,18 @@ public class RawOverviewEventStream extends AbstractJavaStream<RawOverviewEvent>
         }
     }
 
-    public MarketMasterDataStream createMarketMasterDataStream() {
+    public MarketMasterDataStream createMarketMasterDataStream(Function0<Long> sessionStamp) {
         JavaDStream<MarketMasterData> stream = this
                 .flatMap(e -> {
-                    List<MarketMasterData> list = new ArrayList<>();
-                    e.getMarkets().forEach(m -> list.add(new MarketMasterData(
+                    Long currentSessionStamp = sessionStamp.call();
+                    return e.getMarkets().stream().map(m -> new MarketMasterData(
                             Long.parseLong(m.getId()),
-                            e.getTimestamp(),
+                            currentSessionStamp,
                             Long.parseLong(e.getId()),
                             m.getDescription(),
                             m.getType(),
                             m.getHandicap()
-                    )));
-                    return list.iterator();
+                    )).iterator();
                 })
                 .mapToPair(m -> new Tuple2<>(m.getMarketId(), m))
                 .mapWithState(StateSpec.function(RawOverviewEventStream::onlyOneMarketSpec))
@@ -106,14 +106,15 @@ public class RawOverviewEventStream extends AbstractJavaStream<RawOverviewEvent>
         }
     }
 
-    public SelectionMasterDataStream createSelectionMasterDataStream() {
+    public SelectionMasterDataStream createSelectionMasterDataStream(Function0<Long> sessionStamp) {
         JavaDStream<SelectionMasterData> stream = this
                 .flatMap(e -> {
+                    Long currentSessionStamp = sessionStamp.call();
                     List<SelectionMasterData> list = new ArrayList<>();
                     e.getMarkets().forEach(m -> m.getSelections().forEach(s -> {
                         list.add(new SelectionMasterData(
                                 Long.parseLong(s.getId()),
-                                e.getTimestamp(),
+                                currentSessionStamp,
                                 s.getDescription(),
                                 Long.parseLong(m.getId())
                         ));

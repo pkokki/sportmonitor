@@ -4,16 +4,16 @@ import java.io.Serializable;
 
 public class EventScoreChange implements Serializable {
     private long eventId;
-    private long timestamp;
+    private long eventStamp;
     private String clockTime;
     private int home;
     private int away;
     private int homeDiff;
     private int awayDiff;
 
-    public EventScoreChange(long eventId, long timestamp, String clockTime, int home, int away, int homeDiff, int awayDiff) {
+    public EventScoreChange(long eventId, long eventStamp, String clockTime, int home, int away, int homeDiff, int awayDiff) {
         this.eventId = eventId;
-        this.timestamp = timestamp;
+        this.eventStamp = eventStamp;
         this.clockTime = clockTime;
         this.home = home;
         this.away = away;
@@ -29,12 +29,12 @@ public class EventScoreChange implements Serializable {
         this.eventId = eventId;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public long getEventStamp() {
+        return eventStamp;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setEventStamp(long eventStamp) {
+        this.eventStamp = eventStamp;
     }
 
     public String getClockTime() {

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class EventMasterData implements Serializable {
     private long eventId;
-    private long timestamp;
+    private long sessionStamp;
     private String regionId;
     private String regionName;
     private String leagueId;
@@ -20,7 +20,7 @@ public class EventMasterData implements Serializable {
                            String leagueName, long betRadarId, String title, String startTime, long startTimeTicks,
                            String homeTeam, String awayTeam) {
         this.setEventId(eventId);
-        this.setTimestamp(timestamp);
+        this.setSessionStamp(timestamp);
         this.setRegionId(regionId);
         this.setRegionName(regionName);
         this.setLeagueId(leagueId);
@@ -42,12 +42,12 @@ public class EventMasterData implements Serializable {
         this.eventId = eventId;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public long getSessionStamp() {
+        return sessionStamp;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setSessionStamp(long sessionStamp) {
+        this.sessionStamp = sessionStamp;
     }
 
     public String getRegionId() {
