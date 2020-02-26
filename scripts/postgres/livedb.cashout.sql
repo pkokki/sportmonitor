@@ -1,6 +1,6 @@
 CREATE TABLE active_selections (
   selectionid       INT PRIMARY KEY,
-  timestamp         INT NOT NULL,
+  eventstamp        INT NOT NULL,
   currentprice      REAL NOT NULL
 );
 

@@ -75,6 +75,7 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
 
         // Initialize pipelines
         rawOverviewEventPipeline.init(streamingContext);
+        rawRadarEventPipeline.init(streamingContext);
 
         // Source streams
         RawOverviewEventStream rawOverviewEventStream = kafkaOverviewSource.createRawOverviewEventStream(streamingContext);
@@ -82,7 +83,7 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
 
         // Processing pipelines
         rawOverviewEventPipeline.run(rawOverviewEventStream);
-        rawRadarEventPipeline.run(rawOverviewEventStream, rawRadarEventStream);
+        rawRadarEventPipeline.run(rawRadarEventStream);
 
         // Execute the Spark workflow defined in the pipelines
         streamingContext.start();

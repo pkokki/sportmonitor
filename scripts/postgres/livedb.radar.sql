@@ -1,19 +1,26 @@
+DROP TABLE IF EXISTS match_timeline_events;
 CREATE TABLE match_timeline_events (
     id          INT PRIMARY KEY,
     matchid     INT NOT NULL,
-    uts         INT NOT NULL,
-    time        INT,
-    seconds     INT,
-    typeid      VARCHAR(16) NOT NULL,
-    type        VARCHAR(128),
+    eventstamp  INT NOT NULL,
+    gameminute  INT,
+    gameseconds INT,
+    typeid      INT NOT NULL,
     team        VARCHAR(1)
 );
+DROP TABLE IF EXISTS match_timeline_types;
+CREATE TABLE match_timeline_types (
+    typeid      INT         PRIMARY KEY,
+    description VARCHAR(128) NOT NULL
+);
 
+DROP TABLE IF EXISTS match_situation_events;
 CREATE TABLE match_situation_events (
-    id                  INT PRIMARY KEY,
+    id                  BIGINT PRIMARY KEY,
     matchid             INT NOT NULL,
-    time                INT,
-    injurytime          INT,
+    gametime            INT NOT NULL,
+    injurytime          INT NOT NULL,
+    eventstamp          INT NOT NULL,
     safe                INT,
     safecount           INT,
     homeattack          INT,
@@ -30,19 +37,21 @@ CREATE TABLE match_situation_events (
     awaysafecount       INT
 );
 
+DROP TABLE IF EXISTS match_detail_events;
 CREATE TABLE match_detail_events (
     id          SERIAL PRIMARY KEY,
     matchid     INT NOT NULL,
-    timestamp   INT NOT NULL,
-    key         VARCHAR(64) NOT NULL,
+    eventstamp  INT NOT NULL,
+    typeid      VARCHAR(64) NOT NULL,
     home        INT,
     away        INT,
     hometext    VARCHAR(64),
     awaytext    VARCHAR(64)
 );
 
+DROP TABLE IF EXISTS match_detail_types;
 CREATE TABLE match_detail_types (
-    key           VARCHAR(64) PRIMARY KEY,
-    name          VARCHAR(128) NOT NULL
+    typeid      VARCHAR(64) PRIMARY KEY,
+    description VARCHAR(128) NOT NULL
 );
 

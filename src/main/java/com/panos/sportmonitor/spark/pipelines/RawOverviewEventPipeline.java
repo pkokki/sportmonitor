@@ -34,7 +34,7 @@ public class RawOverviewEventPipeline implements Serializable {
         selectionDataStream.foreachRDD((rdd, time) -> {
             Dataset<Row> activeSelections = SparkSession.active().createDataFrame(rdd, SelectionData.class);
             selectionDataStream.appendToSelectionDataTable(activeSelections);
-            selectionDataStream.overwriteActiveSelections(activeSelections);
+            //selectionDataStream.overwriteActiveSelections(activeSelections);
             //selectionDataStream.generateBets(rdd.filter(s -> s.getActive()).collect(), 10);
         });
 

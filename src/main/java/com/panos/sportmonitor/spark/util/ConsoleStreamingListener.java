@@ -108,7 +108,8 @@ public class ConsoleStreamingListener implements StreamingListener {
     }
 
     private String getFailureReason(String input) {
-        input = input.substring(0, input.indexOf("Driver stacktrace:"));
+        int index = input.indexOf("Driver stacktrace:");
+        input = index == -1 ? input : input.substring(0, index);
         return Arrays.stream(input.split("\n"))
                 .filter(s -> s.length() > 0 && !s.startsWith("\tat ") && !s.startsWith("\t..."))
                 .map(s -> "       " + s)

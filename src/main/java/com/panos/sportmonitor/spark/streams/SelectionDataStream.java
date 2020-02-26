@@ -29,7 +29,7 @@ public class SelectionDataStream extends AbstractJavaStream<SelectionData> {
     public void overwriteActiveSelections(Dataset<Row> activeSelections) {
         if (!activeSelections.isEmpty()) {
             Dataset<Row> ds = activeSelections
-                    .select("selectionId", "timestamp", "currentPrice");
+                    .select("selectionId", "eventstamp", "currentPrice");
             PostgresHelper.overwriteDataset(ds, "active_selections");
         }
     }
