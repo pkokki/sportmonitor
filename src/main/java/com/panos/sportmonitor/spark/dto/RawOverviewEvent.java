@@ -208,4 +208,21 @@ public class RawOverviewEvent implements Serializable {
     @Override public String toString() {
         return "RawOverviewEvent(id = " + id + "/" + betRadarId + " " + clockTime + " " + shortTitle + " " + homeScore + "-" + awayScore + ")";
     }
+
+    public int getHomeScoreAsInt() {
+        try {
+            return Integer.parseInt(this.homeScore);
+        }
+        catch (NumberFormatException ex) {
+            return 0;
+        }
+    }
+    public int getAwayScoreAsInt() {
+        try {
+            return Integer.parseInt(this.awayScore);
+        }
+        catch (NumberFormatException ex) {
+            return 0;
+        }
+    }
 }

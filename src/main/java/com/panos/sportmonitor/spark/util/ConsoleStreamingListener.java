@@ -13,6 +13,7 @@ public class ConsoleStreamingListener implements StreamingListener {
     public ConsoleStreamingListener(long batchDurationMillis) {
         this.batchDurationMillis = batchDurationMillis;
         this.firstBatchMillis = 0;
+        System.out.println(String.format("[****] ConsoleStreamingListener"));
     }
 
     private long getBatchNum(long ms) {

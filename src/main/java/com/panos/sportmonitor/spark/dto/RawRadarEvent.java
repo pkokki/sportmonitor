@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.io.Serializable;
 
 public class RawRadarEvent implements Serializable {
+    public static final String MATCH_SITUATION = "stats_match_situation";
+    public static final String MATCH_TIMELINE = "match_timeline";
+    public static final String MATCH_DETAILS = "match_detailsextended";
+
     private String queryUrl;
     private String event;
     private long dob;
@@ -57,5 +61,24 @@ public class RawRadarEvent implements Serializable {
 
     public void setData(JsonNode data) {
         this.data = data;
+    }
+
+    public long getMatchId() {
+        switch (getEvent()) {
+            case RawRadarEvent.MATCH_SITUATION:
+                return Long.parseLong(getData().path("matchid").asText());
+            case RawRadarEvent.MATCH_DETAILS:
+                return getData().path("_matchid").asLong();
+            case RawRadarEvent.MATCH_TIMELINE:
+                return getData().path("matchid").asLong();
+        }
+        return -1;
+    }
+
+    public boolean canParse() {
+        String type = getEvent();
+        return type.equals(RawRadarEvent.MATCH_SITUATION)
+                || type.equals(RawRadarEvent.MATCH_DETAILS)
+                || type.equals(RawRadarEvent.MATCH_TIMELINE);
     }
 }

@@ -1,10 +1,7 @@
 package com.panos.sportmonitor.spark.streams;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.panos.sportmonitor.spark.dto.MatchDetailsEvent;
-import com.panos.sportmonitor.spark.dto.MatchSituationEvent;
-import com.panos.sportmonitor.spark.dto.MatchTimelineEvent;
-import com.panos.sportmonitor.spark.dto.RawRadarEvent;
+import com.panos.sportmonitor.spark.dto.*;
 import org.apache.spark.api.java.Optional;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.State;
@@ -104,5 +101,32 @@ public class RawRadarEventStream extends AbstractJavaStream<RawRadarEvent> {
                 })
                 ;
         return new MatchDetailsEventStream(stream, typesViewName);
+    }
+
+    public DataPointStream createDataPointStream() {
+        JavaDStream<DataPoint> stream = this
+                .filter(e -> e.canParse())
+                .mapToPair(e -> new Tuple2<>(e.getMatchId(), e))
+                .mapWithState(StateSpec
+                                .function(RawRadarEventStream::radarToDataPointMapping)
+                )
+                .flatMap(i -> i.iterator())
+                ;
+        return new DataPointStream(stream);
+    }
+
+    public static List<DataPoint> radarToDataPointMapping(Long id, Optional<RawRadarEvent> rawRadarEvent, State<DataPointState> state) {
+        if (state.isTimingOut()) {
+            state.remove();
+        }
+        else {
+            DataPointState innerState = state.exists() ? state.get() : new DataPointState();
+            if (rawRadarEvent.isPresent()) {
+                List<DataPoint> points = innerState.update(rawRadarEvent.get());
+                state.update(innerState);
+                return points;
+            }
+        }
+        return new ArrayList<>();
     }
 }

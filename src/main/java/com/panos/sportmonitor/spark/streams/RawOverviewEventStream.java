@@ -1,5 +1,6 @@
 package com.panos.sportmonitor.spark.streams;
 
+import com.google.common.collect.Iterators;
 import com.panos.sportmonitor.spark.dto.*;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.Optional;
@@ -11,6 +12,7 @@ import org.apache.spark.streaming.api.java.JavaDStream;
 import scala.Tuple2;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -173,4 +175,30 @@ public class RawOverviewEventStream extends AbstractJavaStream<RawOverviewEvent>
         return null;
     }
 
+    public DataPointStream createDataPointStream() {
+        JavaDStream<DataPoint> stream = this
+                .filter(e -> e.getBetRadarId() > 0)
+                .mapToPair(e -> new Tuple2<>(e.getBetRadarId(), e))
+                .mapWithState(StateSpec
+                                .function(RawOverviewEventStream::overviewToDataPointMapping)
+                        //.initialState(initialRDD)
+                )
+                .flatMap(i -> i.iterator());
+        return new DataPointStream(stream);
+    }
+
+    public static List<DataPoint> overviewToDataPointMapping(Long id, Optional<RawOverviewEvent> rawOverviewEvent, State<DataPointState> state) {
+        if (state.isTimingOut()) {
+            state.remove();
+        }
+        else {
+            DataPointState innerState = state.exists() ? state.get() : new DataPointState();
+            if (rawOverviewEvent.isPresent()) {
+                List<DataPoint> points = innerState.update(rawOverviewEvent.get());
+                state.update(innerState);
+                return points;
+            }
+        }
+        return new ArrayList<>();
+    }
 }

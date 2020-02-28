@@ -15,7 +15,7 @@ public class MatchDetailsEvent implements Serializable {
     private final String awayText;
 
     public MatchDetailsEvent(long matchId, long eventStamp, String typeId, JsonNode value) {
-        Integer num;
+        Integer num1, num2;
         this.matchId = matchId;
         this.eventStamp = eventStamp;
         this.typeId = typeId;
@@ -23,17 +23,17 @@ public class MatchDetailsEvent implements Serializable {
         this.homeText = value.path("value").path("home").asText();
         this.awayText = value.path("value").path("away").asText();
         try {
-            num = Integer.parseInt(getHomeText());
+            num1 = Integer.parseInt(this.homeText);
         } catch (NumberFormatException e) {
-            num = null;
+            num1 = null;
         }
-        this.home = num;
+        this.home = num1;
         try {
-            num = Integer.parseInt(getAwayText());
+            num2 = Integer.parseInt(this.awayText);
         } catch (NumberFormatException e) {
-            num = null;
+            num2 = null;
         }
-        this.away = num;
+        this.away = num2;
     }
 
     public long getMatchId() {

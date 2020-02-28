@@ -1,5 +1,6 @@
 package com.panos.sportmonitor.spark;
 
+import com.panos.sportmonitor.spark.pipelines.RawCompositePipeline;
 import com.panos.sportmonitor.spark.pipelines.RawOverviewEventPipeline;
 import com.panos.sportmonitor.spark.pipelines.RawRadarEventPipeline;
 import com.panos.sportmonitor.spark.sources.KafkaRadarSource;
@@ -49,6 +50,8 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
     private RawRadarEventPipeline rawRadarEventPipeline;
     @Autowired
     private RawOverviewEventPipeline rawOverviewEventPipeline;
+    @Autowired
+    private RawCompositePipeline rawCompositePipeline;
 
     @Override
     public void run() {
@@ -74,18 +77,21 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
         streamingContext.addStreamingListener(new ConsoleStreamingListener(batchDurationMillis));
 
         // Initialize pipelines
-        rawOverviewEventPipeline.init(streamingContext);
-        rawRadarEventPipeline.init(streamingContext);
+        //rawOverviewEventPipeline.init(streamingContext);
+        //rawRadarEventPipeline.init(streamingContext);
+        rawCompositePipeline.init(streamingContext);
 
         // Source streams
         RawOverviewEventStream rawOverviewEventStream = kafkaOverviewSource.createRawOverviewEventStream(streamingContext);
         RawRadarEventStream rawRadarEventStream = kafkaRadarSource.run(streamingContext);
 
         // Processing pipelines
-        rawOverviewEventPipeline.run(rawOverviewEventStream);
-        rawRadarEventPipeline.run(rawRadarEventStream);
+        //rawOverviewEventPipeline.run(rawOverviewEventStream);
+        //rawRadarEventPipeline.run(rawRadarEventStream);
+        rawCompositePipeline.run(rawOverviewEventStream, rawRadarEventStream);
 
         // Execute the Spark workflow defined in the pipelines
+        System.out.println(String.format("[****] Starting streaming context"));
         streamingContext.start();
     }
 }
