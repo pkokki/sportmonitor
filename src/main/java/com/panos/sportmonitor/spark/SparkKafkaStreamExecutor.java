@@ -77,7 +77,7 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
         streamingContext.addStreamingListener(new ConsoleStreamingListener(batchDurationMillis));
 
         // Initialize pipelines
-        //rawOverviewEventPipeline.init(streamingContext);
+        rawOverviewEventPipeline.init(streamingContext);
         //rawRadarEventPipeline.init(streamingContext);
         rawCompositePipeline.init(streamingContext);
 
@@ -86,7 +86,7 @@ public class SparkKafkaStreamExecutor implements Serializable, Runnable {
         RawRadarEventStream rawRadarEventStream = kafkaRadarSource.run(streamingContext);
 
         // Processing pipelines
-        //rawOverviewEventPipeline.run(rawOverviewEventStream);
+        rawOverviewEventPipeline.run(rawOverviewEventStream);
         //rawRadarEventPipeline.run(rawRadarEventStream);
         rawCompositePipeline.run(rawOverviewEventStream, rawRadarEventStream);
 

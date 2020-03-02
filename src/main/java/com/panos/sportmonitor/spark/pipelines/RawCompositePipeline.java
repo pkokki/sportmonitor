@@ -18,8 +18,10 @@ public class RawCompositePipeline implements Serializable {
     public void run(RawOverviewEventStream rawOverviewEventStream, RawRadarEventStream rawRadarEventStream) {
 
         DataPointStream dps1 = rawOverviewEventStream.createDataPointStream();
-        dps1.print();
+        dps1.output(dps1::appendToDataPointTable);
+        //dps1.print();
         DataPointStream dps2 = rawRadarEventStream.createDataPointStream();
+        dps2.output(dps2::appendToDataPointTable);
         dps2.print();
 
         //DataPointStream dataPointStream = new DataPointStream(dps1.union(dps2));
