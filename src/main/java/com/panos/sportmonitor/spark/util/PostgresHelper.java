@@ -4,6 +4,10 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 
 public class PostgresHelper {
@@ -18,6 +22,57 @@ public class PostgresHelper {
 
     public static void init() {
         // convenience method to force static constructor
+    }
+
+    public static boolean execute(String sql) {
+        Connection conn = null;
+        Statement stmt = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/livedb", "postgres", "password");
+            stmt = conn.createStatement();
+            return stmt.execute(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+            catch (SQLException ex) {
+            }
+        }
+    }
+
+    public static int[] execute(Iterable<String> statements) {
+        Connection conn = null;
+        Statement stmt = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/livedb", "postgres", "password");
+            stmt = conn.createStatement();
+            for (String sql : statements) stmt.addBatch(sql);
+            return stmt.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new int[0];
+        }
+        finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+            catch (SQLException ex) {
+            }
+        }
     }
 
     public static void overwriteDataset(Dataset<Row> ds, String tableName) {
