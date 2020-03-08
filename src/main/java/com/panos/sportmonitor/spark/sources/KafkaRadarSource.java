@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.panos.sportmonitor.spark.dto.RawRadarEvent;
 import com.panos.sportmonitor.spark.streams.RawRadarEventStream;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.streaming.api.java.JavaDStream;
@@ -34,12 +35,13 @@ public class KafkaRadarSource {
 
     private HashMap<String, Object> kafkaConsumerParams() {
         HashMap<String, Object> kafkaParams = new HashMap<String, Object>();
-        kafkaParams.put("bootstrap.servers", bootstrapAddress);
-        kafkaParams.put("key.deserializer", StringDeserializer.class);
-        kafkaParams.put("value.deserializer", StringDeserializer.class);
-        kafkaParams.put("group.id", radarGroupId);
-        kafkaParams.put("auto.offset.reset", radarAutoOffsetReset);
-        kafkaParams.put("enable.auto.commit", false);
+        kafkaParams.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+        kafkaParams.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        kafkaParams.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        kafkaParams.put(ConsumerConfig.GROUP_ID_CONFIG, radarGroupId);
+        kafkaParams.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, radarAutoOffsetReset);
+        kafkaParams.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+
         return kafkaParams;
     }
 
