@@ -53,6 +53,7 @@ public class KafkaProducerConfig {
         configProps.put(ProducerConfig.CLIENT_ID_CONFIG, clientId);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializerClass);
+        configProps.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, String.valueOf(10 * 1024 * 1024));
         return configProps;
     }
 
