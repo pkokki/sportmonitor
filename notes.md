@@ -69,3 +69,7 @@ View the details of a consumer group
 
     bin/kafka-consumer-groups.sh --zookeeper localhost:2181 --describe --group <group name>
     
+How to seek Kafka consumer offsets by timestamp:
+
+* https://medium.com/@werneckpaiva/how-to-seek-kafka-consumer-offsets-by-timestamp-de351ba35c61
+* https://kafka.apache.org/23/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html

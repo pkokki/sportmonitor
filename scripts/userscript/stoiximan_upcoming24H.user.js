@@ -15,7 +15,7 @@
     'use strict';
 
     GM_addStyle (`
-    #sparkContainer {
+    .spark_container {
         position:               absolute;
         top:                    0;
         left:                   0;
@@ -27,21 +27,135 @@
         z-index:                1100;
         padding:                5px 20px;
     }
-    #sparkBtn1 {
+    .spark_button {
         cursor:                 pointer;
-    }
-    #myContainer p {
-        color:                  red;
-        background:             white;
+        margin:                 5px;
+        padding:                5px;
     }`);
+    function addButton(container, text, handler) {
+        var button = document.createElement('button');
+        //button.setAttribute('id', id);
+        button.classList.add('spark_button');
+        button.innerText = text;
+        container.appendChild(button);
+        button.addEventListener ("click", handler, false);
+        //document.getElementById(id).addEventListener ("click", handler, false);
+    }
 
-    var zNode = document.createElement('div');
-    zNode.innerHTML = '<button id="sparkBtn1" type="button">Snapshot</button>';
-    zNode.setAttribute('id', 'sparkContainer');
-    document.body.appendChild(zNode);
-    document.getElementById("sparkBtn1").addEventListener ("click", process, false);
+    var debug = true,
+        pauseProcess = false,
+        radarCache = [];
 
+    var container = document.createElement('div');
+    container.classList.add('spark_container');
+    document.body.appendChild(container);
+    addButton(container, 'Snapshot', snapshot);
+    addButton(container, 'Process', process);
+    addButton(container, 'Pause', toggleProcess);
+    addButton(container, 'Cache', showRadarCache);
+
+    window.addEventListener("message", receiveMessage, false);
+
+    function toggleProcess(ev) {
+        pauseProcess = !pauseProcess;
+        ev.target.innerText = pauseProcess ? 'Play' : 'Pause';
+    }
+
+    function showRadarCache() {
+        console.log(radarCache.length, radarCache);
+    }
+
+    function receiveMessage(event) {
+        if (event.origin !== "https://s5.sir.sportradar.com") return;
+        var data = event.data;
+        //log('RECEIVE MESSAGE', data.type, data);
+        switch (data.type) {
+            case 'spm_begin':
+                processBeginMessage(data.sourceUrl);
+                break;
+            case 'spm_end':
+                processEndMessage(data.sourceUrl, data.requests);
+                break;
+            case 'spm_fetch':
+                processFetchMessage(data.sourceUrl, data.radarUrl, data.json);
+                break;
+        }
+    }
+
+    function processFetchMessage(sourceUrl, radarUrl, radarJson) {
+        //log('processFetchMessage', sourceUrl, radarUrl, radarJson);
+        if (!radarCache.includes(radarUrl)) {
+            radarCache.push(radarUrl);
+            var json = Object.assign({
+                "radarUrl": radarUrl
+            }, radarJson);
+            send('http://localhost:8080/sportradar', json);
+        }
+    }
+
+    function processBeginMessage(sourceUrl) {
+        //log('processBeginMessage', sourceUrl);
+    }
+
+    function processEndMessage(sourceUrl, requests) {
+        //log('processEndMessage', sourceUrl, requests, radarCache.length);
+    }
+
+    function log() {
+        if (debug) console.log(... [... arguments]);
+    }
+
+    function snapshot() {
+        processEvents(false);
+    }
     function process() {
+        processEvents(true);
+    }
+    function processEvents(sendToHost) {
+        var events = prepareCouponEvents();
+        console.log('process', events);
+        if (sendToHost && events.length) {
+            var currentStamp = moment().unix();
+            send('http://localhost:8080/coupon', {
+                stamp: currentStamp,
+                events: events
+            });
+            clickStatistics(events);
+        }
+    }
+
+    function clickStatistics(initialEvents) {
+        function appendStatistics() {
+            if (eventsToClick.length) {
+                if (pauseProcess) {
+                    setTimeout(appendStatistics, 15000);
+                }
+                else {
+                    var event = eventsToClick.shift();
+                    log('appendStatistics: ', event.title, ', remaining events=', eventsToClick.length, ', captured messages=', radarCache.length);
+                    var eventTime = new Date(event.eventTime*1000).getHours();
+                    if (event.stats && event.live && eventTime >= 15) {
+                        var statsAnchor = window.document.body.querySelector('a[href="' + event.stats + '"]');
+                        if (statsAnchor) {
+                            statsAnchor.target = 'statsWin';
+                            statsAnchor.click();
+                            setTimeout(appendStatistics, 15000);
+                            return;
+                        } else {
+                            console.warn('appendStatistics: Anchor', event.stats, 'not found!');
+                            appendStatistics();
+                        }
+                    } else {
+                        appendStatistics();
+                    }
+                }
+            }
+        }
+        var eventsToClick = initialEvents.slice();
+        appendStatistics();
+    }
+
+    function prepareCouponEvents() {
         var tableRows = window.document.body.querySelector('div#js-content .tab-content table tbody').children;
         var events = [];
         for (var i = 0; i < tableRows.length; i++) {
@@ -65,21 +179,23 @@
             var info = infoCell.querySelector('a.event-title span').getAttribute('title').split(' - ');
             var country = info[0];
             var league = info[1];
+            var betRadarId = statsHref ? parseInt(statsHref.substring(statsHref.lastIndexOf('/')+1)) : null;
 
-            var event = {
-                id: parseInt(href.substring(href.lastIndexOf('-')+1)),
-                betRadarId: statsHref ? parseInt(statsHref.substring(statsHref.lastIndexOf('/')+1)) : null,
-                title: infoCell.querySelector('a.event-title').innerText.trim(),
-                href: href,
-                country: country,
-                league: league,
-                eventTime: parseEventDate(infoCell.querySelector('.event-facts span.date').innerText.trim()),
-                stats: statsHref,
-                live: !!(infoCell.querySelector('.event-facts span.live')),
-                markets: [{
-                    id: parseInt(r1.getAttribute('data-marketid')),
-                    type: 'MRES',
-                    selections: [{
+            if (betRadarId && r1 && r1.getAttribute('data-selnid') && rX && rX.getAttribute('data-selnid') && r2 && r2.getAttribute('data-selnid')) {
+                var event = {
+                    id: parseInt(href.substring(href.lastIndexOf('-')+1)),
+                    betRadarId: betRadarId,
+                    title: infoCell.querySelector('a.event-title').innerText.trim(),
+                    href: href,
+                    country: country,
+                    league: league,
+                    eventTime: parseEventDate(infoCell.querySelector('.event-facts span.date').innerText.trim()),
+                    stats: statsHref,
+                    live: !!(infoCell.querySelector('.event-facts span.live')),
+                    markets: [{
+                        id: parseInt(r1.getAttribute('data-marketid')),
+                        type: 'MRES',
+                        selections: [{
                             id: parseInt(r1.getAttribute('data-selnid')),
                             type: '1',
                             price: parseFloat(r1.innerText)
@@ -92,52 +208,46 @@
                             type: '2',
                             price: parseFloat(r2.innerText)
                         }
-                    ]
+                                    ]
+                    }
+                             ]};
+                if (o && u) {
+                    event.markets.push({
+                        id: parseInt(o.getAttribute('data-marketid')),
+                        type: 'HCTG',
+                        handicap: 2.5,
+                        selections: [{
+                            id: parseInt(o.getAttribute('data-selnid')),
+                            type: 'O',
+                            price: parseFloat(o.innerText)
+                        }, {
+                            id: parseInt(u.getAttribute('data-selnid')),
+                            type: 'U',
+                            price: parseFloat(u.innerText)
+                        }
+                                    ]
+                    });
                 }
-            ]};
-            if (o && u) {
-                event.markets.push({
-                    id: parseInt(o.getAttribute('data-marketid')),
-                    type: 'HCTG',
-                    handicap: 2.5,
-                    selections: [{
-                        id: parseInt(o.getAttribute('data-selnid')),
-                        type: 'O',
-                        price: parseFloat(o.innerText)
-                    }, {
-                        id: parseInt(u.getAttribute('data-selnid')),
-                        type: 'U',
-                        price: parseFloat(u.innerText)
-                    }
-                    ]
-                });
+                if (gg && ng) {
+                    event.markets.push({
+                        id: parseInt(gg.getAttribute('data-marketid')),
+                        type: 'BTSC',
+                        selections: [{
+                            id: parseInt(gg.getAttribute('data-selnid')),
+                            type: 'Y',
+                            price: parseFloat(gg.innerText)
+                        }, {
+                            id: parseInt(ng.getAttribute('data-selnid')),
+                            type: 'N',
+                            price: parseFloat(ng.innerText)
+                        }
+                                    ]
+                    });
+                }
+                events.push(event);
             }
-            if (gg && ng) {
-                event.markets.push({
-                    id: parseInt(gg.getAttribute('data-marketid')),
-                    type: 'GNG',
-                    selections: [{
-                        id: parseInt(gg.getAttribute('data-selnid')),
-                        type: 'Y',
-                        price: parseFloat(gg.innerText)
-                    }, {
-                        id: parseInt(ng.getAttribute('data-selnid')),
-                        type: 'N',
-                        price: parseFloat(ng.innerText)
-                    }
-                    ]
-                });
-            }
-            events.push(event);
         }
-
-        if (events.length) {
-            var requestData = {
-                stamp: moment().unix(),
-                events: events
-            };
-            send('http://localhost:8080/coupon', requestData);
-        }
+        return events;
     }
 
     function parseEventDate(strDate) {
@@ -147,14 +257,13 @@
     }
 
     function send(url, requestData) {
-        console.log(url, requestData);
+        log('send', url, requestData);
         GM_xmlhttpRequest({
                 method: 'POST',
                 url: url,
                 headers: { 'Content-Type': 'text/plain' },
                 data: JSON.stringify(requestData),
                 onload: function(response) {
-                    //console.log(url, requestData);
                 },
                 onerror: function(response) {
                     console.error(url, response);
