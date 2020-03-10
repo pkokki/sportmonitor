@@ -1,0 +1,46 @@
+package com.panos.sportmonitor.stats.entities;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
+
+public class CountryCodeEntity extends BaseEntity {
+    private String name;
+    private String code;
+    private int continentId;
+    private String continent;
+    private long population;
+
+    public CountryCodeEntity(BaseEntity parent, long id) {
+        super(parent, id);
+    }
+
+    @Override
+    protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
+        switch(nodeName) {
+            case "name": this.name = node.asText(); break;
+            case "ioc": this.code = node.asText(); break;
+            case "continentid": this.continentId = node.asInt(); break;
+            case "continent": this.continent = node.asText(); break;
+            case "population": this.population = node.asLong(); break;
+            case "a2":
+            case "a3":
+                return true;
+            default:
+                return super.handleProperty(nodeName, nodeType, node);
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("CountryCodeEntity{");
+        sb.append("id=").append(getId());
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", code='").append(code).append('\'');
+        sb.append(", continentId=").append(continentId);
+        sb.append(", continent='").append(continent).append('\'');
+        sb.append(", population=").append(population);
+        sb.append('}');
+        return sb.toString();
+    }
+}
