@@ -2,12 +2,15 @@ package com.panos.sportmonitor.stats.entities;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class PlayerEntity extends BaseEntity {
-    private String name;
-    private long birthdate;
-    private long nationalityId;
-    private long memberSince;
+    private String name, fullName;
+    private Long birthDate;
+    private Long nationalityId, secondNationalityId;
+    private Long memberSince;
+    private Long positionId;
+    private Integer shirtNumber;
 
     public PlayerEntity(BaseEntity parent, long id) {
         super(parent, id);
@@ -17,9 +20,13 @@ public class PlayerEntity extends BaseEntity {
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
             case "name": this.name = node.asText(); break;
-            case "birthdate.uts": this.birthdate = node.asLong(); break;
+            case "fullname": this.fullName = node.asText(); break;
+            case "birthdate.uts": this.birthDate = node.asLong(); break;
             case "primarypositiontype": if (!node.isNull()) return false; break;
             case "membersince.uts": this.memberSince = node.asLong(); break;
+            case "jerseynumber":
+            case "shirtnumber":
+                this.shirtNumber = node.asInt(); break;
 
             case "birthdate._doc":
             case "birthdate.time":
@@ -40,9 +47,29 @@ public class PlayerEntity extends BaseEntity {
     }
 
     @Override
+    public boolean handleAuxId(long auxEntityId) {
+        return true;
+    }
+
+    @Override
+    public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
+        if (currentNodeName.equals("position")) {
+            ObjectNode objNode = (ObjectNode)childNode;
+            objNode.put("_doc", "player_position_type");
+        }
+        return super.transformChildNode(currentNodeName, index, childNode);
+    }
+
+    @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         if (entityName.equals("nationality")) {
             this.nationalityId = childEntity.getId();
+        }
+        else  if (entityName.equals("secondarynationality")) {
+            this.secondNationalityId = childEntity.getId();
+        }
+        else if (entityName.equals("position")) {
+            this.positionId = childEntity.getId();
         }
         else {
             return super.handleChildEntity(entityName, childEntity);
@@ -55,8 +82,13 @@ public class PlayerEntity extends BaseEntity {
         final StringBuilder sb = new StringBuilder("PlayerEntity{");
         sb.append("id=").append(getId());
         sb.append(", name='").append(name).append('\'');
-        sb.append(", birthdate=").append(birthdate);
+        sb.append(", fullname='").append(fullName).append('\'');
+        sb.append(", birthdate=").append(birthDate);
         sb.append(", nationalityId=").append(nationalityId);
+        sb.append(", secondNationalityId=").append(secondNationalityId);
+        sb.append(", memberSince=").append(memberSince);
+        sb.append(", positionId=").append(positionId);
+        sb.append(", shirtNumber=").append(shirtNumber);
         sb.append('}');
         return sb.toString();
     }

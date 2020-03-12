@@ -3,10 +3,10 @@ package com.panos.sportmonitor.stats.entities.root;
 import com.panos.sportmonitor.stats.entities.BaseEntity;
 
 public class StatsMatchGet extends RootEntity {
-    private long matchId;
+    private Long matchId;
 
-    public StatsMatchGet(String name) {
-        super(name);
+    public StatsMatchGet(String name, long timeStamp) {
+        super(name, timeStamp);
     }
 
     @Override

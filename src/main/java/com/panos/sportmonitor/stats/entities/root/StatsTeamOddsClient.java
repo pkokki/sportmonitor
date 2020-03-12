@@ -5,10 +5,10 @@ import com.panos.sportmonitor.stats.entities.BaseEntity;
 import java.util.HashMap;
 
 public class StatsTeamOddsClient extends RootEntity {
-    private long uniqueTeamId;
+    private Long uniqueTeamId;
 
-    public StatsTeamOddsClient(String name) {
-        super(name);
+    public StatsTeamOddsClient(String name, long timeStamp) {
+        super(name, timeStamp);
     }
 
     @Override

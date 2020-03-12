@@ -2,26 +2,27 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.panos.sportmonitor.stats.entities.BaseEntity;
 
-public class StatsSeasonTables extends RootEntity {
+public class StatsSeasonOdds extends RootEntity {
     private Long seasonId;
 
-    public StatsSeasonTables(String name, long timeStamp) {
+    public StatsSeasonOdds(String name, long timeStamp) {
         super(name, timeStamp);
     }
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "": this.seasonId = childEntity.getId(); return true;
-            default:
-                return super.handleChildEntity(entityName, childEntity);
+            case "": this.seasonId = childEntity.getId(); break;
+            default: return super.handleChildEntity(entityName, childEntity);
         }
+        return true;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("StatsSeasonTables{");
-        sb.append("name='").append(getName()).append('\'');
+        final StringBuilder sb = new StringBuilder("StatsSeasonOdds{");
+        sb.append("name=").append(getName());
+        sb.append(", timeStampt=").append(getTimeStamp());
         sb.append(", seasonId=").append(seasonId);
         sb.append('}');
         return sb.toString();

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 
 public class MatchTypeEntity extends BaseEntity {
     private String column;
-    private long setTypeId;
+    private Long setTypeId;
 
     public MatchTypeEntity(BaseEntity parent, long id) {
         super(parent, id);

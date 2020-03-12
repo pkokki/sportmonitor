@@ -9,55 +9,57 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MatchEntity extends BaseEntity {
-    private long realCategoryId;
-    private long tournamentId;
-    private long uniqueTournamentId;
-    private long time;
+    private Long realCategoryId;
+    private Long tournamentId;
+    private Long uniqueTournamentId;
+    private Long time;
     private String week;
-    private int round;
+    private Integer round;
     private Integer resultHome, resultAway;
     private String resultPeriod;
-    private String resultWinner;
-    private long seasonId;
-    private long teamHomeId, teamAwayId;
-    private long teamHomeUid, teamAwayUid;
-    private boolean neutralGround;
+    private String resultWinner, resultBettingWinner;
+    private Long seasonId;
+    private Long teamHomeId, teamAwayId;
+    private Long teamHomeUid, teamAwayUid;
+    private Boolean neutralGround;
     private String comment;
-    private boolean toBeAnnounced;
-    private boolean postponed;
-    private boolean canceled;
-    private boolean inlivescore;
-    private long stadiumid;
-    private boolean walkover;
-    private boolean retired;
-    private boolean disqualified;
+    private Boolean toBeAnnounced;
+    private Boolean postponed;
+    private Boolean canceled;
+    private Boolean inlivescore;
+    private Long stadiumid;
+    private Boolean walkover;
+    private Boolean retired;
+    private Boolean disqualified;
     private List<Long> referees = new ArrayList<>();
-    private long managerHomeId;
-    private long managerAwayId;
-    private long roundNameId;
-    private long stadiumId;
+    private Long managerHomeId;
+    private Long managerAwayId;
+    private Long roundNameId;
+    private Long stadiumId;
     private Long historyPreviousMatchId;
     private Long historyNextMatchId;
     private Long homeTeamHistoryPrevMatchId;
     private Long homeTeamHistoryNextMatchId;
     private Long awayTeamHistoryPrevMatchId;
     private Long awayTeamHistoryNextMatchId;
-    private int p1Home, p1Away, ftHome, ftAway;
-    private int cupRoundMatchNumber;
-    private int cupRoundNumberOfMatches;
-    private int matchDifficultyRatingHome, matchDifficultyRatingAway;
+    private Integer p1Home, p1Away, ftHome, ftAway, otHome, otAway;
+    private Integer cupRoundMatchNumber;
+    private Integer cupRoundNumberOfMatches;
+    private Integer matchDifficultyRatingHome, matchDifficultyRatingAway;
     private String oddsClientMatchId;
-    private long oddsBookmakerId;
-    private long oddsBookmakerBetId;
+    private Long oddsBookmakerId;
+    private Long oddsBookmakerBetId;
     private String oddsType;
     private String oddsTypeShort;
     private String oddsTypeId;
-    private boolean oddsLivebet;
-    private boolean oddsIsMatchOdds;
+    private Boolean oddsLivebet;
+    private Boolean oddsIsMatchOdds;
     private String oddsExtra;
-    private boolean oddsActive;
-    private boolean oddsBetstop;
-    private long oddsUpdated;
+    private Boolean oddsActive;
+    private Boolean oddsBetstop;
+    private Long oddsUpdated;
+    private String status;
+    private Long nextMatchiId;
     private List<Long> teamForms = new ArrayList<>();
 
     public MatchEntity(BaseEntity parent, long id) {
@@ -115,8 +117,11 @@ public class MatchEntity extends BaseEntity {
             case "result.away": this.resultAway = node.isNull() ? null : node.asInt(); break;
             case "result.period": this.resultPeriod = node.asText(); break;
             case "result.winner": this.resultWinner = node.asText(); break;
+            case "result.bettingWinner": this.resultBettingWinner = node.asText(); break;
             case "neutralground": this.neutralGround = node.asBoolean(); break;
             case "comment": this.comment = node.asText(); break;
+            case "status": this.status = node.asText(); break;
+            case "nextmatchid": this.nextMatchiId = node.asLong(); break;
             case "tobeannounced": this.toBeAnnounced = node.asBoolean(); break;
             case "postponed": this.postponed = node.asBoolean(); break;
             case "canceled": this.canceled = node.asBoolean(); break;
@@ -131,6 +136,8 @@ public class MatchEntity extends BaseEntity {
             case "periods.p1.away": this.p1Away = node.asInt(); break;
             case "periods.ft.home": this.ftHome = node.asInt(); break;
             case "periods.ft.away": this.ftAway = node.asInt(); break;
+            case "periods.ot.home": this.otHome = node.asInt(); break;
+            case "periods.ot.away": this.otAway = node.asInt(); break;
             case "cuproundmatchnumber": this.cupRoundMatchNumber = node.asInt(); break;
             case "cuproundnumberofmatches": this.cupRoundNumberOfMatches = node.asInt(); break;
             case "matchdifficultyrating.home": this.matchDifficultyRatingHome = node.asInt(); break;
@@ -149,8 +156,7 @@ public class MatchEntity extends BaseEntity {
             case "odds.betstop": this.oddsBetstop = node.asBoolean(); break;
             case "odds.updated_uts": this.oddsUpdated = node.asLong(); break;
 
-            case "periods":
-            case "status":
+
             case "bestof":
                 if (!node.isNull()) return false;
 
@@ -175,7 +181,7 @@ public class MatchEntity extends BaseEntity {
     }
 
 
-    private boolean testRegex(String nodeName, JsonNode node) {
+    private Boolean testRegex(String nodeName, JsonNode node) {
         Pattern regEx = Pattern.compile("(\\w+).(\\d+).(\\w+)");
         Matcher matcher = regEx.matcher(nodeName);
         if (matcher.find()) {
@@ -211,6 +217,7 @@ public class MatchEntity extends BaseEntity {
         sb.append(", resultAway=").append(resultAway);
         sb.append(", resultPeriod='").append(resultPeriod).append('\'');
         sb.append(", resultWinner='").append(resultWinner).append('\'');
+        sb.append(", resultBettingWinner='").append(resultBettingWinner).append('\'');
         sb.append(", seasonId=").append(seasonId);
         sb.append(", teamHomeId=").append(teamHomeId);
         sb.append(", teamAwayId=").append(teamAwayId);
@@ -218,6 +225,8 @@ public class MatchEntity extends BaseEntity {
         sb.append(", teamAwayUid=").append(teamAwayUid);
         sb.append(", neutralGround=").append(neutralGround);
         sb.append(", comment='").append(comment).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", nextMatchiId=").append(nextMatchiId);
         sb.append(", toBeAnnounced=").append(toBeAnnounced);
         sb.append(", postponed=").append(postponed);
         sb.append(", canceled=").append(canceled);
@@ -241,6 +250,8 @@ public class MatchEntity extends BaseEntity {
         sb.append(", p1Away=").append(p1Away);
         sb.append(", ftHome=").append(ftHome);
         sb.append(", ftAway=").append(ftAway);
+        sb.append(", otHome=").append(otHome);
+        sb.append(", otAway=").append(otAway);
         sb.append(", cupRoundMatchNumber=").append(cupRoundMatchNumber);
         sb.append(", cupRoundNumberOfMatches=").append(cupRoundNumberOfMatches);
         sb.append(", matchDifficultyRatingHome=").append(matchDifficultyRatingHome);

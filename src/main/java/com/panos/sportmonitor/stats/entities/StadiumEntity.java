@@ -8,7 +8,7 @@ import java.util.List;
 
 public class StadiumEntity extends BaseEntity {
     private List<Long> teamHomes = new ArrayList<>();
-    private long countryId;
+    private Long countryId;
     private String name;
     private String description;
     private String city;

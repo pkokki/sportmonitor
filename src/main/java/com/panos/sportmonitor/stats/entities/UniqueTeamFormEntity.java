@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 
 public class UniqueTeamFormEntity extends BaseEntity {
-    private long uniqueTeamId;
-    private long matchId;
-    private double home3, home5, home7, home9;
-    private double away3, away5, away7, away9;
-    private double total3, total5, total7, total9;
+    private Long uniqueTeamId;
+    private Long matchId;
+    private Double home3, home5, home7, home9;
+    private Double away3, away5, away7, away9;
+    private Double total3, total5, total7, total9;
 
     public UniqueTeamFormEntity(BaseEntity parent, long id) {
         super(parent, id);

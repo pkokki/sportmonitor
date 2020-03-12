@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StatsSeasonTeams2 extends RootEntity {
-    private long seasonId;
+    private Long seasonId;
     private List<Long> teams = new ArrayList<>();
     private List<Long> statsTables = new ArrayList<>();
 
-    public StatsSeasonTeams2(String name) {
-        super(name);
+    public StatsSeasonTeams2(String name, long timeStamp) {
+        super(name, timeStamp);
     }
 
     @Override

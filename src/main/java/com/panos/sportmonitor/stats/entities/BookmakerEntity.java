@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 public class BookmakerEntity extends BaseEntity {
     private String name;
     private String url;
-    private boolean exchange;
+    private Boolean exchange;
 
     public BookmakerEntity(BaseEntity parent, long id) {
         super(parent, id);

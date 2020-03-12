@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 
 public class RealCategoryEntity extends BaseEntity {
     private String name;
-    private long countryId;
+    private Long countryId;
 
     public RealCategoryEntity(BaseEntity parent, long id) {
         super(parent, id);

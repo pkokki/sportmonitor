@@ -14,10 +14,10 @@ public class StatsTeamVersus extends RootEntity  {
     private List<Long> uniqueTeamIds = new ArrayList<>();
     private List<Long> realCategoryIds = new ArrayList<>();
     private HashMap<Long, Long> currentManagers = new HashMap<>();
-    private long nextMatchId;
+    private Long nextMatchId;
 
-    public StatsTeamVersus(String name) {
-        super(name);
+    public StatsTeamVersus(String name, long timeStamp) {
+        super(name, timeStamp);
     }
 
     @Override

@@ -4,22 +4,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 
 public class OddsEntity extends BaseEntity {
-    private long bookmakerId;
-    private double homeOdds;
-    private long homeTbId;
-    private int homeOddsFieldId;
-    private double homeChange;
-    private double drawOdds;
-    private long drawTbId;
-    private int drawOddsFieldId;
-    private double drawChange;
-    private double awayOdds;
-    private long awayTbId;
-    private int awayOddsFieldId;
-    private double awayChange;
+    private Long bookmakerId;
+    private Double homeOdds;
+    private Long homeTbId;
+    private Integer homeOddsFieldId;
+    private Double homeChange;
+    private Double drawOdds;
+    private Long drawTbId;
+    private Integer drawOddsFieldId;
+    private Double drawChange;
+    private Double awayOdds;
+    private Long awayTbId;
+    private Integer awayOddsFieldId;
+    private Double awayChange;
     private String type;
-    private int oddsTypeId;
-    private boolean exchange;
+    private Integer oddsTypeId;
+    private Boolean exchange;
     private String key;
     private String extra, closingtime;
 
@@ -30,15 +30,21 @@ public class OddsEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch(nodeName) {
-            case "home.odds": this.homeOdds = Double.parseDouble(node.asText()); return true;
+            case "home.odds":
+            case "odds.home":
+                this.homeOdds = Double.parseDouble(node.asText()); return true;
             case "home.tbid": this.homeTbId = node.asLong(); return true;
             case "home.oddsfieldid": this.homeOddsFieldId = node.asInt(); return true;
             case "home.change": this.homeChange = Double.parseDouble(node.asText()); return true;
-            case "draw.odds": this.drawOdds = Double.parseDouble(node.asText()); return true;
+            case "draw.odds":
+            case "odds.draw":
+                this.drawOdds = Double.parseDouble(node.asText()); return true;
             case "draw.tbid": this.drawTbId = node.asLong(); return true;
             case "draw.oddsfieldid": this.drawOddsFieldId = node.asInt(); return true;
             case "draw.change": this.drawChange = Double.parseDouble(node.asText()); return true;
-            case "away.odds": this.awayOdds = Double.parseDouble(node.asText()); return true;
+            case "away.odds":
+            case "odds.away":
+                this.awayOdds = Double.parseDouble(node.asText()); return true;
             case "away.tbid": this.awayTbId = node.asLong(); return true;
             case "away.oddsfieldid": this.awayOddsFieldId = node.asInt(); return true;
             case "away.change": this.awayChange = Double.parseDouble(node.asText()); return true;
@@ -69,14 +75,14 @@ public class OddsEntity extends BaseEntity {
         sb.append("id=").append(getId());
         sb.append(", bookmakerId=").append(bookmakerId);
         sb.append(", homeOdds=").append(homeOdds);
+        sb.append(", drawOdds=").append(drawOdds);
+        sb.append(", awayOdds=").append(awayOdds);
         sb.append(", homeTbId=").append(homeTbId);
         sb.append(", homeOddsFieldId=").append(homeOddsFieldId);
         sb.append(", homeChange=").append(homeChange);
-        sb.append(", drawOdds=").append(drawOdds);
         sb.append(", drawTbId=").append(drawTbId);
         sb.append(", drawOddsFieldId=").append(drawOddsFieldId);
         sb.append(", drawChange=").append(drawChange);
-        sb.append(", awayOdds=").append(awayOdds);
         sb.append(", awayTbId=").append(awayTbId);
         sb.append(", awayOddsFieldId=").append(awayOddsFieldId);
         sb.append(", awayChange=").append(awayChange);

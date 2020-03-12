@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 public class CupRoundEntity extends BaseEntity {
     private String name;
     private String shortName;
-    private int statisticsSortOrder;
+    private Integer statisticsSortOrder;
 
     public CupRoundEntity(BaseEntity parent, long id) {
         super(parent, id);

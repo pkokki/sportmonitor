@@ -3,23 +3,28 @@ package com.panos.sportmonitor.stats.entities;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TournamentEntity extends BaseEntity {
-    private long realCategoryId;
-    private long isk;
-    private long seasonId, currentSeason;
+    private Long realCategoryId;
+    private Long isk;
+    private Long seasonId, currentSeason;
     private String seasonType;
     private String seasonTypeName;
     private String seasonTypeUnique;
     private String year;
     private String name;
     private String abbr;
-    private boolean friendly;
-    private boolean roundByRound;
-    private boolean outdated;
-    private long liveTable;
-    private long tournamentLevelOrder;
+    private Boolean friendly;
+    private Boolean roundByRound;
+    private Boolean outdated;
+    private Long liveTable;
+    private Long tournamentLevelOrder;
     private String tournamentLevelName;
     private String cuprRosterId;
+    private Integer currentRound;
+    private List<Long> matches = new ArrayList<>();
 
     public TournamentEntity(BaseEntity parent, long id) {
         super(parent, id);
@@ -47,6 +52,8 @@ public class TournamentEntity extends BaseEntity {
             case "livetable": this.liveTable = node.asLong(); break;
             case "tournamentlevelorder": this.tournamentLevelOrder = node.asLong(); break;
             case "tournamentlevelname": this.tournamentLevelName = node.asText(); break;
+            case "currentround": this.currentRound = node.asInt(); break;
+            case "matches[]": this.matches.add(node.asLong()); break;
 
             case "_tid":
             case "_utid":

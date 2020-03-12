@@ -7,16 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LeagueTableEntity extends BaseEntity {
-    private long seasonId;
-    private int maxRounds;
-    private int currentRound;
-    private int presentationId;
+    private Long seasonId;
+    private Integer maxRounds;
+    private Integer currentRound;
+    private Integer presentationId;
     private String name;
     private String abbr;
-    private int totalRows;
-    private long tournamentId;
-    private long realCategoryId;
-    private long rulesId;
+    private Integer totalRows;
+    private Long tournamentId;
+    private Long realCategoryId;
+    private Long rulesId;
     private List<Long> tableTypes = new ArrayList<>();
     private List<Long> matchTypes = new ArrayList<>();
     private List<Long> tableRows = new ArrayList<>();

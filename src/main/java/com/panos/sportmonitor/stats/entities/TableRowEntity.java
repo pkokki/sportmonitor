@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 
 public class TableRowEntity extends BaseEntity {
-    private long promotionId;
-    private long teamId;
-    private int changeTotal, changeHome, changeAway, drawTotal, drawHome, drawAway, goalDiffTotal, goalDiffHome, goalDiffAway;
-    private int goalsAgainstTotal, goalsAgainstHome, goalsAgainstAway, goalsForTotal, goalsForHome, goalsForAway;
-    private int lossTotal, lossHome, lossAway, total, home, away, pointsTotal, pointsHome, pointsAway, pos, posHome, posAway;
-    private int sortPositionTotal, sortPositionHome, sortPositionAway, winTotal, winHome, winAway;
+    private Long promotionId;
+    private Long teamId;
+    private Integer changeTotal, changeHome, changeAway, drawTotal, drawHome, drawAway, goalDiffTotal, goalDiffHome, goalDiffAway;
+    private Integer goalsAgainstTotal, goalsAgainstHome, goalsAgainstAway, goalsForTotal, goalsForHome, goalsForAway;
+    private Integer lossTotal, lossHome, lossAway, total, home, away, pointsTotal, pointsHome, pointsAway, pos, posHome, posAway;
+    private Integer sortPositionTotal, sortPositionHome, sortPositionAway, winTotal, winHome, winAway;
 
     public TableRowEntity(BaseEntity parent, long id) {
         super(parent, id);

@@ -3,40 +3,36 @@ package com.panos.sportmonitor.stats.entities;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 
-public class PromotionEntity extends BaseEntity {
+public class PlayerPositionTypeEntity extends BaseEntity {
+    private String type;
     private String name;
     private String shortName;
-    private Integer position;
+    private String abbr;
 
-    public PromotionEntity(BaseEntity parent, long id) {
+    public PlayerPositionTypeEntity(BaseEntity parent, long id) {
         super(parent, id);
-    }
-
-    @Override
-    public boolean handleAuxId(long auxEntityId) {
-        return true;
     }
 
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
+            case "_type": this.type = node.asText(); break;
             case "name": this.name = node.asText(); break;
             case "shortname": this.shortName = node.asText(); break;
-            case "cssclass": break;
-            case "position": this.position = node.asInt(); break;
-            default:
-                return super.handleProperty(nodeName, nodeType, node);
+            case "abbr": this.abbr = node.asText(); break;
+            default: return super.handleProperty(nodeName, nodeType, node);
         }
         return true;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("PromotionEntity{");
-        sb.append("id=").append(getId());
+        final StringBuilder sb = new StringBuilder("PlayerPositionTypeEntity{");
+        sb.append("id='").append(getId()).append('\'');
+        sb.append(", type='").append(type).append('\'');
         sb.append(", name='").append(name).append('\'');
         sb.append(", shortName='").append(shortName).append('\'');
-        sb.append(", position=").append(position);
+        sb.append(", abbr='").append(abbr).append('\'');
         sb.append('}');
         return sb.toString();
     }

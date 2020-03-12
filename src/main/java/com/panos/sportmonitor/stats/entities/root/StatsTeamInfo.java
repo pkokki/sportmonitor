@@ -8,16 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StatsTeamInfo extends RootEntity {
-    private long uniqueTeamId;
-    private long stadiumId;
-    private long managerId;
+    private Long uniqueTeamId;
+    private Long stadiumId;
+    private Long managerId;
     private String twitter;
     private String hashtag;
     private String matchup;
     private List<Long> tournamentIds = new ArrayList<>();
 
-    public StatsTeamInfo(String name) {
-        super(name);
+    public StatsTeamInfo(String name, long timeStamp) {
+        super(name, timeStamp);
     }
 
     @Override

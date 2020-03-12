@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 public class CountryCodeEntity extends BaseEntity {
     private String name;
     private String code;
-    private int continentId;
+    private Integer continentId;
     private String continent;
-    private long population;
+    private Long population;
 
     public CountryCodeEntity(BaseEntity parent, long id) {
         super(parent, id);

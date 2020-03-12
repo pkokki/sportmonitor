@@ -16,7 +16,7 @@ public class SportMonitorConsole {
         List<File> files = (List<File>) FileUtils.listFiles(folder, extensions, false);
         System.out.println(String.format("Found %d files in folder %s", files.size(), folder.getAbsolutePath()));
         for (File file : files) {
-            parser.Parse(file);
+            parser.parse(file);
         }
     }
 }

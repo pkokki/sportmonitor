@@ -7,16 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SeasonEntity extends BaseEntity {
-    private long uniqueTournamentId;
+    private Long uniqueTournamentId;
     private String name;
     private String abbr;
-    private long startDate;
-    private long endDate;
-    private boolean neutralGround;
-    private boolean friendly;
+    private Long startDate;
+    private Long endDate;
+    private Boolean neutralGround;
+    private Boolean friendly;
     private String year;
-    private boolean coverageLineups;
+    private Boolean coverageLineups;
     private List<Long> tables = new ArrayList<>();
+    private Long realCategoryId;
+    private List<Long> iseOdds = new ArrayList<>();
+    private List<Long> odds = new ArrayList<>();
+    private List<Long> matches = new ArrayList<>();
+    private List<Long> tournaments = new ArrayList<>();
 
     public SeasonEntity(BaseEntity parent, long id) {
         super(parent, id);
@@ -25,10 +30,22 @@ public class SeasonEntity extends BaseEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "tables[]": this.tables.add(childEntity.getId()); return true;
+            case "uniquetournament": this.uniqueTournamentId = childEntity.getId(); break;
+            case "realcategory": this.realCategoryId = childEntity.getId(); break;
+            case "tables[]": this.tables.add(childEntity.getId()); break;
+            case "matches[]": this.matches.add(childEntity.getId()); break;
             default:
-                return super.handleChildEntity(entityName, childEntity);
+                if (entityName.startsWith("iseodds."))
+                    this.iseOdds.add(childEntity.getId());
+                else if (entityName.startsWith("odds."))
+                    this.odds.add(childEntity.getId());
+                else if (entityName.startsWith("tournaments."))
+                    this.tournaments.add(childEntity.getId());
+                else if (entityName.startsWith("tables."))
+                    this.tables.add(childEntity.getId());
+                else return super.handleChildEntity(entityName, childEntity);
         }
+        return true;
     }
 
     @Override

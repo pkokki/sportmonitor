@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 
 public class UniqueTournamentEntity extends BaseEntity {
     private String name;
-    private long realCategoryId;
-    private boolean friendly;
+    private Long realCategoryId;
+    private Boolean friendly;
 
     public UniqueTournamentEntity(BaseEntity parent, long id) {
         super(parent, id);

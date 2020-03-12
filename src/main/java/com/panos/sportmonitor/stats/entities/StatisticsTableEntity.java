@@ -3,7 +3,9 @@ package com.panos.sportmonitor.stats.entities;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class StatisticsTableEntity extends BaseEntity {
     private transient long lastId = -1;
@@ -11,17 +13,23 @@ public class StatisticsTableEntity extends BaseEntity {
     private String name;
     private String abbr;
     private String maxRounds;
-    private long tournamentId;
+    private Long tournamentId;
     private String seasonId;
     private String seasonType;
     private String seasonTypeName;
     private String seasonTypeUnique;
-    private long seasonStart;
-    private long seasonEnd;
+    private Long seasonStart;
+    private Long seasonEnd;
     private HashMap<Long, String> uniqueTeams = new HashMap<>();
+    private List<Long> matches = new ArrayList<>();
 
     public StatisticsTableEntity(BaseEntity parent, long id) {
         super(parent, id);
+    }
+
+    @Override
+    protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
+        return super.handleChildEntity(entityName, childEntity);
     }
 
     @Override
@@ -37,6 +45,7 @@ public class StatisticsTableEntity extends BaseEntity {
             case "seasontypeunique": this.seasonTypeUnique = node.asText(); break;
             case "start.uts": this.seasonStart = node.asLong(); break;
             case "end.uts": this.seasonEnd = node.asLong(); break;
+            case "matches[]": matches.add(node.asLong()); break;
             case "uniqueteams[].id":
                 this.lastId = node.asLong();
                 this.uniqueTeams.put(lastId, "<N/A>");

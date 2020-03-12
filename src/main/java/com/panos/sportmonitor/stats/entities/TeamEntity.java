@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 
 public class TeamEntity extends BaseEntity {
-    private long uid;
+    private Long uid;
     private String name;
     private String abbr;
     private String nickname;
     private String mediumName;
-    private boolean isCountry;
+    private Boolean isCountry;
 
     public TeamEntity(BaseEntity parent, long id) {
         super(parent, id);

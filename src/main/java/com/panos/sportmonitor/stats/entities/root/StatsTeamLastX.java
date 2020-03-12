@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StatsTeamLastX extends RootEntity {
-    private long uniqueTeamId;
+    private Long uniqueTeamId;
     private List<Long> matchIds = new ArrayList<>();
     private List<Long> tournamentIds = new ArrayList<>();
     private List<Long> uniqueTournamentIds = new ArrayList<>();
     private List<Long> realCategoriesIds = new ArrayList<>();
 
-    public StatsTeamLastX(String name) {
-        super(name);
+    public StatsTeamLastX(String name, long timeStamp) {
+        super(name, timeStamp);
     }
 
     @Override
