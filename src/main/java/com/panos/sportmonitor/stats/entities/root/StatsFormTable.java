@@ -3,12 +3,13 @@ package com.panos.sportmonitor.stats.entities.root;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.panos.sportmonitor.stats.entities.BaseEntity;
+import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.BaseRootEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatsFormTable extends RootEntity {
+public class StatsFormTable extends BaseRootEntity {
     private Long seasonId;
     private List<Long> teamFormTables = new ArrayList<>();
     private Integer winPoints, lossPoints, currentRound;

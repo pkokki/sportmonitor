@@ -1,8 +1,9 @@
 package com.panos.sportmonitor.stats.entities.root;
 
-import com.panos.sportmonitor.stats.entities.BaseEntity;
+import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.BaseRootEntity;
 
-public class StatsMatchGet extends RootEntity {
+public class StatsMatchGet extends BaseRootEntity {
     private Long matchId;
 
     public StatsMatchGet(String name, long timeStamp) {

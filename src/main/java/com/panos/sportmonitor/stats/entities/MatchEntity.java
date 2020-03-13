@@ -2,6 +2,7 @@ package com.panos.sportmonitor.stats.entities;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.panos.sportmonitor.stats.BaseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,43 @@ public class MatchEntity extends BaseEntity {
     private String status;
     private Long nextMatchiId;
     private List<Long> teamForms = new ArrayList<>();
+    private  Integer  coverageLineup ;
+    private  Integer  coverageFormations ;
+    private  Long  coverageLiveTable ;
+    private  Integer  coverageInjuries ;
+    private  Boolean  coverageBallSpotting ;
+    private  Boolean  coverageCornersOnly ;
+    private  Boolean  coverageMultiCast ;
+    private  Integer  coverageScoutMatch ;
+    private  Integer  coverageScoutCoverageStatus ;
+    private  Boolean  coverageScoutConnected ;
+    private  Boolean  coverageLiveOdds ;
+    private  Boolean  coverageDeeperCoverage ;
+    private  Boolean  coverageTacticalLineup ;
+    private  Boolean  coverageBasicLineup ;
+    private  Boolean  coverageHasStats ;
+    private  Boolean  coverageInLiveScore ;
+    private  Integer  coveragePenaltyShootout ;
+    private  Boolean  coverageScoutTest ;
+    private  Integer  coverageLmtSupport ;
+    private  Boolean  coverageVenue ;
+    private  Boolean  coverageMatchDataComplete ;
+    private  Boolean  coverageMediaCoverage ;
+    private  Boolean  coverageSubstitutions ;
+    private  Long  updatedTime ;
+    private  Long  endedTime ;
+    private  Long  pTime ;
+    private  Boolean  timeInfoRunning ;
+    private  Boolean  removed ;
+    private  Boolean  facts ;
+    private  Boolean  localDerby ;
+    private  Integer  distance ;
+    private  Integer  weather ;
+    private  Integer  pitchCondition ;
+    private  Integer  windAdvantage ;
+    private String  matchStatus ;
+    private Long matchStatusId;
+    private  Boolean  cancelled ;
 
     public MatchEntity(BaseEntity parent, long id) {
         super(parent, id);
@@ -97,6 +135,9 @@ public class MatchEntity extends BaseEntity {
         else if (entityName.equals("stadium")) {
             this.stadiumId = childEntity.getId();
         }
+        else if (entityName.equals("status")) {
+            this.matchStatusId = childEntity.getId();
+        }
         else {
             return super.handleChildEntity(entityName, childEntity);
         }
@@ -110,7 +151,9 @@ public class MatchEntity extends BaseEntity {
             case "_tid": this.tournamentId = node.asLong(); break;
             case "_utid": this.uniqueTournamentId = node.asLong(); break;
             case "_seasonid": this.seasonId = node.asLong(); break;
-            case "time.uts": this.time = node.asLong(); break;
+            case "time.uts":
+            case "_dt.uts":
+                this.time = node.asLong(); break;
             case "week": this.week = node.asText(); break;
             case "round": this.round = node.asInt(); break;
             case "result.home": this.resultHome = node.isNull() ? null : node.asInt(); break;
@@ -156,6 +199,46 @@ public class MatchEntity extends BaseEntity {
             case "odds.betstop": this.oddsBetstop = node.asBoolean(); break;
             case "odds.updated_uts": this.oddsUpdated = node.asLong(); break;
 
+            // MatchTimeline
+            case "coverage.lineup": this.coverageLineup = node.asInt(); break;
+            case "coverage.formations": this.coverageFormations = node.asInt(); break;
+            case "coverage.livetable": this.coverageLiveTable = node.asLong(); break;
+            case "coverage.injuries": this.coverageInjuries = node.asInt(); break;
+            case "coverage.ballspotting": this.coverageBallSpotting = node.asBoolean(); break;
+            case "coverage.cornersonly": this.coverageCornersOnly = node.asBoolean(); break;
+            case "coverage.multicast": this.coverageMultiCast = node.asBoolean(); break;
+            case "coverage.scoutmatch": this.coverageScoutMatch = node.asInt(); break;
+            case "coverage.scoutcoveragestatus": this.coverageScoutCoverageStatus = node.asInt(); break;
+            case "coverage.scoutconnected": this.coverageScoutConnected = node.asBoolean(); break;
+            case "coverage.liveodds": this.coverageLiveOdds = node.asBoolean(); break;
+            case "coverage.deepercoverage": this.coverageDeeperCoverage = node.asBoolean(); break;
+            case "coverage.tacticallineup": this.coverageTacticalLineup = node.asBoolean(); break;
+            case "coverage.basiclineup": this.coverageBasicLineup = node.asBoolean(); break;
+            case "coverage.hasstats": this.coverageHasStats = node.asBoolean(); break;
+            case "coverage.inlivescore": this.coverageInLiveScore = node.asBoolean(); break;
+            case "coverage.penaltyshootout": this.coveragePenaltyShootout = node.asInt(); break;
+            case "coverage.scouttest": this.coverageScoutTest = node.asBoolean(); break;
+            case "coverage.lmtsupport": this.coverageLmtSupport = node.asInt(); break;
+            case "coverage.venue": this.coverageVenue = node.asBoolean(); break;
+            case "coverage.matchdatacomplete": this.coverageMatchDataComplete = node.asBoolean(); break;
+            case "coverage.mediacoverage": this.coverageMediaCoverage = node.asBoolean(); break;
+            case "coverage.substitutions": this.coverageSubstitutions = node.asBoolean(); break;
+            case "updated_uts": this.updatedTime = node.asLong(); break;
+            case "ended_uts": this.endedTime = node.asLong(); break;
+            case "ptime": this.pTime = node.asLong(); break;
+            case "timeinfo.ended": /* ignore */ break;
+            case "timeinfo.running": this.timeInfoRunning = node.asBoolean(); break;
+            case "removed": this.removed = node.asBoolean(); break;
+            case "facts": this.facts = node.asBoolean(); break;
+            case "localderby": this.localDerby = node.asBoolean(); break;
+            case "distance": this.distance = node.asInt(); break;
+            case "weather": this.weather = node.asInt(); break;
+            case "pitchcondition": this.pitchCondition = node.asInt(); break;
+            case "windadvantage": this.windAdvantage = node.asInt(); break;
+            case "matchstatus": this.matchStatus = node.asText(); break;
+            case "cancelled": this.cancelled = node.asBoolean(); break;
+            case "hf": /* ignore */ break;
+            case "p": /* ignore */ break;
 
             case "bestof":
                 if (!node.isNull()) return false;
@@ -165,6 +248,11 @@ public class MatchEntity extends BaseEntity {
             case "time.date":
             case "time.tz":
             case "time.tzoffset":
+            case "_dt._doc":
+            case "_dt.time":
+            case "_dt.date":
+            case "_dt.tz":
+            case "_dt.tzoffset":
             case "periodlength":
             case "numberofperiods":
             case "overtimelength":
@@ -225,8 +313,6 @@ public class MatchEntity extends BaseEntity {
         sb.append(", teamAwayUid=").append(teamAwayUid);
         sb.append(", neutralGround=").append(neutralGround);
         sb.append(", comment='").append(comment).append('\'');
-        sb.append(", status='").append(status).append('\'');
-        sb.append(", nextMatchiId=").append(nextMatchiId);
         sb.append(", toBeAnnounced=").append(toBeAnnounced);
         sb.append(", postponed=").append(postponed);
         sb.append(", canceled=").append(canceled);
@@ -268,7 +354,46 @@ public class MatchEntity extends BaseEntity {
         sb.append(", oddsActive=").append(oddsActive);
         sb.append(", oddsBetstop=").append(oddsBetstop);
         sb.append(", oddsUpdated=").append(oddsUpdated);
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", nextMatchiId=").append(nextMatchiId);
         sb.append(", teamForms=").append(teamForms);
+        sb.append(", coverageLineup=").append(coverageLineup);
+        sb.append(", coverageFormations=").append(coverageFormations);
+        sb.append(", coverageLiveTable=").append(coverageLiveTable);
+        sb.append(", coverageInjuries=").append(coverageInjuries);
+        sb.append(", coverageBallSpotting=").append(coverageBallSpotting);
+        sb.append(", coverageCornersOnly=").append(coverageCornersOnly);
+        sb.append(", coverageMultiCast=").append(coverageMultiCast);
+        sb.append(", coverageScoutMatch=").append(coverageScoutMatch);
+        sb.append(", coverageScoutCoverageStatus=").append(coverageScoutCoverageStatus);
+        sb.append(", coverageScoutConnected=").append(coverageScoutConnected);
+        sb.append(", coverageLiveOdds=").append(coverageLiveOdds);
+        sb.append(", coverageDeeperCoverage=").append(coverageDeeperCoverage);
+        sb.append(", coverageTacticalLineup=").append(coverageTacticalLineup);
+        sb.append(", coverageBasicLineup=").append(coverageBasicLineup);
+        sb.append(", coverageHasStats=").append(coverageHasStats);
+        sb.append(", coverageInLiveScore=").append(coverageInLiveScore);
+        sb.append(", coveragePenaltyShootout=").append(coveragePenaltyShootout);
+        sb.append(", coverageScoutTest=").append(coverageScoutTest);
+        sb.append(", coverageLmtSupport=").append(coverageLmtSupport);
+        sb.append(", coverageVenue=").append(coverageVenue);
+        sb.append(", coverageMatchDataComplete=").append(coverageMatchDataComplete);
+        sb.append(", coverageMediaCoverage=").append(coverageMediaCoverage);
+        sb.append(", coverageSubstitutions=").append(coverageSubstitutions);
+        sb.append(", updatedTime=").append(updatedTime);
+        sb.append(", endedTime=").append(endedTime);
+        sb.append(", pTime=").append(pTime);
+        sb.append(", timeInfoRunning=").append(timeInfoRunning);
+        sb.append(", removed=").append(removed);
+        sb.append(", facts=").append(facts);
+        sb.append(", localDerby=").append(localDerby);
+        sb.append(", distance=").append(distance);
+        sb.append(", weather=").append(weather);
+        sb.append(", pitchCondition=").append(pitchCondition);
+        sb.append(", windAdvantage=").append(windAdvantage);
+        sb.append(", matchStatus='").append(matchStatus).append('\'');
+        sb.append(", matchStatusId=").append(matchStatusId);
+        sb.append(", cancelled=").append(cancelled);
         sb.append('}');
         return sb.toString();
     }

@@ -2,8 +2,9 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.panos.sportmonitor.stats.BaseRootEntity;
 
-public class StatsSeasonLeagueSummary extends RootEntity {
+public class StatsSeasonLeagueSummary extends BaseRootEntity {
     private Integer matchesPlayed, goalsTotal;
     private Double matchesHomeWins, matchesDraws, matchesAwayWins, goalsPerMatch, goalsPerMatchHome, goalsPerMatchAway;
     private Double overUnder05, overUnder15, overUnder25, overUnder35, overUnder45, overUnder55;

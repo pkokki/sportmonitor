@@ -2,13 +2,14 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.panos.sportmonitor.stats.entities.BaseEntity;
+import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.BaseRootEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class StatsSeasonTeamPositionHistory extends RootEntity {
+public class StatsSeasonTeamPositionHistory extends BaseRootEntity {
     private Long seasonId;
     private Integer teamCount;
     private Integer roundCount;

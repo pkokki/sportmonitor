@@ -2,12 +2,13 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.panos.sportmonitor.stats.entities.BaseEntity;
+import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.BaseRootEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatsSeasonUniqueTeamStats extends RootEntity {
+public class StatsSeasonUniqueTeamStats extends BaseRootEntity {
     private Long seasonId;
     private List<Long> uniqueTeamStats = new ArrayList<>();
 

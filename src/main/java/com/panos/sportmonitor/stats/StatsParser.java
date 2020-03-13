@@ -4,7 +4,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.entities.*;
+import com.panos.sportmonitor.stats.entities.ref.*;
 import com.panos.sportmonitor.stats.entities.root.*;
+import com.panos.sportmonitor.stats.entities.time.*;
+import org.springframework.boot.ansi.AnsiColor;
+import org.springframework.boot.ansi.AnsiOutput;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,18 +22,31 @@ public class StatsParser {
         parse(source);
     }
 
+    static void printlnInfo(String msg) {
+        println(AnsiColor.BLUE, msg);
+    }
+    static  void printlnError(String msg) {
+        println(AnsiColor.RED, msg);
+    }
+    private static void println(AnsiColor color, String msg) {
+        System.out.println(AnsiOutput.toString("\u001B[", color.toString(), "m", msg, "\u001B[0m"));
+    }
+
     public void parse(final File jsonFile) throws IOException {
-        System.out.println(String.format("Parsing '%s'", jsonFile.getName()));
+        printlnInfo(String.format("Parsing '%s'", jsonFile.getName()));
         final ObjectMapper mapper = new ObjectMapper();
         final JsonNode rootNode = mapper.readTree(jsonFile);
         parse(rootNode);
     }
 
-    public void parse(final JsonNode rootNode) {
+    public void parse(JsonNode rootNode) {
+        if (rootNode.has("doc") && rootNode.get("doc").getNodeType() == JsonNodeType.ARRAY)
+            rootNode = rootNode.get("doc").iterator().next();
         long timeStamp = rootNode.get("_dob").asLong();
-        final RootEntity rootEntity = createRootEntity(rootNode.get("event").asText(), timeStamp);
-        traverse(1, timeStamp,"", rootNode.get("data"), rootEntity);
-        //rootEntity.print();
+        final BaseRootEntity baseRootEntity = createRootEntity(rootNode.get("event").asText(), timeStamp);
+        traverse(1, timeStamp,"", rootNode.get("data"), baseRootEntity);
+        //if (baseRootEntity instanceof StatsMatchSituation)
+        //    baseRootEntity.print();
     }
 
     private void traverse(final int level, final long timeStamp, final String currentNodeName, final JsonNode currentNode, final BaseEntity parentEntity) {
@@ -55,7 +72,7 @@ public class StatsParser {
                                   final JsonNode currentNode, final BaseEntity parentEntity) {
         boolean r = parentEntity.setProperty(currentNodeName, currentNodeType, currentNode);
         if (!r)
-            System.err.println(String.format("%s [UNHANDLED PROPERTY]: %s --- %s --- %s",
+            printlnError(String.format("%s [UNHANDLED PROPERTY]: %s --- %s --- %s",
                     parentEntity.getClass().getSimpleName(),
                     currentNodeName,
                     currentNodeType,
@@ -63,41 +80,49 @@ public class StatsParser {
     }
 
     private void traverseObject(final int level, final long timeStamp, final String currentNodeName, final JsonNode currentNode, final BaseEntity parentEntity) {
-        BaseEntity childEntity = null;
-        String childPrefix = currentNodeName;
-        if (currentNode.has("_doc")) {
-            String docType = currentNode.get("_doc").asText();
-            if (isEntityNode(currentNodeName, docType, currentNode)) {
-                long auxEntityId = getAuxEntityId(currentNodeName);
-                long childEntityId = getEntityId(currentNodeName, auxEntityId, docType, currentNode);
-                childEntity = createEntity(parentEntity, docType, childEntityId, timeStamp);
-                childEntity.setAuxId(auxEntityId);
-                if (!childEntity.handleAuxId(auxEntityId)) {
-                    System.err.println(String.format("%s [UNHANDLED AUX ID]: '%s' --- id=%s, aux=%s",
-                            childEntity.getClass().getSimpleName(),
-                            currentNodeName,
-                            childEntity.getId(),
-                            auxEntityId));
-                }
-                childPrefix = "";
-                parentEntity.getRoot().register(level, childEntity);
-            }
-        }
+
+        final BaseEntity childEntity = tryCreateChildEntity(timeStamp, currentNodeName, currentNode, parentEntity);
+
         for (Iterator<Map.Entry<String, JsonNode>> it = currentNode.fields(); it.hasNext(); ) {
             Map.Entry<String, JsonNode> childEntry = it.next();
             String childName = childEntry.getKey();
             JsonNode childNode = childEntry.getValue();
             traverse(level + 1, timeStamp,
-                    (childPrefix.length() > 0 ? childPrefix + "." : "") + childName,
+                    childEntity != null ? childName : (currentNodeName.length() > 0 ? currentNodeName + "." : "") + childName,
                     childNode,
                     childEntity != null ? childEntity : parentEntity);
         }
-        if (parentEntity != null && childEntity != null && !parentEntity.setEntity(currentNodeName, childEntity)) {
-            System.err.println(String.format("%s [UNHANDLED CHILD ENTITY]: '%s' --- %s",
-                    parentEntity.getClass().getSimpleName(),
-                    currentNodeName,
-                    childEntity.getClass().getSimpleName()));
+
+        if (childEntity != null) {
+            parentEntity.getRoot().register(level, childEntity);
+            if (!parentEntity.setEntity(currentNodeName, childEntity)) {
+                printlnError(String.format("%s [UNHANDLED CHILD ENTITY]: '%s' --- %s",
+                        parentEntity.getClass().getSimpleName(),
+                        currentNodeName,
+                        childEntity.getClass().getSimpleName()));
+            }
         }
+    }
+
+    private BaseEntity tryCreateChildEntity(final long timeStamp, final String currentNodeName, final JsonNode currentNode, final BaseEntity parentEntity) {
+        if (currentNode.has("_doc")) {
+            String docType = currentNode.get("_doc").asText();
+            if (isEntityNode(currentNodeName, docType, currentNode)) {
+                long auxEntityId = getAuxEntityId(currentNodeName);
+                long childEntityId = getEntityId(currentNodeName, auxEntityId, docType, currentNode);
+                final BaseEntity childEntity = createEntity(parentEntity, docType, childEntityId, timeStamp);
+                childEntity.setAuxId(auxEntityId);
+                if (!childEntity.handleAuxId(auxEntityId)) {
+                    printlnError(String.format("%s [UNHANDLED AUX ID]: '%s' --- id=%s, aux=%s",
+                            childEntity.getClass().getSimpleName(),
+                            currentNodeName,
+                            childEntity.getId(),
+                            auxEntityId));
+                }
+                return childEntity;
+            }
+        }
+        return null;
     }
 
     private boolean isEntityNode(final String nodeName, final String nodeType, final JsonNode node) {
@@ -127,9 +152,12 @@ public class StatsParser {
         return 0;
     }
 
-    public RootEntity createRootEntity(final String name, final long timeStamp) {
-        RootEntity entity;
+    public BaseRootEntity createRootEntity(final String name, final long timeStamp) {
+        BaseRootEntity entity;
         switch (name) {
+            case "match_timeline": entity = new MatchTimeline(name, timeStamp); break;
+            case "match_detailsextended": entity = new MatchDetailsExtended(name, timeStamp); break;
+            case "stats_match_situation": entity = new StatsMatchSituation(name, timeStamp); break;
             case "stats_season_meta": entity = new StatsSeasonMeta(name, timeStamp); break;
             case "stats_match_get": entity = new StatsMatchGet(name, timeStamp); break;
             case "stats_team_versus": entity = new StatsTeamVersus(name, timeStamp); break;
@@ -154,7 +182,7 @@ public class StatsParser {
             case "stats_season_odds": entity = new StatsSeasonOdds(name, timeStamp); break;
             case "stats_season_fixtures": entity = new StatsSeasonFixtures(name, timeStamp); break;
             case "match_funfacts": entity = new MatchFunFacts(name, timeStamp); break;
-            default: System.err.println("createRootEntity [UNKNOWN]: " + name); entity = new RootEntity(name, timeStamp);
+            default: printlnError("createRootEntity [UNKNOWN]: " + name); entity = new NullRootEntity(name, timeStamp);
         }
         return entity;
     }
@@ -204,7 +232,13 @@ public class StatsParser {
             case "team_goal_stats": entity = new TeamGoalStatsEntity(parent, id, timeStamp); break;
             case "unique_team_stats": entity = new UniqueTeamStatsEntity(parent, id, timeStamp); break;
             case "match_funfact": entity = new MatchFunFactEntity(parent, id, timeStamp); break;
-            default: System.err.println("createEntity [UNKNOWN]: " + docType); entity = new NullEntity(parent);
+            case "stats_season_over_under": entity = new StatsSeasonOverUnderEntity(parent, id, timeStamp); break;
+            case "stats_team_over_under": entity = new StatsTeamOverUnderEntity(parent, id, timeStamp); break;
+            case "status": entity = new MatchStatusEntity(parent, id); break;
+            case "event": entity = new MatchEventEntity(parent, id); break;
+            case "match_details_entry": entity = new MatchDetailsEntryEntity(parent, id, timeStamp); break;
+            case "match_situation_entry": entity = new MatchSituationEntryEntity(parent, id); break;
+            default: printlnError("createEntity [UNKNOWN]: " + docType); entity = new NullEntity(parent);
         }
         return entity;
     }

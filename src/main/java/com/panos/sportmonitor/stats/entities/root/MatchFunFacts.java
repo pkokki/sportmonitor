@@ -3,12 +3,13 @@ package com.panos.sportmonitor.stats.entities.root;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.panos.sportmonitor.stats.entities.BaseEntity;
+import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.BaseRootEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MatchFunFacts extends RootEntity {
+public class MatchFunFacts extends BaseRootEntity {
     private List<Long> facts = new ArrayList<>();
 
     public MatchFunFacts(String name, long timeStamp) {

@@ -1,11 +1,12 @@
 package com.panos.sportmonitor.stats.entities.root;
 
-import com.panos.sportmonitor.stats.entities.BaseEntity;
+import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.BaseRootEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatsSeasonLastX extends RootEntity {
+public class StatsSeasonLastX extends BaseRootEntity {
     private long seasonId;
     private List<Long> matches = new ArrayList<>();
     private List<Long> tournaments = new ArrayList<>();

@@ -3,6 +3,7 @@ package com.panos.sportmonitor.stats.entities;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.panos.sportmonitor.stats.BaseEntity;
 
 public class PlayerEntity extends BaseEntity {
     private String name, fullName;
@@ -23,7 +24,7 @@ public class PlayerEntity extends BaseEntity {
             case "fullname": this.fullName = node.asText(); break;
             case "birthdate.uts": this.birthDate = node.asLong(); break;
             case "primarypositiontype": if (!node.isNull()) return false; break;
-            case "membersince.uts": this.memberSince = node.asLong(); break;
+            case "membersince.uts": return getParent().setChildProperty(this, nodeName, nodeType, node);
             case "jerseynumber":
             case "shirtnumber":
                 this.shirtNumber = node.asInt(); break;

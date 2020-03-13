@@ -1,11 +1,12 @@
 package com.panos.sportmonitor.stats.entities.root;
 
-import com.panos.sportmonitor.stats.entities.BaseEntity;
+import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.BaseRootEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatsSeasonTopGoals extends RootEntity {
+public class StatsSeasonTopGoals extends BaseRootEntity {
     private Long seasonId;
     private List<Long> players = new ArrayList<>();
     private List<Long> uniqueTeams = new ArrayList<>();

@@ -2,12 +2,13 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.panos.sportmonitor.stats.entities.BaseEntity;
+import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.BaseRootEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatsSeasonMeta extends RootEntity {
+public class StatsSeasonMeta extends BaseRootEntity {
     private Boolean statsCoverageComplexStat;
     private Boolean statsCoverageLiveTable;
     private Boolean statsCoverageHalftimeTable;

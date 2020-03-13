@@ -1,11 +1,12 @@
 package com.panos.sportmonitor.stats.entities.root;
 
-import com.panos.sportmonitor.stats.entities.BaseEntity;
+import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.BaseRootEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatsSeasonInjuries extends RootEntity {
+public class StatsSeasonInjuries extends BaseRootEntity {
     private List<Long> playerStatuses = new ArrayList<>();
 
     public StatsSeasonInjuries(String name, long timeStamp) {

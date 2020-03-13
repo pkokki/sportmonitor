@@ -2,18 +2,20 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.panos.sportmonitor.stats.entities.BaseEntity;
+import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.BaseRootEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class StatsTeamVersus extends RootEntity  {
+public class StatsTeamVersus extends BaseRootEntity {
     private List<Long> matches = new ArrayList<>();
     private List<Long> tournamentIds = new ArrayList<>();
     private List<Long> uniqueTeamIds = new ArrayList<>();
     private List<Long> realCategoryIds = new ArrayList<>();
     private HashMap<Long, Long> currentManagers = new HashMap<>();
+    private HashMap<Long, Long> currentManagerSince = new HashMap<>();
     private Long nextMatchId;
 
     public StatsTeamVersus(String name, long timeStamp) {
@@ -61,6 +63,15 @@ public class StatsTeamVersus extends RootEntity  {
     }
 
     @Override
+    protected boolean handleChildProperty(BaseEntity childEntity, String nodeName, JsonNodeType nodeType, JsonNode node) {
+        if (nodeName.equals("membersince.uts")) {
+            this.currentManagerSince.put(childEntity.getId(), node.asLong());
+            return true;
+        }
+        return super.handleChildProperty(childEntity, nodeName, nodeType, node);
+    }
+
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("StatsTeamVersus{");
         sb.append("name='").append(getName()).append('\'');
@@ -69,6 +80,7 @@ public class StatsTeamVersus extends RootEntity  {
         sb.append(", uniqueTeamIds=").append(uniqueTeamIds);
         sb.append(", realCategoryIds=").append(realCategoryIds);
         sb.append(", currentManagers=").append(currentManagers);
+        sb.append(", currentManagerSince=").append(currentManagerSince);
         sb.append(", nextMatchId=").append(nextMatchId);
         sb.append('}');
         return sb.toString();

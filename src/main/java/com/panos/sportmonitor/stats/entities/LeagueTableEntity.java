@@ -2,6 +2,7 @@ package com.panos.sportmonitor.stats.entities;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.panos.sportmonitor.stats.BaseEntity;
 
 import java.util.ArrayList;
 import java.util.List;

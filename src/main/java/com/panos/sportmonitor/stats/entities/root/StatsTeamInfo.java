@@ -2,15 +2,17 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.panos.sportmonitor.stats.entities.BaseEntity;
+import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.BaseRootEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatsTeamInfo extends RootEntity {
+public class StatsTeamInfo extends BaseRootEntity {
     private Long uniqueTeamId;
     private Long stadiumId;
     private Long managerId;
+    private Long managerMemberSince;
     private String twitter;
     private String hashtag;
     private String matchup;
@@ -30,6 +32,15 @@ public class StatsTeamInfo extends RootEntity {
             default:
                 return super.handleChildEntity(entityName, childEntity);
         }
+    }
+
+    @Override
+    protected boolean handleChildProperty(BaseEntity childEntity, String nodeName, JsonNodeType nodeType, JsonNode node) {
+        if (nodeName.equals("membersince.uts")) {
+            this.managerMemberSince = node.asLong();
+            return true;
+        }
+        return super.handleChildProperty(childEntity, nodeName, nodeType, node);
     }
 
     @Override
@@ -53,6 +64,7 @@ public class StatsTeamInfo extends RootEntity {
         sb.append(", uniqueTeamId=").append(uniqueTeamId);
         sb.append(", stadiumId=").append(stadiumId);
         sb.append(", managerId=").append(managerId);
+        sb.append(", managerMemberSince=").append(managerMemberSince);
         sb.append(", twitter='").append(twitter).append('\'');
         sb.append(", hashtag='").append(hashtag).append('\'');
         sb.append(", matchup='").append(matchup).append('\'');

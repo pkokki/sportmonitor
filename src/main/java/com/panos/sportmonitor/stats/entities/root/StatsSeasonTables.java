@@ -1,8 +1,9 @@
 package com.panos.sportmonitor.stats.entities.root;
 
-import com.panos.sportmonitor.stats.entities.BaseEntity;
+import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.BaseRootEntity;
 
-public class StatsSeasonTables extends RootEntity {
+public class StatsSeasonTables extends BaseRootEntity {
     private Long seasonId;
 
     public StatsSeasonTables(String name, long timeStamp) {

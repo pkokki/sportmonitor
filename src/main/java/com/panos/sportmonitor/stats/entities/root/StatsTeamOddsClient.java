@@ -1,10 +1,9 @@
 package com.panos.sportmonitor.stats.entities.root;
 
-import com.panos.sportmonitor.stats.entities.BaseEntity;
+import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.BaseRootEntity;
 
-import java.util.HashMap;
-
-public class StatsTeamOddsClient extends RootEntity {
+public class StatsTeamOddsClient extends BaseRootEntity {
     private Long uniqueTeamId;
 
     public StatsTeamOddsClient(String name, long timeStamp) {
