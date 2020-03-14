@@ -2,15 +2,17 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.panos.sportmonitor.stats.BaseRootEntityType;
+import com.panos.sportmonitor.stats.EntityIdList;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StatsSeasonInjuries extends BaseRootEntity {
-    private List<Long> playerStatuses = new ArrayList<>();
+    private EntityIdList playerStatuses = new EntityIdList();
 
-    public StatsSeasonInjuries(String name, long timeStamp) {
-        super(name, timeStamp);
+    public StatsSeasonInjuries(long timeStamp) {
+        super(BaseRootEntityType.StatsSeasonInjuries, timeStamp);
     }
 
     @Override

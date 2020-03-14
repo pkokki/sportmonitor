@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 
 public class PromotionEntity extends BaseEntity {
+    private Integer code;
     private String name;
     private String shortName;
     private Integer position;
@@ -22,6 +23,7 @@ public class PromotionEntity extends BaseEntity {
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
             case "name": this.name = node.asText(); break;
+            case "code": this.code = node.asInt(); break;
             case "shortname": this.shortName = node.asText(); break;
             case "cssclass": break;
             case "position": this.position = node.asInt(); break;
@@ -35,6 +37,7 @@ public class PromotionEntity extends BaseEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("PromotionEntity{");
         sb.append("id=").append(getId());
+        sb.append(", code=").append(code);
         sb.append(", name='").append(name).append('\'');
         sb.append(", shortName='").append(shortName).append('\'');
         sb.append(", position=").append(position);

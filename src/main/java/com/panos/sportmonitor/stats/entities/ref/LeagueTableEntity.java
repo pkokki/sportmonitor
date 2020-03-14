@@ -3,24 +3,26 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityIdList;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LeagueTableEntity extends BaseEntity {
-    private Long seasonId;
+    private EntityId seasonId;
     private Integer maxRounds;
     private Integer currentRound;
     private Integer presentationId;
     private String name;
     private String abbr, groupName;
     private Integer totalRows;
-    private Long tournamentId;
-    private Long realCategoryId;
-    private Long rulesId;
-    private List<Long> tableTypes = new ArrayList<>();
-    private List<Long> matchTypes = new ArrayList<>();
-    private List<Long> tableRows = new ArrayList<>();
+    private EntityId tournamentId;
+    private EntityId realCategoryId;
+    private EntityId rulesId;
+    private EntityIdList tableTypes = new EntityIdList();
+    private EntityIdList matchTypes = new EntityIdList();
+    private EntityIdList tableRows = new EntityIdList();
 
     public LeagueTableEntity(BaseEntity parent, long id) {
         super(parent, id);
@@ -43,7 +45,7 @@ public class LeagueTableEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "seasonid": this.seasonId = Long.parseLong(node.asText()); break;
+            case "seasonid": this.seasonId = new EntityId(node.asText()); break;
             case "maxrounds": this.maxRounds = node.asInt(); break;
             case "currentround": this.currentRound = node.asInt(); break;
             case "presentationid": this.presentationId = node.asInt(); break;

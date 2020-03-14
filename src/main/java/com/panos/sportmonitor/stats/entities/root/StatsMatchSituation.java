@@ -3,24 +3,20 @@ package com.panos.sportmonitor.stats.entities.root;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseRootEntity;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.panos.sportmonitor.stats.*;
 
 public class StatsMatchSituation extends BaseRootEntity {
-    private long matchId;
-    private List<Long> entries = new ArrayList<>();
+    private EntityId matchId;
+    private EntityIdList entries = new EntityIdList();
 
-    public StatsMatchSituation(String name, long timeStamp) {
-        super(name, timeStamp);
+    public StatsMatchSituation(long timeStamp) {
+        super(BaseRootEntityType.StatsMatchSituation, timeStamp);
     }
 
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "matchid": this.matchId = node.asLong(); break;
+            case "matchid": this.matchId = new EntityId(node.asLong()); break;
             default: return super.handleProperty(nodeName, nodeType, node);
         }
         return true;

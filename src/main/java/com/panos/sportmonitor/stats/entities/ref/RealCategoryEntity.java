@@ -3,10 +3,11 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class RealCategoryEntity extends BaseEntity {
     private String name;
-    private Long countryId;
+    private EntityId countryId;
 
     public RealCategoryEntity(BaseEntity parent, long id) {
         super(parent, id);

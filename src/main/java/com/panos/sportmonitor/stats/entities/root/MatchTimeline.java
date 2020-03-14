@@ -1,17 +1,14 @@
 package com.panos.sportmonitor.stats.entities.root;
 
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.panos.sportmonitor.stats.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class MatchTimeline extends BaseRootEntity {
-    private long matchId;
-    private List<Long> events = new ArrayList<>();
+    private EntityId matchId;
+    private EntityIdList events = new EntityIdList();
 
-    public MatchTimeline(String name, long timeStamp) {
-        super(name, timeStamp);
+    public MatchTimeline(long timeStamp) {
+        super(BaseRootEntityType.MatchTimeline, timeStamp);
     }
 
     @Override

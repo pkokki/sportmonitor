@@ -1,7 +1,9 @@
 package com.panos.sportmonitor.stats.entities.root;
 
-public class StatsSeasonTopAssists extends StatsSeasonTopGoals {
-    public StatsSeasonTopAssists(String name, long timeStamp) {
-        super(name, timeStamp);
+import com.panos.sportmonitor.stats.BaseRootEntityType;
+
+public class StatsSeasonTopAssists extends AbstractStatsSeasonTop {
+    public StatsSeasonTopAssists(long timeStamp) {
+        super(BaseRootEntityType.StatsSeasonTopAssists, timeStamp);
     }
 }

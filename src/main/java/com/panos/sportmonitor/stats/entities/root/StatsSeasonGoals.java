@@ -5,18 +5,21 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.panos.sportmonitor.stats.BaseRootEntityType;
+import com.panos.sportmonitor.stats.EntityIdList;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StatsSeasonGoals extends BaseRootEntity {
-    private Long seasonId;
+    private BigInteger seasonId;
     private Integer matches, scoredSum, scored0015, scored1630, scored3145, scored4660, scored6175, scored7690;
-    private List<Long> teamGoalStats = new ArrayList<>();
-    private List<Long> tables = new ArrayList<>();
+    private EntityIdList teamGoalStats = new EntityIdList();
+    private EntityIdList tables = new EntityIdList();
 
-    public StatsSeasonGoals(String name, long timeStamp) {
-        super(name, timeStamp);
+    public StatsSeasonGoals(long timeStamp) {
+        super(BaseRootEntityType.StatsSeasonGoals, timeStamp);
     }
 
     @Override
@@ -35,7 +38,7 @@ public class StatsSeasonGoals extends BaseRootEntity {
         if (currentNodeName.equals("teams")) {
             ObjectNode objNode = (ObjectNode)childNode;
             objNode.put("_doc", "team_goal_stats");
-            objNode.put("_id", childNode.path("team._id").asLong());
+            objNode.put("_id", childNode.get("team").get("_id").asLong());
         }
         return super.transformChildNode(currentNodeName, index, childNode);
     }

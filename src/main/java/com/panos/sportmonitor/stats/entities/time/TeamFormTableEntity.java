@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
+import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityIdList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +20,10 @@ public class TeamFormTableEntity extends BaseTimeEntity {
     private Integer goalsAgainstTotal, goalsAgainstTotalHome, goalsAgainstTotalAway, goalsAgainstHome, goalsAgainstAway;
     private Integer goalDiffTotal, goalDiffTotalHome, goalDiffTotalAway, goalDiffHome, goalDiffAway;
     private Integer pointsTotal, pointsTotalHome, pointsTotalAway, pointsHome, pointsAway;
-    private Long nextOpponentTeamId;
+    private EntityId nextOpponentTeamId;
     private Long nextOpponentTime;
     private Integer nextOpponentMatchDifficultyRatingHome, nextOpponentMatchDifficultyRatingAway;
-    private List<Long> formEntries = new ArrayList<>();
+    private EntityIdList formEntries = new EntityIdList();
 
     public TeamFormTableEntity(BaseEntity parent, long id, long timeStamp) {
         super(parent, id, timeStamp);
@@ -40,10 +42,11 @@ public class TeamFormTableEntity extends BaseTimeEntity {
     }
 
     @Override
-    public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
-        if (currentNodeName.startsWith("form.")) {
+    public JsonNode transformChildNode(final String currentNodeName, final int index, final JsonNode childNode) {
+        if (currentNodeName.equals("form.total") || currentNodeName.equals("form.home") || currentNodeName.equals("form.away")) {
+            int groupId = currentNodeName.equals("form.total") ? 1 : (currentNodeName.equals("form.home") ? 2 : 3);
             ObjectNode objNode = (ObjectNode)childNode;
-            objNode.put("_id", this.getId());
+            objNode.put("_id", Long.parseLong(String.format("%015d%d%02d", this.getRawId(), groupId, index)));
             objNode.put("_doc", "team_form_entry");
             objNode.put("_index", index);
             objNode.put("group", currentNodeName.substring(5));

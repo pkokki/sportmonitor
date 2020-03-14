@@ -2,13 +2,17 @@ package com.panos.sportmonitor.stats.entities;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityIdList;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SeasonEntity extends BaseEntity {
-    private Long uniqueTournamentId;
+    private BigInteger uniqueTournamentId;
     private String name;
     private String abbr;
     private Long startDate;
@@ -17,12 +21,12 @@ public class SeasonEntity extends BaseEntity {
     private Boolean friendly;
     private String year;
     private Boolean coverageLineups;
-    private List<Long> tables = new ArrayList<>();
-    private Long realCategoryId;
-    private List<Long> iseOdds = new ArrayList<>();
-    private List<Long> odds = new ArrayList<>();
-    private List<Long> matches = new ArrayList<>();
-    private List<Long> tournaments = new ArrayList<>();
+    private EntityIdList tables = new EntityIdList();
+    private BigInteger realCategoryId;
+    private EntityIdList iseOdds = new EntityIdList();
+    private EntityIdList odds = new EntityIdList();
+    private EntityIdList matches = new EntityIdList();
+    private EntityIdList tournaments = new EntityIdList();
 
     public SeasonEntity(BaseEntity parent, long id) {
         super(parent, id);
@@ -50,9 +54,19 @@ public class SeasonEntity extends BaseEntity {
     }
 
     @Override
+    public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
+        if (currentNodeName.startsWith("odds.") && !currentNodeName.endsWith("[]")) {
+            ObjectNode objNode = (ObjectNode)childNode;
+            long mid = Long.parseLong(childNode.get("_mid").asText());
+            objNode.put("_id", Long.parseLong(String.format("%d%03d", mid, index)));
+        }
+        return super.transformChildNode(currentNodeName, index, childNode);
+    }
+
+    @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "_utid": this.uniqueTournamentId = node.asLong(); break;
+            case "_utid": this.uniqueTournamentId = new EntityId(node.asLong()); break;
             case "name": this.name = node.asText(); break;
             case "abbr": this.abbr = node.asText(); break;
             case "start.uts": this.startDate = node.asLong() * 1000; break;

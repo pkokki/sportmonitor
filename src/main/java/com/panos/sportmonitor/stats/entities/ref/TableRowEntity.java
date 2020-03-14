@@ -2,11 +2,13 @@ package com.panos.sportmonitor.stats.entities.ref;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class TableRowEntity extends BaseEntity {
-    private Long promotionId;
-    private Long teamId;
+    private EntityId promotionId;
+    private EntityId teamId;
     private Integer changeTotal, changeHome, changeAway, drawTotal, drawHome, drawAway, goalDiffTotal, goalDiffHome, goalDiffAway;
     private Integer goalsAgainstTotal, goalsAgainstHome, goalsAgainstAway, goalsForTotal, goalsForHome, goalsForAway;
     private Integer lossTotal, lossHome, lossAway, total, home, away, pointsTotal, pointsHome, pointsAway, pos, posHome, posAway;
@@ -35,6 +37,16 @@ public class TableRowEntity extends BaseEntity {
             default:
                 return super.handleChildEntity(entityName, childEntity);
         }
+    }
+
+    @Override
+    public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
+        if (currentNodeName.equals("promotion")) {
+            ObjectNode objNode = (ObjectNode)childNode;
+            objNode.put("code", childNode.get("_id").asInt());
+            objNode.put("_id", childNode.get("position").asInt());
+        }
+        return super.transformChildNode(currentNodeName, index, childNode);
     }
 
     @Override

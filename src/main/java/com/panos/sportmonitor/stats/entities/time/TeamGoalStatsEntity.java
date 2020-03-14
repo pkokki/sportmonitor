@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class TeamGoalStatsEntity extends BaseTimeEntity {
-    private Long teamId;
+    private EntityId teamId;
     private Integer matches, scoredSum, scored0015, scored1630, scored3145, scored4660, scored6175, scored7690;
     private Integer concededSum, conceded0015, conceded1630, conceded3145, conceded4660, conceded6175, conceded7690;
     private Integer firstGoal, lastGoal, penaltySuccessCount, penaltyFailCount;

@@ -3,6 +3,8 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityIdList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +24,7 @@ public class StatisticsTableEntity extends BaseEntity {
     private Long seasonStart;
     private Long seasonEnd;
     private HashMap<Long, String> uniqueTeams = new HashMap<>();
-    private List<Long> matches = new ArrayList<>();
+    private EntityIdList matches = new EntityIdList();
 
     public StatisticsTableEntity(BaseEntity parent, long id) {
         super(parent, id);
@@ -46,7 +48,7 @@ public class StatisticsTableEntity extends BaseEntity {
             case "seasontypeunique": this.seasonTypeUnique = node.asText(); break;
             case "start.uts": this.seasonStart = node.asLong(); break;
             case "end.uts": this.seasonEnd = node.asLong(); break;
-            case "matches[]": matches.add(node.asLong()); break;
+            case "matches[]": matches.add(new EntityId(node.asLong())); break;
             case "uniqueteams[].id":
                 this.lastId = node.asLong();
                 this.uniqueTeams.put(lastId, "<N/A>");

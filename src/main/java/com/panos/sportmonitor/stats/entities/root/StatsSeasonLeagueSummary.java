@@ -3,14 +3,15 @@ package com.panos.sportmonitor.stats.entities.root;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.panos.sportmonitor.stats.BaseRootEntityType;
 
 public class StatsSeasonLeagueSummary extends BaseRootEntity {
     private Integer matchesPlayed, goalsTotal;
     private Double matchesHomeWins, matchesDraws, matchesAwayWins, goalsPerMatch, goalsPerMatchHome, goalsPerMatchAway;
     private Double overUnder05, overUnder15, overUnder25, overUnder35, overUnder45, overUnder55;
 
-    public StatsSeasonLeagueSummary(String name, long timeStamp) {
-        super(name, timeStamp);
+    public StatsSeasonLeagueSummary(long timeStamp) {
+        super(BaseRootEntityType.StatsSeasonLeagueSummary, timeStamp);
     }
 
     @Override

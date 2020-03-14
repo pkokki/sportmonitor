@@ -3,19 +3,22 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityIdList;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MatchEventEntity extends BaseEntity {
-    Integer typeId, minute, seconds;
-    String type, name;
-    Long matchId, eventTime, updatedTime;
-    Boolean disabled, header, ownGoal, penalty;
-    Integer minutes, injuryTime, period, periodScoreHome, periodScoreAway, resultHome, resultAway;
-    String resultWinner, team, card, periodName;
-    private Long playerId, scorerId, playerOutId, playerInId, statusId;
-    private List<Long> assists = new ArrayList<>();
+    private Integer typeId, minute, seconds;
+    private String type, name;
+    private EntityId matchId;
+    private Long eventTime, updatedTime;
+    private Boolean disabled, header, ownGoal, penalty;
+    private Integer minutes, injuryTime, period, periodScoreHome, periodScoreAway, resultHome, resultAway;
+    private String resultWinner, team, card, periodName;
+    private EntityId playerId, scorerId, playerOutId, playerInId, statusId;
+    private EntityIdList assists = new EntityIdList();
 
     public MatchEventEntity(BaseEntity parent, long id) {
         super(parent, id);
@@ -30,7 +33,7 @@ public class MatchEventEntity extends BaseEntity {
             case "uts": this.eventTime = node.asLong(); break;
             case "updated_uts": this.updatedTime = node.asLong(); break;
             case "type": this.type = node.asText(); break;
-            case "matchid": this.matchId = node.asLong(); break;
+            case "matchid": this.matchId = new EntityId(node.asLong()); break;
             case "disabled": this.disabled = node.asBoolean(); break;
             case "time": this.minute = node.asInt(); break;
             case "seconds": this.seconds = node.asInt(); break;

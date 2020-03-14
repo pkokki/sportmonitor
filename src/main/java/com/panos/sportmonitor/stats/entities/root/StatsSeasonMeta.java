@@ -2,8 +2,7 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.panos.sportmonitor.stats.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,14 +50,14 @@ public class StatsSeasonMeta extends BaseRootEntity {
     private Boolean statsCoverageStaffTeamOfficials;
     private Boolean statsCoverageStaffAssistantCoaches;
     private Boolean statsCoverageJerseys;
-    private List<Long> tournamentIds = new ArrayList<>();
-    private List<Long> tableIds = new ArrayList<>();
-    private Long seasonId;
-    private Long realCategoryId;
-    private Long uniqueTournamentId;
+    private EntityIdList tournamentIds = new EntityIdList();
+    private EntityIdList tableIds = new EntityIdList();
+    private EntityId seasonId;
+    private EntityId realCategoryId;
+    private EntityId uniqueTournamentId;
 
-    public StatsSeasonMeta(String name, long timeStamp) {
-        super(name, timeStamp);
+    public StatsSeasonMeta(long timeStamp) {
+        super(BaseRootEntityType.StatsSeasonMeta, timeStamp);
     }
 
     @Override
@@ -76,8 +75,8 @@ public class StatsSeasonMeta extends BaseRootEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "tournamentids[]": tournamentIds.add(node.asLong()); break;
-            case "tableids[]": tableIds.add(node.asLong()); break;
+            case "tournamentids[]": tournamentIds.add(new EntityId(node.asLong())); break;
+            case "tableids[]": tableIds.add(new EntityId(node.asLong())); break;
             case "statscoverage.complexstat": this.statsCoverageComplexStat = node.asBoolean(); break;
             case "statscoverage.livetable": this.statsCoverageLiveTable = node.asBoolean(); break;
             case "statscoverage.halftimetable": this.statsCoverageHalftimeTable = node.asBoolean(); break;

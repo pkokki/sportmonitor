@@ -5,15 +5,17 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.panos.sportmonitor.stats.BaseRootEntityType;
+import com.panos.sportmonitor.stats.EntityIdList;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MatchFunFacts extends BaseRootEntity {
-    private List<Long> facts = new ArrayList<>();
+    private EntityIdList facts = new EntityIdList();
 
-    public MatchFunFacts(String name, long timeStamp) {
-        super(name, timeStamp);
+    public MatchFunFacts(long timeStamp) {
+        super(BaseRootEntityType.MatchFunFacts, timeStamp);
     }
 
     @Override

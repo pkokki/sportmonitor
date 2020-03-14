@@ -3,10 +3,12 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class PlayerStatusEntity extends BaseEntity {
-    private Long playerId;
-    private Long uniqueTeamId, statusStart;
+    private EntityId playerId;
+    private EntityId uniqueTeamId;
+    private Long statusStart;
     private Integer statusId;
     private String statusName;
     private String statusComment;
@@ -29,7 +31,7 @@ public class PlayerStatusEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch(nodeName) {
-            case "_playerid": this.playerId = node.asLong(); break;
+            case "_playerid": this.playerId = new EntityId(node.asLong()); break;
             case "status._statusid": this.statusId = node.asInt(); break;
             case "status.name": this.statusName = node.asText(); break;
             case "status.comment": this.statusComment = node.asText(); break;

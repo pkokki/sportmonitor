@@ -5,13 +5,13 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.BaseEntity;
 
+import java.math.BigInteger;
+
 public class PlayerEntity extends BaseEntity {
     private String name, fullName;
     private Long birthDate;
-    private Long nationalityId, secondNationalityId;
-    private Long memberSince;
-    private Long positionId;
-    private Integer shirtNumber;
+    private BigInteger nationalityId, secondNationalityId;
+    private BigInteger positionId;
 
     public PlayerEntity(BaseEntity parent, long id) {
         super(parent, id);
@@ -27,8 +27,6 @@ public class PlayerEntity extends BaseEntity {
             case "membersince.uts": return getParent().setChildProperty(this, nodeName, nodeType, node);
             case "jerseynumber":
             case "shirtnumber":
-                this.shirtNumber = node.asInt(); break;
-
             case "birthdate._doc":
             case "birthdate.time":
             case "birthdate.date":
@@ -87,9 +85,7 @@ public class PlayerEntity extends BaseEntity {
         sb.append(", birthdate=").append(birthDate);
         sb.append(", nationalityId=").append(nationalityId);
         sb.append(", secondNationalityId=").append(secondNationalityId);
-        sb.append(", memberSince=").append(memberSince);
         sb.append(", positionId=").append(positionId);
-        sb.append(", shirtNumber=").append(shirtNumber);
         sb.append('}');
         return sb.toString();
     }

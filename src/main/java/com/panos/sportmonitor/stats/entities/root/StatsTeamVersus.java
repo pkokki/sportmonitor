@@ -2,25 +2,24 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.panos.sportmonitor.stats.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class StatsTeamVersus extends BaseRootEntity {
-    private List<Long> matches = new ArrayList<>();
-    private List<Long> tournamentIds = new ArrayList<>();
-    private List<Long> uniqueTeamIds = new ArrayList<>();
-    private List<Long> realCategoryIds = new ArrayList<>();
-    private HashMap<Long, Long> currentManagers = new HashMap<>();
-    private HashMap<Long, Long> currentManagerSince = new HashMap<>();
-    private Long nextMatchId;
+    private EntityIdList matches = new EntityIdList();
+    private EntityIdList tournamentIds = new EntityIdList();
+    private EntityIdList uniqueTeamIds = new EntityIdList();
+    private EntityIdList realCategoryIds = new EntityIdList();
+    private HashMap<Long, EntityId> currentManagers = new HashMap<>();
+    private HashMap<EntityId, Long> currentManagerSince = new HashMap<>();
+    private EntityId nextMatchId;
     private Long liveMatchId;
 
-    public StatsTeamVersus(String name, long timeStamp) {
-        super(name, timeStamp);
+    public StatsTeamVersus(long timeStamp) {
+        super(BaseRootEntityType.StatsTeamVersus, timeStamp);
     }
 
     @Override

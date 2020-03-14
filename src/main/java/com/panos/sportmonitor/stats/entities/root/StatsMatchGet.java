@@ -2,12 +2,14 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.panos.sportmonitor.stats.BaseRootEntityType;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class StatsMatchGet extends BaseRootEntity {
-    private Long matchId;
+    private EntityId matchId;
 
-    public StatsMatchGet(String name, long timeStamp) {
-        super(name, timeStamp);
+    public StatsMatchGet(long timeStamp) {
+        super(BaseRootEntityType.StatsMatchGet, timeStamp);
     }
 
     @Override

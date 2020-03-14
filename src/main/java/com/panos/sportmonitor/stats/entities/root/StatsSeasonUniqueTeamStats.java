@@ -2,18 +2,17 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.panos.sportmonitor.stats.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StatsSeasonUniqueTeamStats extends BaseRootEntity {
-    private Long seasonId;
-    private List<Long> uniqueTeamStats = new ArrayList<>();
+    private EntityId seasonId;
+    private EntityIdList uniqueTeamStats = new EntityIdList();
 
-    public StatsSeasonUniqueTeamStats(String name, long timeStamp) {
-        super(name, timeStamp);
+    public StatsSeasonUniqueTeamStats(long timeStamp) {
+        super(BaseRootEntityType.StatsSeasonUniqueTeamStats, timeStamp);
     }
 
     @Override

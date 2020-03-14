@@ -2,12 +2,14 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.panos.sportmonitor.stats.BaseRootEntityType;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class StatsSeasonOdds extends BaseRootEntity {
-    private Long seasonId;
+    private EntityId seasonId;
 
-    public StatsSeasonOdds(String name, long timeStamp) {
-        super(name, timeStamp);
+    public StatsSeasonOdds(long timeStamp) {
+        super(BaseRootEntityType.StatsSeasonOdds, timeStamp);
     }
 
     @Override

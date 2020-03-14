@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
+import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityIdList;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TopListEntryEntity extends BaseTimeEntity {
-    private Long playerId;
+    private EntityId playerId;
     private Integer totalGoals, totalAssists;
     private Integer totalMatches;
     private Integer totalPenalties;
@@ -23,7 +25,7 @@ public class TopListEntryEntity extends BaseTimeEntity {
     private Integer awayGoals;
     private Integer firstHalfGoals;
     private Integer secondHalfGoals;
-    private List<Long> teamsEntries = new ArrayList<>();
+    private EntityIdList teamsEntries = new EntityIdList();
     private Integer totalYellowCards;
     private Integer totalYellowRedCards;
     private Integer totalRedCards;
@@ -64,7 +66,7 @@ public class TopListEntryEntity extends BaseTimeEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "playerid": this.playerId = node.asLong(); break;
+            case "playerid": this.playerId = new EntityId(node.asLong()); break;
             case "total.goals": this.totalGoals = node.asInt(); break;
             case "total.assists": this.totalAssists = node.asInt(); break;
             case "total.matches": this.totalMatches = node.asInt(); break;

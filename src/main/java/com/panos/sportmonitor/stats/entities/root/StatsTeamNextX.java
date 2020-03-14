@@ -2,19 +2,22 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.panos.sportmonitor.stats.BaseRootEntityType;
+import com.panos.sportmonitor.stats.EntityIdList;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StatsTeamNextX extends BaseRootEntity {
-    private Long uniqueTeamId;
-    private List<Long> matchIds = new ArrayList<>();
-    private List<Long> tournamentIds = new ArrayList<>();
-    private List<Long> uniqueTournamentIds = new ArrayList<>();
-    private List<Long> realCategoriesIds = new ArrayList<>();
+    private BigInteger uniqueTeamId;
+    private EntityIdList matchIds = new EntityIdList();
+    private EntityIdList tournamentIds = new EntityIdList();
+    private EntityIdList uniqueTournamentIds = new EntityIdList();
+    private EntityIdList realCategoriesIds = new EntityIdList();
 
-    public StatsTeamNextX(String name, long timeStamp) {
-        super(name, timeStamp);
+    public StatsTeamNextX(long timeStamp) {
+        super(BaseRootEntityType.StatsTeamNextX, timeStamp);
     }
 
     @Override

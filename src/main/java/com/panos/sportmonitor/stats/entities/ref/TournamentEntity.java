@@ -3,6 +3,8 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityIdList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,7 @@ public class TournamentEntity extends BaseEntity {
     private String cuprRosterId;
     private Integer currentRound;
     private String groupName;
-    private List<Long> matches = new ArrayList<>();
+    private EntityIdList matches = new EntityIdList();
 
     public TournamentEntity(BaseEntity parent, long id) {
         super(parent, id);
@@ -56,7 +58,7 @@ public class TournamentEntity extends BaseEntity {
             case "tournamentlevelname": this.tournamentLevelName = node.asText(); break;
             case "groupname": this.groupName = node.asText(); break;
             case "currentround": this.currentRound = node.asInt(); break;
-            case "matches[]": this.matches.add(node.asLong()); break;
+            case "matches[]": this.matches.add(new EntityId(node.asLong())); break;
 
             case "_tid":
             case "_utid":

@@ -1,13 +1,18 @@
 package com.panos.sportmonitor.stats.entities.root;
 
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.panos.sportmonitor.stats.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StatsTeamOddsClient extends BaseRootEntity {
-    private Long uniqueTeamId;
+    private EntityId uniqueTeamId;
+    private EntityIdList odds = new EntityIdList();
 
-    public StatsTeamOddsClient(String name, long timeStamp) {
-        super(name, timeStamp);
+    public StatsTeamOddsClient(long timeStamp) {
+        super(BaseRootEntityType.StatsTeamOddsClient, timeStamp);
     }
 
     @Override
@@ -16,11 +21,32 @@ public class StatsTeamOddsClient extends BaseRootEntity {
             this.uniqueTeamId = childEntity.getId();
         }
         else if (entityName.startsWith("odds.")) {
-            //String oddId = entityName.substring(5, entityName.indexOf('['));
+            this.odds.add(childEntity.getId());
         }
         else {
             return super.handleChildEntity(entityName, childEntity);
         }
         return true;
+    }
+
+    @Override
+    public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
+        if (currentNodeName.startsWith("odds.") && !currentNodeName.endsWith("[]")) {
+            ObjectNode objNode = (ObjectNode)childNode;
+            long mid = Long.parseLong(childNode.get("_mid").asText());
+            objNode.put("_id", Long.parseLong(String.format("%d%03d", mid, index)));
+        }
+        return super.transformChildNode(currentNodeName, index, childNode);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("StatsTeamOddsClient{");
+        sb.append("name='").append(getName()).append('\'');
+        sb.append(", timeStamp=").append(getTimeStamp());
+        sb.append(", uniqueTeamId=").append(uniqueTeamId);
+        sb.append(", odds=").append(odds);
+        sb.append('}');
+        return sb.toString();
     }
 }

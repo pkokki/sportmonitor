@@ -3,6 +3,7 @@ package com.panos.sportmonitor.stats.entities;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class TeamEntity extends BaseEntity {
     private Long uid;
@@ -11,7 +12,8 @@ public class TeamEntity extends BaseEntity {
     private String nickname;
     private String mediumName;
     private Boolean isCountry;
-    private Long homeRealCategoryId, countryId;
+    private Long homeRealCategoryId;
+    private EntityId countryId;
 
     public TeamEntity(BaseEntity parent, long id) {
         super(parent, id);

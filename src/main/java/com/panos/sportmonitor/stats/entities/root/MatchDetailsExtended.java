@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.panos.sportmonitor.stats.BaseRootEntityType;
+import com.panos.sportmonitor.stats.EntityIdList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,11 +16,11 @@ public class MatchDetailsExtended extends BaseRootEntity {
     private transient int valueIndex = 0;
     private long matchId;
     private String teamHome, teamAway;
-    private List<Long> entries = new ArrayList<>();
+    private EntityIdList entries = new EntityIdList();
     private HashMap<String, String> types = new HashMap<>();
 
-    public MatchDetailsExtended(String name, long timeStamp) {
-        super(name, timeStamp);
+    public MatchDetailsExtended(long timeStamp) {
+        super(BaseRootEntityType.MatchDetailsExtended, timeStamp);
     }
 
     @Override
@@ -67,7 +69,6 @@ public class MatchDetailsExtended extends BaseRootEntity {
         final StringBuilder sb = new StringBuilder("MatchDetailsExtended{");
         sb.append("name='").append(getName()).append('\'');
         sb.append(", timeStamp=").append(getTimeStamp());
-        sb.append(", valueIndex=").append(valueIndex);
         sb.append(", matchId=").append(matchId);
         sb.append(", teamHome='").append(teamHome).append('\'');
         sb.append(", teamAway='").append(teamAway).append('\'');

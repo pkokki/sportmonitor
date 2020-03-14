@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class UniqueTeamStatsEntity extends BaseTimeEntity {
-    private Long uniqueTeamId;
+    private EntityId uniqueTeamId;
     private Integer goalAttempts, shotsOnGoal, shotsOffGoal, cornerKicks, ballPossession, shotsBlocked,
             cardsGiven, freekicks, offside, shotsOnPost, shotsOnBar, goalsByFoot,
             goalsByHead, attendance, yellowCards, redCards, goalsScored, goalsConceded,
@@ -28,7 +29,7 @@ public class UniqueTeamStatsEntity extends BaseTimeEntity {
 
     @Override
     public boolean handleAuxId(long auxEntityId) {
-        this.uniqueTeamId = auxEntityId;
+        this.uniqueTeamId = new EntityId(auxEntityId);
         return true;
     }
 

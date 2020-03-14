@@ -25,7 +25,7 @@ public class MatchTypeEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("TableTypeEntity{");
+        final StringBuilder sb = new StringBuilder("MatchTypeEntity{");
         sb.append("id=").append(getId());
         sb.append(", column='").append(column).append('\'');
         sb.append(", setTypeId=").append(setTypeId);

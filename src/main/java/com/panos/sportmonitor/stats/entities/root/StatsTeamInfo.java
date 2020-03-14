@@ -2,24 +2,23 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.panos.sportmonitor.stats.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StatsTeamInfo extends BaseRootEntity {
-    private Long uniqueTeamId;
-    private Long stadiumId;
-    private Long managerId;
+    private EntityId uniqueTeamId;
+    private EntityId stadiumId;
+    private EntityId managerId;
     private Long managerMemberSince;
     private String twitter;
     private String hashtag;
     private String matchup;
-    private List<Long> tournamentIds = new ArrayList<>();
+    private EntityIdList tournamentIds = new EntityIdList();
 
-    public StatsTeamInfo(String name, long timeStamp) {
-        super(name, timeStamp);
+    public StatsTeamInfo(long timeStamp) {
+        super(BaseRootEntityType.StatsTeamInfo, timeStamp);
     }
 
     @Override

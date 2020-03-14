@@ -3,20 +3,19 @@ package com.panos.sportmonitor.stats.entities.root;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.panos.sportmonitor.stats.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class StatsSeasonOverUnder extends BaseRootEntity {
-    private long seasonId;
-    private long statsSeasonOverUnderId;
-    private List<Long> statsTeamOverUnders = new ArrayList<>();
+    private EntityId seasonId;
+    private EntityId statsSeasonOverUnderId;
+    private EntityIdList statsTeamOverUnders = new EntityIdList();
 
-    public StatsSeasonOverUnder(String name, long timeStamp) {
-        super(name, timeStamp);
+    public StatsSeasonOverUnder(long timeStamp) {
+        super(BaseRootEntityType.StatsSeasonOverUnder, timeStamp);
     }
 
     @Override

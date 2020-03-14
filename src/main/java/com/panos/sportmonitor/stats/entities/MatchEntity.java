@@ -3,6 +3,8 @@ package com.panos.sportmonitor.stats.entities;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityIdList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,17 +12,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MatchEntity extends BaseEntity {
-    private Long realCategoryId;
-    private Long tournamentId;
-    private Long uniqueTournamentId;
+    private EntityId realCategoryId;
+    private EntityId tournamentId;
+    private EntityId uniqueTournamentId;
     private Long time;
     private String week;
     private Integer round;
     private Integer resultHome, resultAway;
     private String resultPeriod;
     private String resultWinner, resultBettingWinner;
-    private Long seasonId;
-    private Long teamHomeId, teamAwayId;
+    private EntityId seasonId;
+    private EntityId teamHomeId, teamAwayId;
     private Long teamHomeUid, teamAwayUid;
     private Boolean neutralGround;
     private String comment;
@@ -32,11 +34,11 @@ public class MatchEntity extends BaseEntity {
     private Boolean walkover;
     private Boolean retired;
     private Boolean disqualified;
-    private List<Long> referees = new ArrayList<>();
-    private Long managerHomeId;
-    private Long managerAwayId;
-    private Long roundNameId;
-    private Long stadiumId;
+    private EntityIdList referees = new EntityIdList();
+    private EntityId managerHomeId;
+    private EntityId managerAwayId;
+    private EntityId roundNameId;
+    private EntityId stadiumId;
     private Long historyPreviousMatchId;
     private Long historyNextMatchId;
     private Long homeTeamHistoryPrevMatchId;
@@ -61,7 +63,7 @@ public class MatchEntity extends BaseEntity {
     private Long oddsUpdated;
     private String status;
     private Long nextMatchiId;
-    private List<Long> teamForms = new ArrayList<>();
+    private EntityIdList teamForms = new EntityIdList();
     private  Integer  coverageLineup ;
     private  Integer  coverageFormations ;
     private  Long  coverageLiveTable ;
@@ -97,7 +99,7 @@ public class MatchEntity extends BaseEntity {
     private  Integer  pitchCondition ;
     private  Integer  windAdvantage ;
     private String  matchStatus ;
-    private Long matchStatusId;
+    private EntityId matchStatusId;
     private  Boolean  cancelled ;
 
     public MatchEntity(BaseEntity parent, long id) {
@@ -147,10 +149,10 @@ public class MatchEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "_rcid": this.realCategoryId = node.asLong(); break;
-            case "_tid": this.tournamentId = node.asLong(); break;
-            case "_utid": this.uniqueTournamentId = node.asLong(); break;
-            case "_seasonid": this.seasonId = node.asLong(); break;
+            case "_rcid": this.realCategoryId = new EntityId(node.asLong()); break;
+            case "_tid": this.tournamentId = new EntityId(node.asLong()); break;
+            case "_utid": this.uniqueTournamentId = new EntityId(node.asLong()); break;
+            case "_seasonid": this.seasonId = new EntityId(node.asLong()); break;
             case "time.uts":
             case "_dt.uts":
                 this.time = node.asLong(); break;

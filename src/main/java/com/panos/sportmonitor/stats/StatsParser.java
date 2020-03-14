@@ -7,8 +7,6 @@ import com.panos.sportmonitor.stats.entities.*;
 import com.panos.sportmonitor.stats.entities.ref.*;
 import com.panos.sportmonitor.stats.entities.root.*;
 import com.panos.sportmonitor.stats.entities.time.*;
-import org.springframework.boot.ansi.AnsiColor;
-import org.springframework.boot.ansi.AnsiOutput;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,26 +15,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StatsParser {
+    private final StatsStore statsStore;
+
+    public StatsParser(StatsStore statsStore) {
+        this.statsStore = statsStore;
+    }
+
     public void parse(final String jsonFilePath) throws IOException {
         File source = new File(jsonFilePath);
         parse(source);
     }
 
-    static void printlnInfo(String msg) {
-        println(AnsiColor.BLUE, msg);
-    }
-    static  void printlnError(String msg) {
-        println(AnsiColor.RED, msg);
-    }
-    static  void printlnWarn(String msg) {
-        println(AnsiColor.YELLOW, msg);
-    }
-    private static void println(AnsiColor color, String msg) {
-        System.out.println(AnsiOutput.toString("\u001B[", color.toString(), "m", msg, "\u001B[0m"));
-    }
+
 
     public void parse(final File jsonFile) throws IOException {
-        printlnInfo(String.format("Parsing '%s'", jsonFile.getName()));
+        StatsConsole.printlnInfo(String.format("Parsing '%s'", jsonFile.getName()));
         final ObjectMapper mapper = new ObjectMapper();
         final JsonNode rootNode = mapper.readTree(jsonFile);
         parse(rootNode);
@@ -50,20 +43,21 @@ public class StatsParser {
         final BaseRootEntity baseRootEntity = createRootEntity(name, timeStamp);
         if (baseRootEntity != null) {
             traverse(1, timeStamp, "", rootNode.get("data"), baseRootEntity);
-            //if (baseRootEntity instanceof StatsMatchSituation)
+            //if (baseRootEntity instanceof StatsFormTable)
             //    baseRootEntity.print();
+            statsStore.submit(baseRootEntity);
         }
         else
-            printlnWarn(String.format("StatsParser.parse [IGNORED ROOT TYPE]: %s", name));
+            StatsConsole.printlnWarn(String.format("StatsParser.parse [IGNORED ROOT TYPE]: %s", name));
     }
 
     private void traverse(final int level, final long timeStamp, final String currentNodeName, final JsonNode currentNode, final BaseEntity parentEntity) {
         JsonNodeType currentNodeType = currentNode.getNodeType();
         if (currentNodeType == JsonNodeType.ARRAY) {
             int index = 0;
-            for (JsonNode childNode : currentNode) {
-                childNode = parentEntity.transformChildNode(currentNodeName, index, childNode);
-                traverse(level, timeStamp, currentNodeName + "[]", childNode, parentEntity);
+            for (final JsonNode childNode : currentNode) {
+                final JsonNode transformedNode = parentEntity.transformChildNode(currentNodeName, index, childNode);
+                traverse(level, timeStamp, currentNodeName + "[]", transformedNode, parentEntity);
                 ++index;
             }
         }
@@ -80,7 +74,7 @@ public class StatsParser {
                                   final JsonNode currentNode, final BaseEntity parentEntity) {
         boolean r = parentEntity.setProperty(currentNodeName, currentNodeType, currentNode);
         if (!r)
-            printlnError(String.format("%s [UNHANDLED PROPERTY]: %s --- %s --- %s",
+            StatsConsole.printlnError(String.format("%s [UNHANDLED PROPERTY]: %s --- %s --- %s",
                     parentEntity.getClass().getSimpleName(),
                     currentNodeName,
                     currentNodeType,
@@ -102,9 +96,9 @@ public class StatsParser {
         }
 
         if (childEntity != null) {
-            parentEntity.getRoot().register(level, childEntity);
+            parentEntity.getRoot().addChildEntity(level, childEntity);
             if (!parentEntity.setEntity(currentNodeName, childEntity)) {
-                printlnError(String.format("%s [UNHANDLED CHILD ENTITY]: '%s' --- %s",
+                StatsConsole.printlnError(String.format("%s [UNHANDLED CHILD ENTITY]: '%s' --- %s",
                         parentEntity.getClass().getSimpleName(),
                         currentNodeName,
                         childEntity.getClass().getSimpleName()));
@@ -121,7 +115,7 @@ public class StatsParser {
                 final BaseEntity childEntity = createEntity(parentEntity, docType, childEntityId, timeStamp);
                 childEntity.setAuxId(auxEntityId);
                 if (!childEntity.handleAuxId(auxEntityId)) {
-                    printlnError(String.format("%s [UNHANDLED AUX ID]: '%s' --- id=%s, aux=%s",
+                    StatsConsole.printlnError(String.format("%s [UNHANDLED AUX ID]: '%s' --- id=%s, aux=%s",
                             childEntity.getClass().getSimpleName(),
                             currentNodeName,
                             childEntity.getId(),
@@ -135,7 +129,7 @@ public class StatsParser {
 
     private boolean isEntityNode(final String nodeName, final String nodeType, final JsonNode node) {
         return node.has("_id")
-                || node.has("_mid")
+                //|| node.has("_mid")
                 || nodeType.equals("uniqueteamform")
                 || nodeType.equals("seasonpos")
                 ;
@@ -149,7 +143,8 @@ public class StatsParser {
             String composite = String.format("%08d%08d%02d", node.get("seasonid").asInt(), auxEntityId, node.get("round").asInt());
             return Long.parseLong(composite);
         }
-        return node.has("_id") ? node.get("_id").asLong() : node.get("_mid").asLong();
+        //return node.has("_id") ? node.get("_id").asLong() : node.get("_mid").asLong();
+        return node.get("_id").asLong();
     }
     private long getAuxEntityId(final String nodeName) {
         Pattern regEx = Pattern.compile("[^0-9]*(\\d+)[^0-9]*");
@@ -165,42 +160,42 @@ public class StatsParser {
         switch (name) {
             case "match_timeline":
             case "match_timelinedelta":
-                entity = new MatchTimeline(name, timeStamp); break;
-            case "match_detailsextended": entity = new MatchDetailsExtended(name, timeStamp); break;
+                entity = new MatchTimeline(timeStamp); break;
+            case "match_detailsextended": entity = new MatchDetailsExtended(timeStamp); break;
             case "match_info": entity = null; break;
             case "match_bookmakerodds": entity = null; break;
             case "stats_match_form": entity = null; break;
-            case "match_funfacts": entity = new MatchFunFacts(name, timeStamp); break;
-            case "stats_match_get": entity = new StatsMatchGet(name, timeStamp); break;
-            case "stats_match_situation": entity = new StatsMatchSituation(name, timeStamp); break;
+            case "match_funfacts": entity = new MatchFunFacts(timeStamp); break;
+            case "stats_match_get": entity = new StatsMatchGet(timeStamp); break;
+            case "stats_match_situation": entity = new StatsMatchSituation(timeStamp); break;
 
-            case "stats_formtable": entity = new StatsFormTable(name, timeStamp); break;
-            case "stats_season_meta": entity = new StatsSeasonMeta(name, timeStamp); break;
-            case "stats_season_teams2": entity = new StatsSeasonTeams2(name, timeStamp); break;
-            case "stats_season_lastx": entity = new StatsSeasonLastX(name, timeStamp); break;
-            case "stats_season_nextx": entity = new StatsSeasonNextX(name, timeStamp); break;
-            case "stats_season_tables": entity = new StatsSeasonTables(name, timeStamp); break;
-            case "stats_season_overunder": entity = new StatsSeasonOverUnder(name, timeStamp); break;
-            case "stats_season_teampositionhistory": entity = new StatsSeasonTeamPositionHistory(name, timeStamp); break;
-            case "stats_season_topgoals": entity = new StatsSeasonTopGoals(name, timeStamp); break;
-            case "stats_season_topassists": entity = new StatsSeasonTopAssists(name, timeStamp); break;
-            case "stats_season_topcards": entity = new StatsSeasonTopCards(name, timeStamp); break;
-            case "stats_season_injuries": entity = new StatsSeasonInjuries(name, timeStamp); break;
-            case "stats_season_leaguesummary": entity = new StatsSeasonLeagueSummary(name, timeStamp); break;
-            case "stats_season_goals": entity = new StatsSeasonGoals(name, timeStamp); break;
-            case "stats_season_uniqueteamstats": entity = new StatsSeasonUniqueTeamStats(name, timeStamp); break;
-            case "stats_season_odds": entity = new StatsSeasonOdds(name, timeStamp); break;
-            case "stats_season_fixtures": entity = new StatsSeasonFixtures(name, timeStamp); break;
+            case "stats_formtable": entity = new StatsFormTable(timeStamp); break;
+            case "stats_season_meta": entity = new StatsSeasonMeta(timeStamp); break;
+            case "stats_season_teams2": entity = new StatsSeasonTeams2(timeStamp); break;
+            case "stats_season_lastx": entity = new StatsSeasonLastX(timeStamp); break;
+            case "stats_season_nextx": entity = new StatsSeasonNextX(timeStamp); break;
+            case "stats_season_tables": entity = new StatsSeasonTables(timeStamp); break;
+            case "stats_season_overunder": entity = new StatsSeasonOverUnder(timeStamp); break;
+            case "stats_season_teampositionhistory": entity = new StatsSeasonTeamPositionHistory(timeStamp); break;
+            case "stats_season_topgoals": entity = new StatsSeasonTopGoals(timeStamp); break;
+            case "stats_season_topassists": entity = new StatsSeasonTopAssists(timeStamp); break;
+            case "stats_season_topcards": entity = new StatsSeasonTopCards(timeStamp); break;
+            case "stats_season_injuries": entity = new StatsSeasonInjuries(timeStamp); break;
+            case "stats_season_leaguesummary": entity = new StatsSeasonLeagueSummary(timeStamp); break;
+            case "stats_season_goals": entity = new StatsSeasonGoals(timeStamp); break;
+            case "stats_season_uniqueteamstats": entity = new StatsSeasonUniqueTeamStats(timeStamp); break;
+            case "stats_season_odds": entity = new StatsSeasonOdds(timeStamp); break;
+            case "stats_season_fixtures": entity = new StatsSeasonFixtures(timeStamp); break;
 
             case "stats_team_tournaments": entity = null; break;
-            case "stats_team_odds_client": entity = new StatsTeamOddsClient(name, timeStamp); break;
-            case "stats_team_info": entity = new StatsTeamInfo(name, timeStamp); break;
-            case "stats_team_lastx": entity = new StatsTeamLastX(name, timeStamp); break;
-            case "stats_team_nextx": entity = new StatsTeamNextX(name, timeStamp); break;
+            case "stats_team_odds_client": entity = new StatsTeamOddsClient(timeStamp); break;
+            case "stats_team_info": entity = new StatsTeamInfo(timeStamp); break;
+            case "stats_team_lastx": entity = new StatsTeamLastX(timeStamp); break;
+            case "stats_team_nextx": entity = new StatsTeamNextX(timeStamp); break;
             case "stats_team_versusrecent":
             case "stats_team_versus":
-                entity = new StatsTeamVersus(name, timeStamp); break;
-            default: printlnError("StatsParser.createRootEntity [UNKNOWN ROOT TYPE]: " + name); entity = new NullRootEntity(name, timeStamp);
+                entity = new StatsTeamVersus(timeStamp); break;
+            default: StatsConsole.printlnError("StatsParser.createRootEntity [UNKNOWN ROOT TYPE]: " + name); entity = new NullRootEntity(timeStamp);
         }
         return entity;
     }
@@ -232,7 +227,7 @@ public class StatsParser {
             case "cupround": entity = new CupRoundEntity(parent, id); break;
             case "statistics_table": entity = new StatisticsTableEntity(parent, id); break;
             case "bookmaker": entity = new BookmakerEntity(parent, id); break;
-            case "odds": entity = new OddsEntity(parent, id); break;
+            case "odds": entity = new OddsEntity(parent, id, timeStamp); break;
             case "uniqueteamform": entity = new UniqueTeamFormEntity(parent, id); break;
             case "statistics_leaguetable": entity = new LeagueTableEntity(parent, id); break;
             case "tiebreakrule": entity = new TieBreakRuleEntity(parent, id); break;
@@ -256,7 +251,7 @@ public class StatsParser {
             case "event": entity = new MatchEventEntity(parent, id); break;
             case "match_details_entry": entity = new MatchDetailsEntryEntity(parent, id, timeStamp); break;
             case "match_situation_entry": entity = new MatchSituationEntryEntity(parent, id); break;
-            default: printlnError("StatsParser.createEntity [UNKNOWN ENTITY TYPE]: " + docType); entity = new NullEntity(parent);
+            default: StatsConsole.printlnError("StatsParser.createEntity [UNKNOWN ENTITY TYPE]: " + docType); entity = new NullEntity(parent);
         }
         return entity;
     }

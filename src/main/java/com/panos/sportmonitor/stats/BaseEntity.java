@@ -3,17 +3,20 @@ package com.panos.sportmonitor.stats;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.google.common.collect.Lists;
-import com.panos.sportmonitor.stats.entities.PlayerEntity;
+import org.apache.commons.lang3.builder.*;
 
 import java.util.List;
 
-public abstract class BaseEntity {
-    private final static List<String> IGNORED = Lists.newArrayList("_doc", "_mid", "_id", "_sid");
-    private final long id;
+public abstract class BaseEntity implements Diffable<BaseEntity> {
+    private final static List<String> IGNORED = Lists.newArrayList("_doc",/* "_mid",*/ "_id", "_sid");
+    private final EntityId id;
     private long auxId;
     private final BaseEntity parent;
 
     public BaseEntity(BaseEntity parent, long id) {
+        this(parent, new EntityId(id));
+    }
+    public BaseEntity(BaseEntity parent, EntityId id) {
         this.parent = parent;
         this.id = id;
     }
@@ -38,7 +41,7 @@ public abstract class BaseEntity {
     }
 
     protected boolean handleChildProperty(BaseEntity childEntity, String nodeName, JsonNodeType nodeType, JsonNode node) {
-        StatsParser.printlnError(String.format("%s [UNHANDLED *CHILD* PROPERTY]: %s->%s --- %s --- %s",
+        StatsConsole.printlnError(String.format("%s [UNHANDLED *CHILD* PROPERTY]: %s->%s --- %s --- %s",
                 this.getClass().getSimpleName(),
                 childEntity.getClass().getSimpleName(),
                 nodeName,
@@ -52,14 +55,14 @@ public abstract class BaseEntity {
     }
 
     public boolean handleAuxId(long auxEntityId) {
-        return auxEntityId == 0 || auxEntityId == id;
+        return auxEntityId == 0 || id.equals(new EntityId(auxEntityId));
     }
 
     public JsonNode transformChildNode(final String currentNodeName, final int index, final JsonNode childNode) {
         return childNode;
     }
 
-    public long getId() {
+    public EntityId getId() {
         return id;
     }
     public final BaseEntity getParent() {
@@ -70,6 +73,12 @@ public abstract class BaseEntity {
     }
     public final long getAuxId() { return this.auxId; }
     public final void setAuxId(long auxId) { this.auxId = auxId; }
+
+    public DiffResult diff(BaseEntity obj) {
+        // No need for null check, as NullPointerException correct if obj is null
+        return new ReflectionDiffBuilder(this, obj, ToStringStyle.SHORT_PREFIX_STYLE)
+                .build();
+    }
 
     @Override
     public String toString() {

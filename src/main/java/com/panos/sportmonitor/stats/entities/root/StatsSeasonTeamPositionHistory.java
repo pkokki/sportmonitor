@@ -2,24 +2,24 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.panos.sportmonitor.stats.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class StatsSeasonTeamPositionHistory extends BaseRootEntity {
-    private Long seasonId;
+    private EntityId seasonId;
     private Integer teamCount;
     private Integer roundCount;
-    private List<Long> promotions = new ArrayList<>();
-    private List<Long> tables = new ArrayList<>();
-    private List<Long> teams = new ArrayList<>();
-    private HashMap<Long, Long> seasonPositions = new HashMap<>();
+    private EntityIdList promotions = new EntityIdList();
+    private EntityIdList tables = new EntityIdList();
+    private EntityIdList teams = new EntityIdList();
+    private HashMap<Long, EntityId> seasonPositions = new HashMap<>();
 
-    public StatsSeasonTeamPositionHistory(String name, long timeStamp) {
-        super(name, timeStamp);
+    public StatsSeasonTeamPositionHistory(long timeStamp) {
+        super(BaseRootEntityType.StatsSeasonTeamPositionHistory, timeStamp);
     }
 
     @Override
@@ -49,6 +49,16 @@ public class StatsSeasonTeamPositionHistory extends BaseRootEntity {
                 return super.handleProperty(nodeName, nodeType, node);
         }
         return true;
+    }
+
+    @Override
+    public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
+        if (currentNodeName.startsWith("positiondata.")) {
+            ObjectNode objNode = (ObjectNode)childNode;
+            objNode.put("code", childNode.get("_id").asInt());
+            objNode.put("_id", currentNodeName.substring(currentNodeName.indexOf('.')+1));
+        }
+        return super.transformChildNode(currentNodeName, index, childNode);
     }
 
     @Override

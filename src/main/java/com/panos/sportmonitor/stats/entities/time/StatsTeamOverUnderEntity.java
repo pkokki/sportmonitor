@@ -1,9 +1,10 @@
 package com.panos.sportmonitor.stats.entities.time;
 
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class StatsTeamOverUnderEntity extends StatsOverUnderEntity {
-    private long teamId;
+    private EntityId teamId;
 
     public StatsTeamOverUnderEntity(BaseEntity parent, long id, long timeStamp) {
         super(parent, id, timeStamp);

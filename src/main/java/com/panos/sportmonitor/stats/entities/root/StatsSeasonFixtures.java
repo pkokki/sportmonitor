@@ -2,12 +2,14 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.panos.sportmonitor.stats.BaseRootEntityType;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class StatsSeasonFixtures extends BaseRootEntity {
-    private long seasonId;
+    private EntityId seasonId;
 
-    public StatsSeasonFixtures(String name, long timeStamp) {
-        super(name, timeStamp);
+    public StatsSeasonFixtures(long timeStamp) {
+        super(BaseRootEntityType.StatsSeasonFixtures, timeStamp);
     }
 
     @Override
