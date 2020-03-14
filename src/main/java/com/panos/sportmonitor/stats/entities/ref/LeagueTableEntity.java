@@ -1,4 +1,4 @@
-package com.panos.sportmonitor.stats.entities;
+package com.panos.sportmonitor.stats.entities.ref;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
@@ -13,7 +13,7 @@ public class LeagueTableEntity extends BaseEntity {
     private Integer currentRound;
     private Integer presentationId;
     private String name;
-    private String abbr;
+    private String abbr, groupName;
     private Integer totalRows;
     private Long tournamentId;
     private Long realCategoryId;
@@ -49,6 +49,7 @@ public class LeagueTableEntity extends BaseEntity {
             case "presentationid": this.presentationId = node.asInt(); break;
             case "name": this.name = node.asText(); break;
             case "abbr": this.abbr = node.asText(); break;
+            case "groupname": this.groupName = node.asText(); break;
             case "totalrows": this.totalRows = node.asInt(); break;
             default:
                 if (nodeName.startsWith("header[]") || nodeName.startsWith("set[]"))
@@ -68,6 +69,7 @@ public class LeagueTableEntity extends BaseEntity {
         sb.append(", presentationId=").append(presentationId);
         sb.append(", name='").append(name).append('\'');
         sb.append(", abbr='").append(abbr).append('\'');
+        sb.append(", groupName='").append(groupName).append('\'');
         sb.append(", totalRows=").append(totalRows);
         sb.append(", tournamentId=").append(tournamentId);
         sb.append(", realCategoryId=").append(realCategoryId);

@@ -25,6 +25,7 @@ public class TournamentEntity extends BaseEntity {
     private String tournamentLevelName;
     private String cuprRosterId;
     private Integer currentRound;
+    private String groupName;
     private List<Long> matches = new ArrayList<>();
 
     public TournamentEntity(BaseEntity parent, long id) {
@@ -53,6 +54,7 @@ public class TournamentEntity extends BaseEntity {
             case "livetable": this.liveTable = node.asLong(); break;
             case "tournamentlevelorder": this.tournamentLevelOrder = node.asLong(); break;
             case "tournamentlevelname": this.tournamentLevelName = node.asText(); break;
+            case "groupname": this.groupName = node.asText(); break;
             case "currentround": this.currentRound = node.asInt(); break;
             case "matches[]": this.matches.add(node.asLong()); break;
 
@@ -69,7 +71,7 @@ public class TournamentEntity extends BaseEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("TournamentEntity{");
         sb.append("id=").append(getId());
-        sb.append(", realCategoryId=").append(realCategoryId);
+        sb.append("realCategoryId=").append(realCategoryId);
         sb.append(", isk=").append(isk);
         sb.append(", seasonId=").append(seasonId);
         sb.append(", currentSeason=").append(currentSeason);
@@ -85,6 +87,10 @@ public class TournamentEntity extends BaseEntity {
         sb.append(", liveTable=").append(liveTable);
         sb.append(", tournamentLevelOrder=").append(tournamentLevelOrder);
         sb.append(", tournamentLevelName='").append(tournamentLevelName).append('\'');
+        sb.append(", cuprRosterId='").append(cuprRosterId).append('\'');
+        sb.append(", currentRound=").append(currentRound);
+        sb.append(", groupName='").append(groupName).append('\'');
+        sb.append(", matches=").append(matches);
         sb.append('}');
         return sb.toString();
     }

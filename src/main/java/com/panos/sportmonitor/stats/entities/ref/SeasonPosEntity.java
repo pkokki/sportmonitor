@@ -1,4 +1,4 @@
-package com.panos.sportmonitor.stats.entities;
+package com.panos.sportmonitor.stats.entities.ref;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;

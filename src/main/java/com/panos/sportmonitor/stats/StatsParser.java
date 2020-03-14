@@ -28,6 +28,9 @@ public class StatsParser {
     static  void printlnError(String msg) {
         println(AnsiColor.RED, msg);
     }
+    static  void printlnWarn(String msg) {
+        println(AnsiColor.YELLOW, msg);
+    }
     private static void println(AnsiColor color, String msg) {
         System.out.println(AnsiOutput.toString("\u001B[", color.toString(), "m", msg, "\u001B[0m"));
     }
@@ -42,11 +45,16 @@ public class StatsParser {
     public void parse(JsonNode rootNode) {
         if (rootNode.has("doc") && rootNode.get("doc").getNodeType() == JsonNodeType.ARRAY)
             rootNode = rootNode.get("doc").iterator().next();
-        long timeStamp = rootNode.get("_dob").asLong();
-        final BaseRootEntity baseRootEntity = createRootEntity(rootNode.get("event").asText(), timeStamp);
-        traverse(1, timeStamp,"", rootNode.get("data"), baseRootEntity);
-        //if (baseRootEntity instanceof StatsMatchSituation)
-        //    baseRootEntity.print();
+        final long timeStamp = rootNode.get("_dob").asLong();
+        final String name = rootNode.get("event").asText();
+        final BaseRootEntity baseRootEntity = createRootEntity(name, timeStamp);
+        if (baseRootEntity != null) {
+            traverse(1, timeStamp, "", rootNode.get("data"), baseRootEntity);
+            //if (baseRootEntity instanceof StatsMatchSituation)
+            //    baseRootEntity.print();
+        }
+        else
+            printlnWarn(String.format("StatsParser.parse [IGNORED ROOT TYPE]: %s", name));
     }
 
     private void traverse(final int level, final long timeStamp, final String currentNodeName, final JsonNode currentNode, final BaseEntity parentEntity) {
@@ -155,23 +163,25 @@ public class StatsParser {
     public BaseRootEntity createRootEntity(final String name, final long timeStamp) {
         BaseRootEntity entity;
         switch (name) {
-            case "match_timeline": entity = new MatchTimeline(name, timeStamp); break;
+            case "match_timeline":
+            case "match_timelinedelta":
+                entity = new MatchTimeline(name, timeStamp); break;
             case "match_detailsextended": entity = new MatchDetailsExtended(name, timeStamp); break;
-            case "stats_match_situation": entity = new StatsMatchSituation(name, timeStamp); break;
-            case "stats_season_meta": entity = new StatsSeasonMeta(name, timeStamp); break;
+            case "match_info": entity = null; break;
+            case "match_bookmakerodds": entity = null; break;
+            case "stats_match_form": entity = null; break;
+            case "match_funfacts": entity = new MatchFunFacts(name, timeStamp); break;
             case "stats_match_get": entity = new StatsMatchGet(name, timeStamp); break;
-            case "stats_team_versus": entity = new StatsTeamVersus(name, timeStamp); break;
+            case "stats_match_situation": entity = new StatsMatchSituation(name, timeStamp); break;
+
+            case "stats_formtable": entity = new StatsFormTable(name, timeStamp); break;
+            case "stats_season_meta": entity = new StatsSeasonMeta(name, timeStamp); break;
             case "stats_season_teams2": entity = new StatsSeasonTeams2(name, timeStamp); break;
-            case "stats_team_odds_client": entity = new StatsTeamOddsClient(name, timeStamp); break;
-            case "stats_team_info": entity = new StatsTeamInfo(name, timeStamp); break;
-            case "stats_team_lastx": entity = new StatsTeamLastX(name, timeStamp); break;
-            case "stats_team_nextx": entity = new StatsTeamNextX(name, timeStamp); break;
             case "stats_season_lastx": entity = new StatsSeasonLastX(name, timeStamp); break;
             case "stats_season_nextx": entity = new StatsSeasonNextX(name, timeStamp); break;
             case "stats_season_tables": entity = new StatsSeasonTables(name, timeStamp); break;
             case "stats_season_overunder": entity = new StatsSeasonOverUnder(name, timeStamp); break;
             case "stats_season_teampositionhistory": entity = new StatsSeasonTeamPositionHistory(name, timeStamp); break;
-            case "stats_formtable": entity = new StatsFormTable(name, timeStamp); break;
             case "stats_season_topgoals": entity = new StatsSeasonTopGoals(name, timeStamp); break;
             case "stats_season_topassists": entity = new StatsSeasonTopAssists(name, timeStamp); break;
             case "stats_season_topcards": entity = new StatsSeasonTopCards(name, timeStamp); break;
@@ -181,8 +191,16 @@ public class StatsParser {
             case "stats_season_uniqueteamstats": entity = new StatsSeasonUniqueTeamStats(name, timeStamp); break;
             case "stats_season_odds": entity = new StatsSeasonOdds(name, timeStamp); break;
             case "stats_season_fixtures": entity = new StatsSeasonFixtures(name, timeStamp); break;
-            case "match_funfacts": entity = new MatchFunFacts(name, timeStamp); break;
-            default: printlnError("createRootEntity [UNKNOWN]: " + name); entity = new NullRootEntity(name, timeStamp);
+
+            case "stats_team_tournaments": entity = null; break;
+            case "stats_team_odds_client": entity = new StatsTeamOddsClient(name, timeStamp); break;
+            case "stats_team_info": entity = new StatsTeamInfo(name, timeStamp); break;
+            case "stats_team_lastx": entity = new StatsTeamLastX(name, timeStamp); break;
+            case "stats_team_nextx": entity = new StatsTeamNextX(name, timeStamp); break;
+            case "stats_team_versusrecent":
+            case "stats_team_versus":
+                entity = new StatsTeamVersus(name, timeStamp); break;
+            default: printlnError("StatsParser.createRootEntity [UNKNOWN ROOT TYPE]: " + name); entity = new NullRootEntity(name, timeStamp);
         }
         return entity;
     }
@@ -238,7 +256,7 @@ public class StatsParser {
             case "event": entity = new MatchEventEntity(parent, id); break;
             case "match_details_entry": entity = new MatchDetailsEntryEntity(parent, id, timeStamp); break;
             case "match_situation_entry": entity = new MatchSituationEntryEntity(parent, id); break;
-            default: printlnError("createEntity [UNKNOWN]: " + docType); entity = new NullEntity(parent);
+            default: printlnError("StatsParser.createEntity [UNKNOWN ENTITY TYPE]: " + docType); entity = new NullEntity(parent);
         }
         return entity;
     }

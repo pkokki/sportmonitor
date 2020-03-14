@@ -17,6 +17,7 @@ public class StatsTeamVersus extends BaseRootEntity {
     private HashMap<Long, Long> currentManagers = new HashMap<>();
     private HashMap<Long, Long> currentManagerSince = new HashMap<>();
     private Long nextMatchId;
+    private Long liveMatchId;
 
     public StatsTeamVersus(String name, long timeStamp) {
         super(name, timeStamp);
@@ -54,7 +55,7 @@ public class StatsTeamVersus extends BaseRootEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "": break;
+            case "livematchid": this.liveMatchId = node.asLong(); break;
             default:
                 if (nodeName.startsWith("jersey.")) return true;
                 return super.handleProperty(nodeName, nodeType, node);
@@ -82,6 +83,7 @@ public class StatsTeamVersus extends BaseRootEntity {
         sb.append(", currentManagers=").append(currentManagers);
         sb.append(", currentManagerSince=").append(currentManagerSince);
         sb.append(", nextMatchId=").append(nextMatchId);
+        sb.append(", liveMatchId=").append(liveMatchId);
         sb.append('}');
         return sb.toString();
     }

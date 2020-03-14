@@ -1,4 +1,4 @@
-package com.panos.sportmonitor.stats.entities;
+package com.panos.sportmonitor.stats.entities.ref;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
@@ -22,7 +22,7 @@ public class OddsEntity extends BaseEntity {
     private Integer oddsTypeId;
     private Boolean exchange;
     private String key;
-    private String extra, closingtime;
+    private String extra, closingTime;
 
     public OddsEntity(BaseEntity parent, long id) {
         super(parent, id);
@@ -54,7 +54,7 @@ public class OddsEntity extends BaseEntity {
             case "exchange": this.exchange = node.asBoolean(); return true;
             case "key": this.key = node.asText(); return true;
             case "extra": this.extra = node.asText(); return true;
-            case "closingtime": this.closingtime = node.asText(); return true;
+            case "closingtime": this.closingTime = node.asText(); return true;
         }
         return super.handleProperty(nodeName, nodeType, node);
     }
@@ -92,7 +92,7 @@ public class OddsEntity extends BaseEntity {
         sb.append(", exchange=").append(exchange);
         sb.append(", key='").append(key).append('\'');
         sb.append(", extra='").append(extra).append('\'');
-        sb.append(", closingtime='").append(closingtime).append('\'');
+        sb.append(", closingtime='").append(closingTime).append('\'');
         sb.append('}');
         return sb.toString();
     }

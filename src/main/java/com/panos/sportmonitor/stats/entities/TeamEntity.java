@@ -11,6 +11,7 @@ public class TeamEntity extends BaseEntity {
     private String nickname;
     private String mediumName;
     private Boolean isCountry;
+    private Long homeRealCategoryId, countryId;
 
     public TeamEntity(BaseEntity parent, long id) {
         super(parent, id);
@@ -25,6 +26,7 @@ public class TeamEntity extends BaseEntity {
             case "nickname": this.nickname = node.asText(); break;
             case "mediumname": this.mediumName = node.asText(); break;
             case "iscountry": this.isCountry = node.asBoolean(); break;
+            case "homerealcategoryid": this.homeRealCategoryId = node.asLong(); break;
 
             case "haslogo":
             case "virtual":
@@ -33,6 +35,15 @@ public class TeamEntity extends BaseEntity {
                 return super.handleProperty(nodeName, nodeType, node);
         }
         return true;
+    }
+
+    @Override
+    protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
+        if (entityName.equals("countrycode")) {
+            this.countryId = childEntity.getId();
+            return true;
+        }
+        return super.handleChildEntity(entityName, childEntity);
     }
 
     @Override
@@ -45,6 +56,8 @@ public class TeamEntity extends BaseEntity {
         sb.append(", nickname='").append(nickname).append('\'');
         sb.append(", mediumName='").append(mediumName).append('\'');
         sb.append(", isCountry=").append(isCountry);
+        sb.append(", countryId=").append(countryId);
+        sb.append(", homeRealCategoryId=").append(homeRealCategoryId);
         sb.append('}');
         return sb.toString();
     }
