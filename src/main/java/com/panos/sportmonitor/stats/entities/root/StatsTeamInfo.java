@@ -4,9 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class StatsTeamInfo extends BaseRootEntity {
     private EntityId uniqueTeamId;
     private EntityId stadiumId;
@@ -15,7 +12,7 @@ public class StatsTeamInfo extends BaseRootEntity {
     private String twitter;
     private String hashtag;
     private String matchup;
-    private EntityIdList tournamentIds = new EntityIdList();
+    private EntityIdList tournaments = new EntityIdList();
 
     public StatsTeamInfo(long timeStamp) {
         super(BaseRootEntityType.StatsTeamInfo, timeStamp);
@@ -25,7 +22,7 @@ public class StatsTeamInfo extends BaseRootEntity {
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
             case "team": this.uniqueTeamId = childEntity.getId(); return true;
-            case "tournaments[]": this.tournamentIds.add(childEntity.getId()); return true;
+            case "tournaments[]": this.tournaments.add(childEntity.getId()); return true;
             case "stadium": this.stadiumId = childEntity.getId(); return true;
             case "manager": this.managerId = childEntity.getId(); return true;
             default:
@@ -67,7 +64,7 @@ public class StatsTeamInfo extends BaseRootEntity {
         sb.append(", twitter='").append(twitter).append('\'');
         sb.append(", hashtag='").append(hashtag).append('\'');
         sb.append(", matchup='").append(matchup).append('\'');
-        sb.append(", tournamentsIds=").append(tournamentIds);
+        sb.append(", tournamentsIds=").append(tournaments);
         sb.append('}');
         return sb.toString();
     }

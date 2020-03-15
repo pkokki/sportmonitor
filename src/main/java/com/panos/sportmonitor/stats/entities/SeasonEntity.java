@@ -7,12 +7,8 @@ import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.EntityIdList;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-
 public class SeasonEntity extends BaseEntity {
-    private BigInteger uniqueTournamentId;
+    private EntityId uniqueTournamentId;
     private String name;
     private String abbr;
     private Long startDate;
@@ -22,7 +18,7 @@ public class SeasonEntity extends BaseEntity {
     private String year;
     private Boolean coverageLineups;
     private EntityIdList tables = new EntityIdList();
-    private BigInteger realCategoryId;
+    private EntityId realCategoryId;
     private EntityIdList iseOdds = new EntityIdList();
     private EntityIdList odds = new EntityIdList();
     private EntityIdList matches = new EntityIdList();

@@ -129,7 +129,6 @@ public class StatsParser {
 
     private boolean isEntityNode(final String nodeName, final String nodeType, final JsonNode node) {
         return node.has("_id")
-                //|| node.has("_mid")
                 || nodeType.equals("uniqueteamform")
                 || nodeType.equals("seasonpos")
                 ;
@@ -143,7 +142,6 @@ public class StatsParser {
             String composite = String.format("%08d%08d%02d", node.get("seasonid").asInt(), auxEntityId, node.get("round").asInt());
             return Long.parseLong(composite);
         }
-        //return node.has("_id") ? node.get("_id").asLong() : node.get("_mid").asLong();
         return node.get("_id").asLong();
     }
     private long getAuxEntityId(final String nodeName) {

@@ -4,14 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.BaseEntity;
-
-import java.math.BigInteger;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class PlayerEntity extends BaseEntity {
     private String name, fullName;
     private Long birthDate;
-    private BigInteger nationalityId, secondNationalityId;
-    private BigInteger positionId;
+    private EntityId nationalityId, secondNationalityId;
+    private EntityId positionId;
 
     public PlayerEntity(BaseEntity parent, long id) {
         super(parent, id);

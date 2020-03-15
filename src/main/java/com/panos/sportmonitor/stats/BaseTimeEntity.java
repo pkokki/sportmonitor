@@ -1,6 +1,5 @@
 package com.panos.sportmonitor.stats;
 
-import java.math.BigInteger;
 
 public abstract class BaseTimeEntity extends BaseEntity {
     private final long timeStamp;

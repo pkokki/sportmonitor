@@ -1,20 +1,13 @@
 package com.panos.sportmonitor.stats.entities.root;
 
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseRootEntity;
-import com.panos.sportmonitor.stats.BaseRootEntityType;
-import com.panos.sportmonitor.stats.EntityIdList;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
+import com.panos.sportmonitor.stats.*;
 
 public class StatsTeamLastX extends BaseRootEntity {
-    private BigInteger uniqueTeamId;
-    private EntityIdList matchIds = new EntityIdList();
-    private EntityIdList tournamentIds = new EntityIdList();
-    private EntityIdList uniqueTournamentIds = new EntityIdList();
-    private EntityIdList realCategoriesIds = new EntityIdList();
+    private EntityId uniqueTeamId;
+    private EntityIdList matches = new EntityIdList();
+    private EntityIdList tournaments = new EntityIdList();
+    private EntityIdList uniqueTournaments = new EntityIdList();
+    private EntityIdList realCategories = new EntityIdList();
 
     public StatsTeamLastX(long timeStamp) {
         super(BaseRootEntityType.StatsTeamLastX, timeStamp);
@@ -24,14 +17,14 @@ public class StatsTeamLastX extends BaseRootEntity {
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
             case "team": this.uniqueTeamId = childEntity.getId(); return true;
-            case "matches[]": this.matchIds.add(childEntity.getId()); return true;
+            case "matches[]": this.matches.add(childEntity.getId()); return true;
             default:
                 if (entityName.matches("tournaments\\.\\d+")) {
-                    this.tournamentIds.add(childEntity.getId()); return true;
+                    this.tournaments.add(childEntity.getId()); return true;
                 } else if (entityName.matches("uniquetournaments\\.\\d+")) {
-                    this.uniqueTournamentIds.add(childEntity.getId()); return true;
+                    this.uniqueTournaments.add(childEntity.getId()); return true;
                 } else if (entityName.matches("realcategories\\.\\d+")) {
-                    this.realCategoriesIds.add(childEntity.getId()); return true;
+                    this.realCategories.add(childEntity.getId()); return true;
                 }
                 return super.handleChildEntity(entityName, childEntity);
         }
@@ -42,10 +35,10 @@ public class StatsTeamLastX extends BaseRootEntity {
         final StringBuilder sb = new StringBuilder("StatsTeamLastX{");
         sb.append("name=").append(getName());
         sb.append(", uniqueTeamId=").append(uniqueTeamId);
-        sb.append(", matchIds=").append(matchIds);
-        sb.append(", tournamentIds=").append(tournamentIds);
-        sb.append(", uniqueTournamentIds=").append(uniqueTournamentIds);
-        sb.append(", realCategoriesIds=").append(realCategoriesIds);
+        sb.append(", matchIds=").append(matches);
+        sb.append(", tournamentIds=").append(tournaments);
+        sb.append(", uniqueTournamentIds=").append(uniqueTournaments);
+        sb.append(", realCategoriesIds=").append(realCategories);
         sb.append('}');
         return sb.toString();
     }

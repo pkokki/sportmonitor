@@ -1,16 +1,9 @@
 package com.panos.sportmonitor.stats.entities.root;
 
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseRootEntity;
-import com.panos.sportmonitor.stats.BaseRootEntityType;
-import com.panos.sportmonitor.stats.EntityIdList;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
+import com.panos.sportmonitor.stats.*;
 
 public abstract class AbstractStatsSeasonTop extends BaseRootEntity {
-    protected BigInteger seasonId;
+    protected EntityId seasonId;
     protected EntityIdList players = new EntityIdList();
     protected EntityIdList uniqueTeams = new EntityIdList();
 

@@ -4,15 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class StatsTeamVersus extends BaseRootEntity {
     private EntityIdList matches = new EntityIdList();
-    private EntityIdList tournamentIds = new EntityIdList();
-    private EntityIdList uniqueTeamIds = new EntityIdList();
-    private EntityIdList realCategoryIds = new EntityIdList();
+    private EntityIdList tournaments = new EntityIdList();
+    private EntityIdList uniqueTeams = new EntityIdList();
+    private EntityIdList realCategories = new EntityIdList();
     private HashMap<Long, EntityId> currentManagers = new HashMap<>();
     private HashMap<EntityId, Long> currentManagerSince = new HashMap<>();
     private EntityId nextMatchId;
@@ -33,13 +31,13 @@ public class StatsTeamVersus extends BaseRootEntity {
                 return true;
             default:
                 if (entityName.startsWith("tournaments.")) {
-                    this.tournamentIds.add(childEntity.getId());
+                    this.tournaments.add(childEntity.getId());
                     return true;
                 } else if (entityName.startsWith("realcategories.")) {
-                    this.realCategoryIds.add(childEntity.getId());
+                    this.realCategories.add(childEntity.getId());
                     return true;
                 } else if (entityName.startsWith("teams.")) {
-                    this.uniqueTeamIds.add(childEntity.getId());
+                    this.uniqueTeams.add(childEntity.getId());
                     return true;
                 }
                 else if (entityName.startsWith("currentmanagers.")) {
@@ -76,9 +74,9 @@ public class StatsTeamVersus extends BaseRootEntity {
         final StringBuilder sb = new StringBuilder("StatsTeamVersus{");
         sb.append("name='").append(getName()).append('\'');
         sb.append(", matches=").append(matches);
-        sb.append(", tournamentIds=").append(tournamentIds);
-        sb.append(", uniqueTeamIds=").append(uniqueTeamIds);
-        sb.append(", realCategoryIds=").append(realCategoryIds);
+        sb.append(", tournamentIds=").append(tournaments);
+        sb.append(", uniqueTeamIds=").append(uniqueTeams);
+        sb.append(", realCategoryIds=").append(realCategories);
         sb.append(", currentManagers=").append(currentManagers);
         sb.append(", currentManagerSince=").append(currentManagerSince);
         sb.append(", nextMatchId=").append(nextMatchId);

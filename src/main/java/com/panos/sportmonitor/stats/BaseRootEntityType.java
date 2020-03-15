@@ -26,7 +26,7 @@ public class BaseRootEntityType {
     public static final BaseRootEntityType StatsSeasonUniqueTeamStats = new BaseRootEntityType(22, "StatsSeasonUniqueTeamStats");
     public static final BaseRootEntityType StatsTeamInfo = new BaseRootEntityType(23, "StatsTeamInfo");
     public static final BaseRootEntityType StatsTeamLastX = new BaseRootEntityType(24, "StatsTeamLastX");
-    public static final BaseRootEntityType StatsTeamNextX = new BaseRootEntityType(25, "");
+    public static final BaseRootEntityType StatsTeamNextX = new BaseRootEntityType(25, "StatsTeamNextX");
     public static final BaseRootEntityType StatsTeamOddsClient = new BaseRootEntityType(26, "StatsTeamOddsClient");
     public static final BaseRootEntityType StatsTeamVersus = new BaseRootEntityType(27, "StatsTeamVersus");
 
