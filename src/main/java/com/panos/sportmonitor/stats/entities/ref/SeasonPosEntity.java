@@ -3,13 +3,14 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class SeasonPosEntity extends BaseEntity {
-    private Long uniqueTeamId;
-    private Long seasonId;
+    private EntityId uniqueTeamId;
+    private EntityId seasonId;
+    private EntityId matchId;
     private Integer round;
     private Integer position;
-    private Long matchId;
     private String moved;
 
     public SeasonPosEntity(BaseEntity parent, long id) {
@@ -18,7 +19,7 @@ public class SeasonPosEntity extends BaseEntity {
 
     @Override
     public boolean handleAuxId(long auxEntityId) {
-        this.uniqueTeamId = auxEntityId;
+        this.uniqueTeamId = new EntityId(auxEntityId);
         return true;
     }
 
@@ -27,8 +28,8 @@ public class SeasonPosEntity extends BaseEntity {
         switch (nodeName) {
             case "round": this.round = node.asInt(); break;
             case "position": this.position = node.asInt(); break;
-            case "seasonid": this.seasonId = node.asLong(); break;
-            case "matchid": this.matchId = node.asLong(); break;
+            case "seasonid": this.seasonId = new EntityId(node.asLong()); break;
+            case "matchid": this.matchId = new EntityId(node.asLong()); break;
             case "moved": this.moved = node.asText(); break;
             default:
                 return super.handleProperty(nodeName, nodeType, node);

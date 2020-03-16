@@ -106,6 +106,11 @@ public class SeasonEntity extends BaseEntity {
         sb.append(", year='").append(year).append('\'');
         sb.append(", coverageLineups=").append(coverageLineups);
         sb.append(", tables=").append(tables);
+        sb.append(", realCategoryId=").append(realCategoryId);
+        sb.append(", iseOdds=").append(iseOdds);
+        sb.append(", odds=").append(odds);
+        sb.append(", matches=").append(matches);
+        sb.append(", tournaments=").append(tournaments);
         sb.append('}');
         return sb.toString();
     }

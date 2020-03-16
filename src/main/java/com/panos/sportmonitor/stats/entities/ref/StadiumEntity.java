@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StadiumEntity extends BaseEntity {
-    private EntityIdList teamHomes = new EntityIdList();
     private EntityId countryId;
+    private EntityIdList teamHomes = new EntityIdList();
     private String name;
     private String description;
     private String city;

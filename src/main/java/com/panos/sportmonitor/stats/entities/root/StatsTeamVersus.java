@@ -12,7 +12,7 @@ public class StatsTeamVersus extends BaseRootEntity {
     private EntityIdList uniqueTeams = new EntityIdList();
     private EntityIdList realCategories = new EntityIdList();
     private EntityId nextMatchId;
-    private Long liveMatchId;
+    private EntityId liveMatchId;
 
     public StatsTeamVersus(long timeStamp) {
         super(BaseRootEntityType.StatsTeamVersus, timeStamp);
@@ -50,7 +50,7 @@ public class StatsTeamVersus extends BaseRootEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "livematchid": this.liveMatchId = node.asLong(); break;
+            case "livematchid": this.liveMatchId = new EntityId(node.asLong()); break;
             default:
                 if (nodeName.startsWith("jersey.")) return true;
                 return super.handleProperty(nodeName, nodeType, node);

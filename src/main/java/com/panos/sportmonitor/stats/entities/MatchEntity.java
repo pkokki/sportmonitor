@@ -24,14 +24,14 @@ public class MatchEntity extends BaseEntity {
     private String resultWinner, resultBettingWinner;
     private EntityId seasonId;
     private EntityId teamHomeId, teamAwayId;
-    private Long teamHomeUid, teamAwayUid;
+    private EntityId teamHomeUid, teamAwayUid;
     private Boolean neutralGround;
     private String comment;
     private Boolean toBeAnnounced;
     private Boolean postponed;
     private Boolean canceled;
     private Boolean inlivescore;
-    private Long stadiumid;
+    private EntityId stadiumid;
     private Boolean walkover;
     private Boolean retired;
     private Boolean disqualified;
@@ -40,19 +40,19 @@ public class MatchEntity extends BaseEntity {
     private EntityId managerAwayId;
     private EntityId roundNameId;
     private EntityId stadiumId;
-    private Long historyPreviousMatchId;
-    private Long historyNextMatchId;
-    private Long homeTeamHistoryPrevMatchId;
-    private Long homeTeamHistoryNextMatchId;
-    private Long awayTeamHistoryPrevMatchId;
-    private Long awayTeamHistoryNextMatchId;
+    private EntityId historyPreviousMatchId;
+    private EntityId historyNextMatchId;
+    private EntityId homeTeamHistoryPrevMatchId;
+    private EntityId homeTeamHistoryNextMatchId;
+    private EntityId awayTeamHistoryPrevMatchId;
+    private EntityId awayTeamHistoryNextMatchId;
     private Integer p1Home, p1Away, ftHome, ftAway, otHome, otAway;
     private Integer cupRoundMatchNumber;
     private Integer cupRoundNumberOfMatches;
     private Integer matchDifficultyRatingHome, matchDifficultyRatingAway;
     private String oddsClientMatchId;
-    private Long oddsBookmakerId;
-    private Long oddsBookmakerBetId;
+    private EntityId oddsBookmakerId;
+    private EntityId oddsBookmakerBetId;
     private String oddsType;
     private String oddsTypeShort;
     private String oddsTypeId;
@@ -63,7 +63,7 @@ public class MatchEntity extends BaseEntity {
     private Boolean oddsBetstop;
     private Long oddsUpdated;
     private String status;
-    private Long nextMatchiId;
+    private EntityId nextMatchiId;
     private EntityIdList teamForms = new EntityIdList();
     private  Integer  coverageLineup ;
     private  Integer  coverageFormations ;
@@ -176,17 +176,17 @@ public class MatchEntity extends BaseEntity {
             case "neutralground": this.neutralGround = node.asBoolean(); break;
             case "comment": this.comment = node.asText(); break;
             case "status": this.status = node.asText(); break;
-            case "nextmatchid": this.nextMatchiId = node.asLong(); break;
+            case "nextmatchid": this.nextMatchiId = new EntityId(node.asLong()); break;
             case "tobeannounced": this.toBeAnnounced = node.asBoolean(); break;
             case "postponed": this.postponed = node.asBoolean(); break;
             case "canceled": this.canceled = node.asBoolean(); break;
             case "inlivescore": this.inlivescore = node.asBoolean(); break;
-            case "stadiumid": this.stadiumid = node.asLong(); break;
+            case "stadiumid": this.stadiumid = node.asLong() > 0 ? new EntityId(node.asLong()) : null; break;
             case "walkover": this.walkover = node.asBoolean(); break;
             case "retired": this.retired = node.asBoolean(); break;
             case "disqualified": this.disqualified = node.asBoolean(); break;
-            case "history.previous": this.historyPreviousMatchId = node.isNull() ? null : node.asLong(); break;
-            case "history.next": this.historyNextMatchId = node.isNull() ? null :node.asLong(); break;
+            case "history.previous": this.historyPreviousMatchId = node.isNull() ? null : new EntityId(node.asLong()); break;
+            case "history.next": this.historyNextMatchId = node.isNull() ? null : new EntityId(node.asLong()); break;
             case "periods.p1.home": this.p1Home = node.asInt(); break;
             case "periods.p1.away": this.p1Away = node.asInt(); break;
             case "periods.ft.home": this.ftHome = node.asInt(); break;
@@ -199,8 +199,8 @@ public class MatchEntity extends BaseEntity {
             case "matchdifficultyrating.away": this.matchDifficultyRatingAway = node.asInt(); break;
 
             case "odds.clientmatchid": this.oddsClientMatchId = node.asText(); break;
-            case "odds.bookmakerid": this.oddsBookmakerId = node.asLong(); break;
-            case "odds.bookmakerbetid": this.oddsBookmakerBetId = node.asLong(); break;
+            case "odds.bookmakerid": this.oddsBookmakerId = new EntityId(node.asLong()); break;
+            case "odds.bookmakerbetid": this.oddsBookmakerBetId = new EntityId(node.asLong()); break;
             case "odds.oddstype": this.oddsType = node.asText(); break;
             case "odds.oddstypeshort": this.oddsTypeShort = node.asText(); break;
             case "odds.oddstypeid": this.oddsTypeId = node.asText(); break;
@@ -286,9 +286,9 @@ public class MatchEntity extends BaseEntity {
         Matcher matcher = regEx.matcher(nodeName);
         if (matcher.find()) {
             if (!node.isNull() && matcher.group(1).equals("teamhistory")) {
-                long teamId = Long.parseLong(matcher.group(2));
+                EntityId teamId = new EntityId(Long.parseLong(matcher.group(2)));
                 String prevNext = matcher.group(3);
-                long matchId = node.asLong();
+                EntityId matchId = new EntityId(node.asLong());
                 if (teamId == this.teamHomeUid) {
                     if (prevNext.equals("previous")) this.homeTeamHistoryPrevMatchId = matchId;
                     if (prevNext.equals("next")) this.homeTeamHistoryNextMatchId = matchId;

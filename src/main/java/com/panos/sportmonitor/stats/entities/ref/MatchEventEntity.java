@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MatchEventEntity extends BaseEntity {
+    private EntityId matchId;
+    private EntityId playerId, scorerId, playerOutId, playerInId, statusId;
     private Integer typeId, minute, seconds;
     private String type, name;
-    private EntityId matchId;
     private Long eventTime, updatedTime;
     private Boolean disabled, header, ownGoal, penalty;
     private Integer minutes, injuryTime, period, periodScoreHome, periodScoreAway, resultHome, resultAway;
     private String resultWinner, team, card, periodName;
-    private EntityId playerId, scorerId, playerOutId, playerInId, statusId;
     private EntityIdList assists = new EntityIdList();
 
     public MatchEventEntity(BaseEntity parent, long id) {

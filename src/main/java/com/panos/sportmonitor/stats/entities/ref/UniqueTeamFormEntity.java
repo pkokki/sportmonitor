@@ -3,10 +3,11 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class UniqueTeamFormEntity extends BaseEntity {
-    private Long uniqueTeamId;
-    private Long matchId;
+    private EntityId uniqueTeamId;
+    private EntityId matchId;
     private Double home3, home5, home7, home9;
     private Double away3, away5, away7, away9;
     private Double total3, total5, total7, total9;
@@ -18,8 +19,8 @@ public class UniqueTeamFormEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "uniqueteamid": this.uniqueTeamId = Long.parseLong(node.asText()); break;
-            case "matchid": this.matchId = node.asLong(); break;
+            case "uniqueteamid": this.uniqueTeamId = new EntityId(node.asLong()); break;
+            case "matchid": this.matchId = new EntityId(node.asLong()); break;
             case "form.home.3": this.home3 = node.asDouble(); break;
             case "form.home.5": this.home5 = node.asDouble(); break;
             case "form.home.7": this.home7 = node.asDouble(); break;

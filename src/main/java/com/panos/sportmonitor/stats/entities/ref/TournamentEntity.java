@@ -6,13 +6,11 @@ import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.EntityIdList;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class TournamentEntity extends BaseEntity {
-    private Long realCategoryId;
+    private EntityId realCategoryId;
+    private EntityId seasonId;
+    private EntityId currentSeasonId;
     private Long isk;
-    private Long seasonId, currentSeason;
     private String seasonType;
     private String seasonTypeName;
     private String seasonTypeUnique;
@@ -25,7 +23,7 @@ public class TournamentEntity extends BaseEntity {
     private Long liveTable;
     private Long tournamentLevelOrder;
     private String tournamentLevelName;
-    private String cuprRosterId;
+    private String cupRosterId;
     private Integer currentRound;
     private String groupName;
     private EntityIdList matches = new EntityIdList();
@@ -37,17 +35,17 @@ public class TournamentEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "_rcid": this.realCategoryId = node.asLong(); break;
+            case "_rcid": this.realCategoryId = new EntityId(node.asLong()); break;
             case "_isk": this.isk = node.asLong(); break;
-            case "seasonid": this.seasonId = node.asLong(); break;
-            case "currentseason": this.currentSeason = node.asLong(); break;
+            case "seasonid": this.seasonId = new EntityId(node.asLong()); break;
+            case "currentseason": this.currentSeasonId = new EntityId(node.asLong()); break;
             case "seasontype": this.seasonType = node.asText(); break;
             case "seasontypename": this.seasonTypeName = node.asText(); break;
             case "seasontypeunique": this.seasonTypeUnique = node.asText(); break;
             case "year": this.year = node.asText(); break;
             case "name": this.name = node.asText(); break;
             case "abbr": this.abbr = node.asText(); break;
-            case "cuprosterid": this.cuprRosterId = node.asText(); break;
+            case "cuprosterid": this.cupRosterId = node.asText(); break;
             case "ground":
                 if (!node.isNull()) return false; break;
             case "friendly": this.friendly = node.asBoolean(); break;
@@ -76,7 +74,7 @@ public class TournamentEntity extends BaseEntity {
         sb.append("realCategoryId=").append(realCategoryId);
         sb.append(", isk=").append(isk);
         sb.append(", seasonId=").append(seasonId);
-        sb.append(", currentSeason=").append(currentSeason);
+        sb.append(", currentSeason=").append(currentSeasonId);
         sb.append(", seasonType='").append(seasonType).append('\'');
         sb.append(", seasonTypeName='").append(seasonTypeName).append('\'');
         sb.append(", seasonTypeUnique='").append(seasonTypeUnique).append('\'');
@@ -89,7 +87,7 @@ public class TournamentEntity extends BaseEntity {
         sb.append(", liveTable=").append(liveTable);
         sb.append(", tournamentLevelOrder=").append(tournamentLevelOrder);
         sb.append(", tournamentLevelName='").append(tournamentLevelName).append('\'');
-        sb.append(", cuprRosterId='").append(cuprRosterId).append('\'');
+        sb.append(", cuprRosterId='").append(cupRosterId).append('\'');
         sb.append(", currentRound=").append(currentRound);
         sb.append(", groupName='").append(groupName).append('\'');
         sb.append(", matches=").append(matches);

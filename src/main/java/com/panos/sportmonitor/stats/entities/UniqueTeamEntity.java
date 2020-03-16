@@ -15,11 +15,11 @@ public class UniqueTeamEntity extends BaseEntity {
     private String founded;
     private String website;
     private String sex;
-    private Long realCategoryId;
+    private EntityId realCategoryId;
     private Long teamTypeId;
     private EntityId countryCodeId;
     private EntityId stadiumId;
-    private Long homeRealCategoryId;
+    private EntityId homeRealCategoryId;
 
     private Integer statsMatches;
     private Integer statsHomeMatches;
@@ -223,8 +223,8 @@ public class UniqueTeamEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "_rcid": this.realCategoryId = node.asLong(); break;
-            case "homerealcategoryid": this.homeRealCategoryId = node.asLong(); break;
+            case "_rcid": this.realCategoryId = new EntityId(node.asLong()); break;
+            case "homerealcategoryid": this.homeRealCategoryId = new EntityId(node.asLong()); break;
             case "teamtypeid": this.teamTypeId = node.asLong(); break;
             case "name": this.name = node.asText(); break;
             case "suffix": this.suffix = node.asText(); break;

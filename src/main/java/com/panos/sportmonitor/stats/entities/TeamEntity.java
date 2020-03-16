@@ -6,13 +6,13 @@ import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
 
 public class TeamEntity extends BaseEntity {
-    private Long uid;
+    private EntityId uid;
     private String name;
     private String abbr;
     private String nickname;
     private String mediumName;
     private Boolean isCountry;
-    private Long homeRealCategoryId;
+    private EntityId homeRealCategoryId;
     private EntityId countryId;
 
     public TeamEntity(BaseEntity parent, long id) {
@@ -22,13 +22,13 @@ public class TeamEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "uid": this.uid = node.asLong(); break;
+            case "uid": this.uid = new EntityId(node.asLong()); break;
             case "name": this.name = node.asText(); break;
             case "abbr": this.abbr = node.asText(); break;
             case "nickname": this.nickname = node.asText(); break;
             case "mediumname": this.mediumName = node.asText(); break;
             case "iscountry": this.isCountry = node.asBoolean(); break;
-            case "homerealcategoryid": this.homeRealCategoryId = node.asLong(); break;
+            case "homerealcategoryid": this.homeRealCategoryId = new EntityId(node.asLong()); break;
 
             case "haslogo":
             case "virtual":
@@ -64,7 +64,7 @@ public class TeamEntity extends BaseEntity {
         return sb.toString();
     }
 
-    public long getUid() {
+    public EntityId getUid() {
         return uid;
     }
 }

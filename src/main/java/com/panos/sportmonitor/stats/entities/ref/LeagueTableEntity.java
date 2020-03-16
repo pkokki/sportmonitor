@@ -11,15 +11,15 @@ import java.util.List;
 
 public class LeagueTableEntity extends BaseEntity {
     private EntityId seasonId;
+    private EntityId tournamentId;
+    private EntityId realCategoryId;
+    private EntityId rulesId;
     private Integer maxRounds;
     private Integer currentRound;
     private Integer presentationId;
     private String name;
     private String abbr, groupName;
     private Integer totalRows;
-    private EntityId tournamentId;
-    private EntityId realCategoryId;
-    private EntityId rulesId;
     private EntityIdList tableTypes = new EntityIdList();
     private EntityIdList matchTypes = new EntityIdList();
     private EntityIdList tableRows = new EntityIdList();

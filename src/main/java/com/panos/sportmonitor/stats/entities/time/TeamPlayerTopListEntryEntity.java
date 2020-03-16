@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class TeamPlayerTopListEntryEntity extends BaseTimeEntity {
-    private Long uniqueTeamId;
+    private EntityId uniqueTeamId;
     private Boolean playerId;
     private Boolean active;
     private String lastEvent;
@@ -32,7 +33,7 @@ public class TeamPlayerTopListEntryEntity extends BaseTimeEntity {
 
     @Override
     public boolean handleAuxId(long auxEntityId) {
-        this.uniqueTeamId = auxEntityId;
+        this.uniqueTeamId = new EntityId(auxEntityId);
         return true;
     }
 
@@ -44,7 +45,7 @@ public class TeamPlayerTopListEntryEntity extends BaseTimeEntity {
             case "lastevent": this.lastEvent = node.asText(); break;
             case "started": this.started = node.asInt(); break;
             case "goals": this.goals = node.asInt(); break;
-            case "assists": this.goals = node.asInt(); break;
+            case "assists": this.assists = node.asInt(); break;
             case "matches": this.matches = node.asInt(); break;
             case "penalties": this.penalties = node.asInt(); break;
             case "goal_points": this.goalPoints = node.asInt(); break;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class TeamFormEntryEntity extends BaseTimeEntity {
     private Integer index;
@@ -12,7 +13,7 @@ public class TeamFormEntryEntity extends BaseTimeEntity {
     private String value;
     private Boolean homeMatch;
     private Boolean neutralGround;
-    private Long matchId;
+    private EntityId matchId;
 
     public TeamFormEntryEntity(BaseEntity parent, long timeStamp) {
         super(parent, timeStamp);
@@ -27,7 +28,7 @@ public class TeamFormEntryEntity extends BaseTimeEntity {
             case "value": this.value = node.asText(); break;
             case "homematch": this.homeMatch = node.asBoolean(); break;
             case "neutralground": this.neutralGround = node.asBoolean(); break;
-            case "matchid": this.matchId = node.asLong(); break;
+            case "matchid": this.matchId = new EntityId(node.asLong()); break;
             default: return super.handleProperty(nodeName, nodeType, node);
         }
         return true;
