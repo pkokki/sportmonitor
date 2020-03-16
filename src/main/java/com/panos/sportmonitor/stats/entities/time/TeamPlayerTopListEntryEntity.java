@@ -26,8 +26,8 @@ public class TeamPlayerTopListEntryEntity extends BaseTimeEntity {
     private Integer firstHalfCards;
     private Integer secondHalfCards;
 
-    public TeamPlayerTopListEntryEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+    public TeamPlayerTopListEntryEntity(BaseEntity parent, long timeStamp) {
+        super(parent, timeStamp);
     }
 
     @Override

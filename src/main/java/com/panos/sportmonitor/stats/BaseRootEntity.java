@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public abstract class BaseRootEntity extends BaseTimeEntity {
     private final String name;
     private final List<Tuple2<Integer, BaseEntity>> childEntities = new ArrayList<>();
+    private int nextId = 0;
 
     public BaseRootEntity(BaseRootEntityType type, long timeStamp) {
         super(null, combine(type, timeStamp), timeStamp);
@@ -17,9 +18,13 @@ public abstract class BaseRootEntity extends BaseTimeEntity {
         this.addChildEntity(1, this);
     }
 
+    public int getNextId() {
+        return ++nextId;
+    }
+
     private static EntityId combine(BaseRootEntityType type, long timeStamp) {
         try {
-            return new EntityId(String.format("1%013d%018d", timeStamp, type.getId()));
+            return new EntityId((timeStamp << 2) + type.getId());
         } catch (NumberFormatException ex) {
             throw new NumberFormatException(String.format("Unable to combine %d and %d -- %s", type.getId(), timeStamp, ex));
         }
@@ -55,4 +60,5 @@ public abstract class BaseRootEntity extends BaseTimeEntity {
         sb.append('}');
         return sb.toString();
     }
+
 }

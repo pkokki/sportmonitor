@@ -45,7 +45,7 @@ public class LeagueTableEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "seasonid": this.seasonId = new EntityId(node.asText()); break;
+            case "seasonid": this.seasonId = new EntityId(node.asLong()); break;
             case "maxrounds": this.maxRounds = node.asInt(); break;
             case "currentround": this.currentRound = node.asInt(); break;
             case "presentationid": this.presentationId = node.asInt(); break;

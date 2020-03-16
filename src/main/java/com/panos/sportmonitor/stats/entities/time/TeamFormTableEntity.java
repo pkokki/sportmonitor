@@ -25,8 +25,8 @@ public class TeamFormTableEntity extends BaseTimeEntity {
     private Integer nextOpponentMatchDifficultyRatingHome, nextOpponentMatchDifficultyRatingAway;
     private EntityIdList formEntries = new EntityIdList();
 
-    public TeamFormTableEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+    public TeamFormTableEntity(BaseEntity parent, long timeStamp) {
+        super(parent, timeStamp);
     }
 
     @Override

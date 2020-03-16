@@ -1,6 +1,5 @@
 package com.panos.sportmonitor.stats.store;
 
-import com.google.common.collect.Lists;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityIdList;
 import com.panos.sportmonitor.stats.StatsConsole;
@@ -10,14 +9,25 @@ import org.apache.commons.lang3.builder.*;
 import java.util.*;
 
 public abstract class AbstractEntityMap<T extends BaseEntity> {
+    private final String name;
     private final HashMap<Object, T> entities = new HashMap<>();
     private final List<IStatsStoreListener<T>> listeners = new ArrayList<>();
     private final StoreCounterListener<T> storeCounterListener;
+    private final SqlBuilderListener<T> sqlBuilderListener;
 
-    public AbstractEntityMap() {
+    public AbstractEntityMap(String name, SqlBuilderListener<T> sqlBuilderListener) {
+        this.name = name;
         this.storeCounterListener = new StoreCounterListener<>();
         this.listeners.add(storeCounterListener);
-        this.listeners.add(new SqlBuilderListener<>());
+        this.sqlBuilderListener = sqlBuilderListener;
+        this.addListener(getSqlBuilderListener());
+    }
+
+    public void addListener(IStatsStoreListener<T> listener) {
+        this.listeners.add(listener);
+    }
+    public void removeListener(IStatsStoreListener<T> listener) {
+        this.listeners.remove(listener);
     }
 
     public void submit(T submittedEntity) {
@@ -114,7 +124,7 @@ public abstract class AbstractEntityMap<T extends BaseEntity> {
     }
 
     private boolean isAcceptedDiff(String fieldName, Object oldValue, Object newValue) {
-        if (fieldName.equals("parent") || fieldName.equals("auxId") || fieldName.equals("childEntities"))
+        if (fieldName.equals("parent") || fieldName.equals("auxId") || fieldName.equals("childEntities") || fieldName.startsWith("__"))
             return false;
         if (newValue == null || Objects.equals(newValue, ""))
             return false;
@@ -127,5 +137,13 @@ public abstract class AbstractEntityMap<T extends BaseEntity> {
 
     public StoreCounters getCounters() {
         return storeCounterListener.getCounters();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public SqlBuilderListener<T> getSqlBuilderListener() {
+        return sqlBuilderListener;
     }
 }

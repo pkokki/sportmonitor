@@ -80,8 +80,8 @@ public abstract class StatsOverUnderEntity extends BaseTimeEntity {
     private Integer p255Over;
     private Integer p255Under;
 
-    public StatsOverUnderEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+    public StatsOverUnderEntity(BaseEntity parent, long timeStamp) {
+        super(parent, timeStamp);
     }
 
     @Override

@@ -4,14 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 
-public class CountryCodeEntity extends BaseEntity {
+public class CountryEntity extends BaseEntity {
     private String name;
     private String code;
     private Integer continentId;
     private String continent;
     private Long population;
 
-    public CountryCodeEntity(BaseEntity parent, long id) {
+    public CountryEntity(BaseEntity parent, long id) {
         super(parent, id);
     }
 
@@ -34,7 +34,7 @@ public class CountryCodeEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("CountryCodeEntity{");
+        final StringBuilder sb = new StringBuilder("CountryEntity{");
         sb.append("id=").append(getId());
         sb.append(", name='").append(name).append('\'');
         sb.append(", code='").append(code).append('\'');

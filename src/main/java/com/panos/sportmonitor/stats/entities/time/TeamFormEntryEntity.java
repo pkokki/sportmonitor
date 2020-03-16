@@ -14,8 +14,8 @@ public class TeamFormEntryEntity extends BaseTimeEntity {
     private Boolean neutralGround;
     private Long matchId;
 
-    public TeamFormEntryEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+    public TeamFormEntryEntity(BaseEntity parent, long timeStamp) {
+        super(parent, timeStamp);
     }
 
     @Override

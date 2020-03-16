@@ -4,8 +4,8 @@ package com.panos.sportmonitor.stats;
 public abstract class BaseTimeEntity extends BaseEntity {
     private final long timeStamp;
 
-    public BaseTimeEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, combine(parent, id, timeStamp));
+    public BaseTimeEntity(BaseEntity parent, long timeStamp) {
+        super(parent, combine(parent, timeStamp));
         this.timeStamp = timeStamp;
     }
 
@@ -14,12 +14,12 @@ public abstract class BaseTimeEntity extends BaseEntity {
         this.timeStamp = timeStamp;
     }
 
-    private static EntityId combine(BaseEntity parent, long id, long timeStamp) {
+    private static EntityId combine(BaseEntity parent, long timeStamp) {
         try {
-            return new EntityId(String.format("%013d%018d", timeStamp, id));
+            return new EntityId((timeStamp << 6) + parent.getRoot().getNextId());
         } catch (NumberFormatException ex) {
-            String parentName = parent != null ? parent.getClass().getSimpleName() : "ROOT";
-            throw new NumberFormatException(String.format("%s: Unable to combine %d and %d", parentName, id, timeStamp));
+            String parentName = parent.getClass().getSimpleName();
+            throw new NumberFormatException(String.format("%s: Unable to combine %d", parentName, timeStamp));
         }
     }
     protected long getRawId() {

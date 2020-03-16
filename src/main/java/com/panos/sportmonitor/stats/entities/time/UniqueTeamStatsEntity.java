@@ -23,8 +23,8 @@ public class UniqueTeamStatsEntity extends BaseTimeEntity {
             goalsByHeadMatches, attendanceMatches, yellowCardsMatches, redCardsMatches, goalsScoredMatches, goalsConcededMatches,
             yellowRedCardsMatches, shootingEfficiencyMatches;
 
-    public UniqueTeamStatsEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+    public UniqueTeamStatsEntity(BaseEntity parent, long timeStamp) {
+        super(parent, timeStamp);
     }
 
     @Override

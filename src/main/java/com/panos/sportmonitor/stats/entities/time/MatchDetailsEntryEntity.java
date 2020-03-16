@@ -11,8 +11,8 @@ public class MatchDetailsEntryEntity extends BaseTimeEntity {
     private Integer valueHome, valueHomeP1, valueHomeP2;
     private Integer valueAway, valueAwayP1, valueAwayP2;
 
-    public MatchDetailsEntryEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+    public MatchDetailsEntryEntity(BaseEntity parent, long timeStamp) {
+        super(parent, timeStamp);
     }
 
     @Override

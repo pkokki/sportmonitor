@@ -13,11 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MatchDetailsExtended extends BaseRootEntity {
-    private transient int valueIndex = 0;
+    private transient int __valueIndex = 0;
     private long matchId;
     private String teamHome, teamAway;
     private EntityIdList entries = new EntityIdList();
-    private HashMap<String, String> types = new HashMap<>();
+    //private HashMap<String, String> types = new HashMap<>();
 
     public MatchDetailsExtended(long timeStamp) {
         super(BaseRootEntityType.MatchDetailsExtended, timeStamp);
@@ -34,10 +34,9 @@ public class MatchDetailsExtended extends BaseRootEntity {
                 break;
             default:
                 if (nodeName.startsWith("types.")) {
-                    this.types.put(nodeName.substring(6), node.asText());
+                    //this.types.put(nodeName.substring(6), node.asText());
+                    return true;
                 }
-                //else if (nodeName.startsWith("values.")) {
-                //}
                 else
                     return super.handleProperty(nodeName, nodeType, node);
         }
@@ -49,7 +48,7 @@ public class MatchDetailsExtended extends BaseRootEntity {
         if (currentNodeName.startsWith("values.")) {
             ObjectNode objNode = (ObjectNode)childNode;
             objNode.put("_doc", "match_details_entry");
-            objNode.put("_id", Long.parseLong(String.format("%08d%04d", matchId, ++valueIndex)));
+            objNode.put("_id", Long.parseLong(String.format("%08d%04d", matchId, ++__valueIndex)));
             objNode.put("code", currentNodeName.substring(7));
         }
         return super.transformChildNode(currentNodeName, index, childNode);
@@ -73,7 +72,6 @@ public class MatchDetailsExtended extends BaseRootEntity {
         sb.append(", teamHome='").append(teamHome).append('\'');
         sb.append(", teamAway='").append(teamAway).append('\'');
         sb.append(", entries=").append(entries);
-        sb.append(", types=").append(types);
         sb.append('}');
         return sb.toString();
     }

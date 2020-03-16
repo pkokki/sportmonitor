@@ -4,9 +4,18 @@ package com.panos.sportmonitor.stats;
 import com.panos.sportmonitor.stats.store.*;
 
 public class StatsStore {
-    private final BaseRootEntityMap rootEntities = new BaseRootEntityMap();
-    private final BaseEntityMap entities = new BaseEntityMap();
-    private final BaseTimeEntityMap timeEntities = new BaseTimeEntityMap();
+    private final BaseRootEntityMap rootEntities;
+    private final BaseEntityMap entities;
+    private final BaseTimeEntityMap timeEntities;
+    private final boolean flagDDL;
+
+    public StatsStore(boolean flagDDL) {
+        this.flagDDL = flagDDL;
+
+        rootEntities = new BaseRootEntityMap("RootEntities", flagDDL);
+        entities = new BaseEntityMap("BaseEntities", flagDDL);
+        timeEntities = new BaseTimeEntityMap("TimeEntities", flagDDL);
+    }
 
     public void submit(BaseRootEntity rootEntity) {
         for (BaseEntity entity : rootEntity.getChildEntities()) {
@@ -23,11 +32,15 @@ public class StatsStore {
     }
 
     public void print() {
-        StatsConsole.printlnState(String.format("StatsStore rootEntities: submitted=%d, created=%d, updated=%d, discarded=%d",
-                rootEntities.getCounters().submitted, rootEntities.getCounters().created, rootEntities.getCounters().updated, rootEntities.getCounters().discarded));
-        StatsConsole.printlnState(String.format("StatsStore entities: submitted=%d, created=%d, updated=%d, discarded=%d",
-                entities.getCounters().submitted, entities.getCounters().created, entities.getCounters().updated, entities.getCounters().discarded));
-        StatsConsole.printlnState(String.format("StatsStore timeEntities: submitted=%d, created=%d, updated=%d, discarded=%d",
-                timeEntities.getCounters().submitted, timeEntities.getCounters().created, timeEntities.getCounters().updated, timeEntities.getCounters().discarded));
+        print(entities);
+        print(timeEntities);
+        print(rootEntities);
+    }
+
+    private void print(AbstractEntityMap<?> map) {
+        StatsConsole.printlnState(String.format("StatsStore %s (%s): %s", map.getName(), map.getClass().getSimpleName(), map.getCounters()));
+        if (flagDDL) {
+            StatsConsole.printlnState(map.getSqlBuilderListener().print());
+        }
     }
 }

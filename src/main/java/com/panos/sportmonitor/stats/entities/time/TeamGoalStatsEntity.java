@@ -12,8 +12,8 @@ public class TeamGoalStatsEntity extends BaseTimeEntity {
     private Integer concededSum, conceded0015, conceded1630, conceded3145, conceded4660, conceded6175, conceded7690;
     private Integer firstGoal, lastGoal, penaltySuccessCount, penaltyFailCount;
 
-    public TeamGoalStatsEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+    public TeamGoalStatsEntity(BaseEntity parent, long timeStamp) {
+        super(parent, timeStamp);
     }
 
     @Override

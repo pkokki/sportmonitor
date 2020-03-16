@@ -16,7 +16,7 @@ public class StatsSeasonTeamPositionHistory extends BaseRootEntity {
     private EntityIdList promotions = new EntityIdList();
     private EntityIdList tables = new EntityIdList();
     private EntityIdList teams = new EntityIdList();
-    private HashMap<Long, EntityId> seasonPositions = new HashMap<>();
+    private EntityIdList seasonPositions = new EntityIdList();
 
     public StatsSeasonTeamPositionHistory(long timeStamp) {
         super(BaseRootEntityType.StatsSeasonTeamPositionHistory, timeStamp);
@@ -31,7 +31,7 @@ public class StatsSeasonTeamPositionHistory extends BaseRootEntity {
                 else if (entityName.startsWith("tables")) this.tables.add(childEntity.getId());
                 else if (entityName.startsWith("teams")) this.teams.add(childEntity.getId());
                 else if (entityName.startsWith("previousseason") || entityName.startsWith("currentseason")) {
-                    this.seasonPositions.put(childEntity.getAuxId(), childEntity.getId());
+                    seasonPositions.add(childEntity.getId());
                 }
                 else return super.handleChildEntity(entityName, childEntity);
                 return true;
@@ -56,7 +56,14 @@ public class StatsSeasonTeamPositionHistory extends BaseRootEntity {
         if (currentNodeName.startsWith("positiondata.")) {
             ObjectNode objNode = (ObjectNode)childNode;
             objNode.put("code", childNode.get("_id").asInt());
-            objNode.put("_id", currentNodeName.substring(currentNodeName.indexOf('.')+1));
+            objNode.put("_id", currentNodeName.substring(currentNodeName.indexOf('.') + 1));
+        }
+        else if (currentNodeName.startsWith("previousseason.") || currentNodeName.startsWith("currentseason.")) {
+            ObjectNode objNode = (ObjectNode)childNode;
+            long seasonId = childNode.get("seasonid").asInt();
+            long teamId =  Long.parseLong(currentNodeName.substring(currentNodeName.indexOf('.') + 1).replace("[", "").replace("]", ""));
+            long roundId = childNode.get("round").asInt();
+            objNode.put("_id", (seasonId << 10) + (teamId << 2) + roundId);
         }
         return super.transformChildNode(currentNodeName, index, childNode);
     }

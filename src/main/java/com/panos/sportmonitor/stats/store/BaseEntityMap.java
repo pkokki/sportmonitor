@@ -6,6 +6,11 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import scala.Tuple2;
 
 public class BaseEntityMap extends AbstractEntityMap<BaseEntity> {
+
+    public BaseEntityMap(String name, boolean flagDDL) {
+        super(name, new SqlBuilderListener<>(flagDDL));
+    }
+
     @Override
     protected Object getKey(BaseEntity entity) {
         return new Tuple2<>(entity.getClass().getSimpleName(), entity.getId());

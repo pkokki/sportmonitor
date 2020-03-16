@@ -11,8 +11,6 @@ public class StatsTeamVersus extends BaseRootEntity {
     private EntityIdList tournaments = new EntityIdList();
     private EntityIdList uniqueTeams = new EntityIdList();
     private EntityIdList realCategories = new EntityIdList();
-    private HashMap<Long, EntityId> currentManagers = new HashMap<>();
-    private HashMap<EntityId, Long> currentManagerSince = new HashMap<>();
     private EntityId nextMatchId;
     private Long liveMatchId;
 
@@ -41,8 +39,8 @@ public class StatsTeamVersus extends BaseRootEntity {
                     return true;
                 }
                 else if (entityName.startsWith("currentmanagers.")) {
-                    long teamId = Long.parseLong(entityName.split("\\.|\\[")[1]);
-                    this.currentManagers.put(teamId, childEntity.getId());
+                    //long teamId = Long.parseLong(entityName.split("\\.|\\[")[1]);
+                   //this.currentManagers.put(teamId, childEntity.getId());
                     return true;
                 }
                 return super.handleChildEntity(entityName, childEntity);
@@ -63,7 +61,7 @@ public class StatsTeamVersus extends BaseRootEntity {
     @Override
     protected boolean handleChildProperty(BaseEntity childEntity, String nodeName, JsonNodeType nodeType, JsonNode node) {
         if (nodeName.equals("membersince.uts")) {
-            this.currentManagerSince.put(childEntity.getId(), node.asLong());
+            //this.currentManagerSince.put(childEntity.getId(), node.asLong());
             return true;
         }
         return super.handleChildProperty(childEntity, nodeName, nodeType, node);
@@ -77,8 +75,6 @@ public class StatsTeamVersus extends BaseRootEntity {
         sb.append(", tournamentIds=").append(tournaments);
         sb.append(", uniqueTeamIds=").append(uniqueTeams);
         sb.append(", realCategoryIds=").append(realCategories);
-        sb.append(", currentManagers=").append(currentManagers);
-        sb.append(", currentManagerSince=").append(currentManagerSince);
         sb.append(", nextMatchId=").append(nextMatchId);
         sb.append(", liveMatchId=").append(liveMatchId);
         sb.append('}');

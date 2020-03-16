@@ -2,6 +2,7 @@ package com.panos.sportmonitor.stats.entities;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.EntityIdList;
@@ -144,6 +145,15 @@ public class MatchEntity extends BaseEntity {
             return super.handleChildEntity(entityName, childEntity);
         }
         return true;
+    }
+
+    @Override
+    public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
+        if (currentNodeName.equals("form[]")) {
+            ObjectNode objNode = (ObjectNode)childNode;
+            objNode.put("_id", (childNode.get("uniqueteamid").asLong() << 8) + childNode.get("matchid").asLong());
+        }
+        return super.transformChildNode(currentNodeName, index, childNode);
     }
 
     @Override

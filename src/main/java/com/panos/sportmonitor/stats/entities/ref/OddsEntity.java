@@ -27,8 +27,8 @@ public class OddsEntity extends BaseTimeEntity {
     private String key;
     private String extra, closingTime;
 
-    public OddsEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+    public OddsEntity(BaseEntity parent, long timeStamp) {
+        super(parent, timeStamp);
     }
 
     @Override

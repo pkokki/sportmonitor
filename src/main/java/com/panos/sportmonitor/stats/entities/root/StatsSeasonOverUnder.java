@@ -37,7 +37,7 @@ public class StatsSeasonOverUnder extends BaseRootEntity {
         if (currentNodeName.equals("league.totals")) {
             ObjectNode objNode = (ObjectNode)childNode;
             objNode.put("_doc", "stats_season_over_under");
-            objNode.put("_id", this.seasonId);
+            objNode.put("_id", this.seasonId.asLong());
         } else if (currentNodeName.startsWith("stats.")) {
             ObjectNode objNode = (ObjectNode)childNode;
             objNode.put("_doc", "stats_team_over_under");

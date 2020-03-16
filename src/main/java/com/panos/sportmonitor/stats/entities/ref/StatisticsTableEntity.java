@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class StatisticsTableEntity extends BaseEntity {
-    private transient long lastId = -1;
-
     private String name;
     private String abbr;
     private String maxRounds;
@@ -23,7 +21,6 @@ public class StatisticsTableEntity extends BaseEntity {
     private String seasonTypeUnique;
     private Long seasonStart;
     private Long seasonEnd;
-    private HashMap<Long, String> uniqueTeams = new HashMap<>();
     private EntityIdList matches = new EntityIdList();
 
     public StatisticsTableEntity(BaseEntity parent, long id) {
@@ -50,11 +47,7 @@ public class StatisticsTableEntity extends BaseEntity {
             case "end.uts": this.seasonEnd = node.asLong(); break;
             case "matches[]": matches.add(new EntityId(node.asLong())); break;
             case "uniqueteams[].id":
-                this.lastId = node.asLong();
-                this.uniqueTeams.put(lastId, "<N/A>");
-                break;
             case "uniqueteams[].name":
-                this.uniqueTeams.put(lastId, node.asText());
                 break;
 
             case "id":
@@ -90,7 +83,7 @@ public class StatisticsTableEntity extends BaseEntity {
         sb.append(", seasonTypeUnique='").append(seasonTypeUnique).append('\'');
         sb.append(", seasonStart=").append(seasonStart);
         sb.append(", seasonEnd=").append(seasonEnd);
-        sb.append(", uniqueTeams=").append(uniqueTeams);
+        sb.append(", matches=").append(matches);
         sb.append('}');
         return sb.toString();
     }

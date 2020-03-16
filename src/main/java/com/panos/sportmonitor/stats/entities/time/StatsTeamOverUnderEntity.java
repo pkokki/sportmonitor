@@ -6,8 +6,8 @@ import com.panos.sportmonitor.stats.EntityId;
 public class StatsTeamOverUnderEntity extends StatsOverUnderEntity {
     private EntityId teamId;
 
-    public StatsTeamOverUnderEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+    public StatsTeamOverUnderEntity(BaseEntity parent, long timeStamp) {
+        super(parent, timeStamp);
     }
 
     @Override
@@ -17,6 +17,12 @@ public class StatsTeamOverUnderEntity extends StatsOverUnderEntity {
             return true;
         }
         return super.handleChildEntity(entityName, childEntity);
+    }
+
+    @Override
+    public boolean handleAuxId(long auxEntityId) {
+        //this.teamId = auxEntityId;
+        return true;
     }
 
     @Override

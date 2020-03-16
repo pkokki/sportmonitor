@@ -6,8 +6,8 @@ import com.panos.sportmonitor.stats.EntityId;
 public class StatsSeasonOverUnderEntity extends StatsOverUnderEntity {
     private EntityId seasonId;
 
-    public StatsSeasonOverUnderEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+    public StatsSeasonOverUnderEntity(BaseEntity parent, long timeStamp) {
+        super(parent, timeStamp);
     }
 
     @Override

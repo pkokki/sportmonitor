@@ -32,8 +32,8 @@ public class TopListEntryEntity extends BaseTimeEntity {
     private Integer totalFirstHalfCards;
     private Integer totalSecondHalfCards;
 
-    public TopListEntryEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+    public TopListEntryEntity(BaseEntity parent, long timeStamp) {
+        super(parent, timeStamp);
     }
 
     @Override
@@ -54,11 +54,11 @@ public class TopListEntryEntity extends BaseTimeEntity {
     public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
         if (currentNodeName.startsWith("teams.")) {
             long teamId = Long.parseLong(currentNodeName.substring(6));
-            long id = Long.parseLong(String.format("%08d%08d", playerId, teamId));
+            long id = (playerId.asLong() << 8) + teamId;
             ObjectNode objNode = (ObjectNode)childNode;
             objNode.put("_doc", "team_player_top_list_entry");
             objNode.put("_id", id);
-            objNode.put("playerid", playerId);
+            objNode.put("playerid", playerId.asLong());
         }
         return super.transformChildNode(currentNodeName, index, childNode);
     }
