@@ -43,7 +43,6 @@ public class StatsTeamOddsClient extends BaseRootEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("StatsTeamOddsClient{");
         sb.append("name='").append(getName()).append('\'');
-        sb.append(", timeStamp=").append(getTimeStamp());
         sb.append(", uniqueTeamId=").append(uniqueTeamId);
         sb.append(", odds=").append(odds);
         sb.append('}');

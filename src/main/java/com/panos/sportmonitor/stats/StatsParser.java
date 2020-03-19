@@ -222,17 +222,17 @@ public class StatsParser {
             case "event": entity = new MatchEventEntity(parent, id); break;
             case "match_situation_entry": entity = new MatchSituationEntryEntity(parent, id); break;
 
-            case "match_details_entry": entity = new MatchDetailsEntryEntity(parent, timeStamp); break;
-            case "odds": entity = new OddsEntity(parent, timeStamp); break;
-            case "team_form_table": entity = new TeamFormTableEntity(parent, timeStamp); break;
-            case "team_form_entry": entity = new TeamFormEntryEntity(parent, timeStamp); break;
-            case "toplistentry": entity = new TopListEntryEntity(parent, timeStamp); break;
-            case "team_goal_stats": entity = new TeamGoalStatsEntity(parent, timeStamp); break;
-            case "unique_team_stats": entity = new UniqueTeamStatsEntity(parent, timeStamp); break;
-            case "match_funfact": entity = new MatchFunFactEntity(parent, timeStamp); break;
-            case "stats_season_over_under": entity = new StatsSeasonOverUnderEntity(parent, timeStamp); break;
-            case "stats_team_over_under": entity = new StatsTeamOverUnderEntity(parent, timeStamp); break;
-            case "team_player_top_list_entry": entity = new TeamPlayerTopListEntryEntity(parent, timeStamp); break;
+            case "match_details_entry": entity = new MatchDetailsEntryEntity(parent, id, timeStamp); break;
+            case "odds": entity = new OddsEntity(parent, id, timeStamp); break;
+            case "team_form_table": entity = new TeamFormTableEntity(parent, id, timeStamp); break;
+            case "team_form_entry": entity = new TeamFormEntryEntity(parent, id, timeStamp); break;
+            case "toplistentry": entity = new TopListEntryEntity(parent, id, timeStamp); break;
+            case "team_goal_stats": entity = new TeamGoalStatsEntity(parent, id, timeStamp); break;
+            case "unique_team_stats": entity = new UniqueTeamStatsEntity(parent, id, timeStamp); break;
+            case "match_funfact": entity = new MatchFunFactEntity(parent, id, timeStamp); break;
+            case "season_over_under": entity = new SeasonOverUnderEntity(parent, id, timeStamp); break;
+            case "team_over_under": entity = new TeamOverUnderEntity(parent, id, timeStamp); break;
+            case "team_player_top_list_entry": entity = new TeamPlayerTopListEntryEntity(parent, id, timeStamp); break;
 
             default: StatsConsole.printlnError("StatsParser.createEntity [UNKNOWN ENTITY TYPE]: " + docType); entity = new NullEntity(parent);
         }

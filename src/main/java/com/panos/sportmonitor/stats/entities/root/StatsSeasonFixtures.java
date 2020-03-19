@@ -25,7 +25,6 @@ public class StatsSeasonFixtures extends BaseRootEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("StatsSeasonFixtures{");
         sb.append("name=").append(getName());
-        sb.append(", timeStamp=").append(getTimeStamp());
         sb.append(", seasonId=").append(seasonId);
         sb.append('}');
         return sb.toString();

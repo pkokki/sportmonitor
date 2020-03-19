@@ -27,7 +27,6 @@ public class MatchTimeline extends BaseRootEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("MatchTimeline{");
         sb.append("name='").append(getName()).append('\'');
-        sb.append(", timeStamp=").append(getTimeStamp());
         sb.append(", matchId=").append(matchId);
         sb.append(", events=").append(events);
         sb.append('}');

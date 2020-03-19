@@ -28,7 +28,6 @@ public class StatsSeasonInjuries extends BaseRootEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("StatsSeasonInjuries{");
         sb.append("name=").append(getName());
-        sb.append(", timeStamp=").append(getTimeStamp());
         sb.append(", playerStatuses=").append(playerStatuses);
         sb.append('}');
         return sb.toString();

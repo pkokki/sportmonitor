@@ -1,8 +1,8 @@
 package com.panos.sportmonitor.stats;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
-public class EntityIdList extends ArrayList<EntityId> {
+public class EntityIdList extends LinkedList<EntityId> {
     @Override
     public boolean add(EntityId entityId) {
         if (this.contains(entityId))

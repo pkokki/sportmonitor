@@ -25,8 +25,8 @@ public class TeamFormTableEntity extends BaseTimeEntity {
     private Integer nextOpponentMatchDifficultyRatingHome, nextOpponentMatchDifficultyRatingAway;
     private EntityIdList formEntries = new EntityIdList();
 
-    public TeamFormTableEntity(BaseEntity parent, long timeStamp) {
-        super(parent, timeStamp);
+    public TeamFormTableEntity(BaseEntity parent, long id, long timeStamp) {
+        super(parent, id, timeStamp);
     }
 
     @Override
@@ -46,7 +46,10 @@ public class TeamFormTableEntity extends BaseTimeEntity {
         if (currentNodeName.equals("form.total") || currentNodeName.equals("form.home") || currentNodeName.equals("form.away")) {
             int groupId = currentNodeName.equals("form.total") ? 1 : (currentNodeName.equals("form.home") ? 2 : 3);
             ObjectNode objNode = (ObjectNode)childNode;
-            objNode.put("_id", Long.parseLong(String.format("%015d%d%02d", this.getRawId(), groupId, index)));
+            //objNode.put("_id", Long.parseLong(String.format("%d%02d", groupId, index)));
+            long id = (this.getId().getId() << 3) + (index << 2) + groupId;
+            System.out.println(String.format("%s %d %d %d -> %d", this.getClass().getSimpleName(), (this.getId().getId() << 3), (index << 2), groupId, id));
+            objNode.put("_id", id);
             objNode.put("_doc", "team_form_entry");
             objNode.put("_index", index);
             objNode.put("group", currentNodeName.substring(5));
@@ -120,7 +123,6 @@ public class TeamFormTableEntity extends BaseTimeEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("TeamFormTableEntity{");
         sb.append("id=").append(getId());
-        sb.append(", timeStamp=").append(getTimeStamp());
         sb.append(", positionTotal=").append(positionTotal);
         sb.append(", positionHome=").append(positionHome);
         sb.append(", positionAway=").append(positionAway);

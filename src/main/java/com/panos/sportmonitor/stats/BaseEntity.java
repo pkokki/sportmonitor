@@ -7,21 +7,22 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 public abstract class BaseEntity {
-    private final static List<String> IGNORED = Lists.newArrayList("_doc", "_id", "_sid");
+    private final static List<String> __IGNORED = Lists.newArrayList("_doc", "_id", "_sid");
     private final EntityId id;
-    private long auxId;
-    private final BaseEntity parent;
+    private long __auxId;
+    private final BaseEntity __parent;
+    private int __next;
 
     public BaseEntity(BaseEntity parent, long id) {
         this(parent, new EntityId(id));
     }
     public BaseEntity(BaseEntity parent, EntityId id) {
-        this.parent = parent;
+        this.__parent = parent;
         this.id = id;
     }
 
     public final boolean setProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
-        if (node.isNull() || (node.isTextual() && node.asText().length() == 0) || IGNORED.contains(nodeName) )
+        if (node.isNull() || (node.isTextual() && node.asText().length() == 0) || __IGNORED.contains(nodeName) )
             return true;
         return handleProperty(nodeName, nodeType, node);
     }
@@ -65,13 +66,13 @@ public abstract class BaseEntity {
         return id;
     }
     public final BaseEntity getParent() {
-        return parent;
+        return __parent;
     }
     public final BaseRootEntity getRoot() {
-        return parent == null ? (BaseRootEntity)this : parent.getRoot();
+        return __parent == null ? (BaseRootEntity)this : __parent.getRoot();
     }
-    public final long getAuxId() { return this.auxId; }
-    public final void setAuxId(long auxId) { this.auxId = auxId; }
+    public final long getAuxId() { return this.__auxId; }
+    public final void setAuxId(long auxId) { this.__auxId = auxId; }
 
     @Override
     public String toString() {
@@ -79,5 +80,9 @@ public abstract class BaseEntity {
         sb.append("id=").append(getId());
         sb.append(", ......}");
         return sb.toString();
+    }
+
+    protected int getNext() {
+        return ++__next;
     }
 }

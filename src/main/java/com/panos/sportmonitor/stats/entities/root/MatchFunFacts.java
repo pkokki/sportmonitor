@@ -46,7 +46,6 @@ public class MatchFunFacts extends BaseRootEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("MatchFunFacts{");
         sb.append("name=").append(getName());
-        sb.append(", timeStamp=").append(getTimeStamp());
         sb.append(", facts=").append(facts);
         sb.append('}');
         return sb.toString();

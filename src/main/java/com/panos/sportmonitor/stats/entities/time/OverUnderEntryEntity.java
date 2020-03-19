@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
 
-public abstract class StatsOverUnderEntity extends BaseTimeEntity {
+public abstract class OverUnderEntryEntity extends BaseTimeEntity {
     private Integer matches;
     private Double goalsscoredFtAverage;
     private Integer goalsscoredFtTotal;
@@ -80,8 +80,8 @@ public abstract class StatsOverUnderEntity extends BaseTimeEntity {
     private Integer p255Over;
     private Integer p255Under;
 
-    public StatsOverUnderEntity(BaseEntity parent, long timeStamp) {
-        super(parent, timeStamp);
+    public OverUnderEntryEntity(BaseEntity parent, long id, long timeStamp) {
+        super(parent, id, timeStamp);
     }
 
     @Override
@@ -169,7 +169,6 @@ public abstract class StatsOverUnderEntity extends BaseTimeEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("id=").append(getId());
-        sb.append(", timeStamp=").append(getTimeStamp());
         sb.append(", matches=").append(matches);
         sb.append(", goalsscoredFtAverage=").append(goalsscoredFtAverage);
         sb.append(", goalsscoredFtTotal=").append(goalsscoredFtTotal);

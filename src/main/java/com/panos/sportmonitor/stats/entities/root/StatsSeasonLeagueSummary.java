@@ -40,7 +40,6 @@ public class StatsSeasonLeagueSummary extends BaseRootEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("StatsSeasonLeagueSummary{");
         sb.append("name=").append(getName());
-        sb.append(", timeStamp=").append(getTimeStamp());
         sb.append(", matchesPlayed=").append(matchesPlayed);
         sb.append(", goalsTotal=").append(goalsTotal);
         sb.append(", matchesHomeWins=").append(matchesHomeWins);

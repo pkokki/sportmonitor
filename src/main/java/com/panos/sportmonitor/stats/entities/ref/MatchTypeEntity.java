@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 
 public class MatchTypeEntity extends BaseEntity {
-    private String column;
+    private String name;
     private Long setTypeId;
 
     public MatchTypeEntity(BaseEntity parent, long id) {
@@ -15,7 +15,7 @@ public class MatchTypeEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "column": this.column = node.asText(); break;
+            case "column": this.name = node.asText(); break;
             case "settypeid": this.setTypeId = node.asLong(); break;
             default:
                 return super.handleProperty(nodeName, nodeType, node);
@@ -27,7 +27,7 @@ public class MatchTypeEntity extends BaseEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("MatchTypeEntity{");
         sb.append("id=").append(getId());
-        sb.append(", column='").append(column).append('\'');
+        sb.append(", name='").append(name).append('\'');
         sb.append(", setTypeId=").append(setTypeId);
         sb.append('}');
         return sb.toString();

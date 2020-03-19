@@ -45,7 +45,6 @@ public class StatsMatchSituation extends BaseRootEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("StatsMatchSituation{");
         sb.append("name='").append(getName()).append('\'');
-        sb.append(", timeStamp=").append(getTimeStamp());
         sb.append(", matchId=").append(matchId);
         sb.append(", entries=").append(entries);
         sb.append('}');

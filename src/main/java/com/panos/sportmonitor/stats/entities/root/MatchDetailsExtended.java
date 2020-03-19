@@ -64,7 +64,6 @@ public class MatchDetailsExtended extends BaseRootEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("MatchDetailsExtended{");
         sb.append("name='").append(getName()).append('\'');
-        sb.append(", timeStamp=").append(getTimeStamp());
         sb.append(", matchId=").append(matchId);
         sb.append(", teamHome='").append(teamHome).append('\'');
         sb.append(", teamAway='").append(teamAway).append('\'');

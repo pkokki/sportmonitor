@@ -25,7 +25,6 @@ public class StatsSeasonOdds extends BaseRootEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("StatsSeasonOdds{");
         sb.append("name=").append(getName());
-        sb.append(", timeStampt=").append(getTimeStamp());
         sb.append(", seasonId=").append(seasonId);
         sb.append('}');
         return sb.toString();

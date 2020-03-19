@@ -43,7 +43,6 @@ public class StatsSeasonUniqueTeamStats extends BaseRootEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("StatsSeasonUniqueTeamStats{");
         sb.append("name=").append(getName());
-        sb.append(", timeStampt=").append(getTimeStamp());
         sb.append(", seasonId=").append(seasonId);
         sb.append(", uniqueTeamStats=").append(uniqueTeamStats);
         sb.append('}');

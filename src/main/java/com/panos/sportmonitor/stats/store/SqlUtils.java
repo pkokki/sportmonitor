@@ -5,13 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class SqlUtils {
-    public static List<Field> getAllFields(final List<Field> fields, final Class<?> type) {
-        if (type.getSuperclass() != null) {
-            getAllFields(fields, type.getSuperclass());
-        }
-        fields.addAll(Arrays.asList(type.getDeclaredFields()));
-        return fields;
-    }
+    static final String FIELD_ID = "id";
+    static final String FIELD_TIMESTAMP = "time_stamp";
+    static final String FIELD_REL_SOURCE_PREFIX = "src_";
+    static final String FIELD_REL_TARGET_PREFIX = "dst_";
+    static final String RELATION_SEPARATOR = "__";
+
     public static String transformTableName(String str) {
         return transform(str.replace("Entity", ""));
     }

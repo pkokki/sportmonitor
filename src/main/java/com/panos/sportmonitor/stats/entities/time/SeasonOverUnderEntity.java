@@ -3,11 +3,11 @@ package com.panos.sportmonitor.stats.entities.time;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
 
-public class StatsSeasonOverUnderEntity extends StatsOverUnderEntity {
+public class SeasonOverUnderEntity extends OverUnderEntryEntity {
     private EntityId seasonId;
 
-    public StatsSeasonOverUnderEntity(BaseEntity parent, long timeStamp) {
-        super(parent, timeStamp);
+    public SeasonOverUnderEntity(BaseEntity parent, long id, long timeStamp) {
+        super(parent, id, timeStamp);
     }
 
     @Override
@@ -21,7 +21,7 @@ public class StatsSeasonOverUnderEntity extends StatsOverUnderEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("StatsSeasonOverUnderEntity{");
+        final StringBuilder sb = new StringBuilder("SeasonOverUnderEntity{");
         sb.append(super.toString());
         sb.append(", seasonId=").append(seasonId);
         sb.append('}');

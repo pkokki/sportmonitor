@@ -7,23 +7,23 @@ import com.panos.sportmonitor.stats.BaseTimeEntity;
 import com.panos.sportmonitor.stats.EntityId;
 
 public class TeamFormEntryEntity extends BaseTimeEntity {
-    private Integer index;
-    private String group;
+    private Integer _index;
+    private String group_name;
     private String typeId;
     private String value;
     private Boolean homeMatch;
     private Boolean neutralGround;
     private EntityId matchId;
 
-    public TeamFormEntryEntity(BaseEntity parent, long timeStamp) {
-        super(parent, timeStamp);
+    public TeamFormEntryEntity(BaseEntity parent, long id, long timeStamp) {
+        super(parent, id, timeStamp);
     }
 
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "_index": this.index = node.asInt(); break;
-            case "group": this.group = node.asText(); break;
+            case "_index": this._index = node.asInt(); break;
+            case "group": this.group_name = node.asText(); break;
             case "typeid": this.typeId = node.asText(); break;
             case "value": this.value = node.asText(); break;
             case "homematch": this.homeMatch = node.asBoolean(); break;
@@ -38,9 +38,8 @@ public class TeamFormEntryEntity extends BaseTimeEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("TeamFormEntryEntity{");
         sb.append("id=").append(getId());
-        sb.append(", timeStamp=").append(getTimeStamp());
-        sb.append(", group='").append(group).append('\'');
-        sb.append(", index=").append(index);
+        sb.append(", group_name='").append(group_name).append('\'');
+        sb.append(", index=").append(_index);
         sb.append(", typeId='").append(typeId).append('\'');
         sb.append(", value='").append(value).append('\'');
         sb.append(", homeMatch=").append(homeMatch);

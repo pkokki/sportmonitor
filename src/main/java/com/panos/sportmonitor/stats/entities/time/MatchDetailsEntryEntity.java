@@ -11,8 +11,8 @@ public class MatchDetailsEntryEntity extends BaseTimeEntity {
     private Integer valueHome, valueHomeP1, valueHomeP2;
     private Integer valueAway, valueAwayP1, valueAwayP2;
 
-    public MatchDetailsEntryEntity(BaseEntity parent, long timeStamp) {
-        super(parent, timeStamp);
+    public MatchDetailsEntryEntity(BaseEntity parent, long id, long timeStamp) {
+        super(parent, id, timeStamp);
     }
 
     @Override
@@ -56,7 +56,6 @@ public class MatchDetailsEntryEntity extends BaseTimeEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("MatchDetailsEntryEntity{");
         sb.append("id=").append(getId());
-        sb.append(", timeStamp=").append(getTimeStamp());
         sb.append(", code='").append(code).append('\'');
         sb.append(", name='").append(name).append('\'');
         sb.append(", valueHome=").append(valueHome);

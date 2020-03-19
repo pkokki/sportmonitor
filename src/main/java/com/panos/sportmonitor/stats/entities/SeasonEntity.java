@@ -65,8 +65,8 @@ public class SeasonEntity extends BaseEntity {
             case "_utid": this.uniqueTournamentId = new EntityId(node.asLong()); break;
             case "name": this.name = node.asText(); break;
             case "abbr": this.abbr = node.asText(); break;
-            case "start.uts": this.startDate = node.asLong() * 1000; break;
-            case "end.uts": this.endDate = node.asLong() * 1000; break;
+            case "start.uts": this.startDate = node.asLong(); break;
+            case "end.uts": this.endDate = node.asLong(); break;
             case "neutralground": this.neutralGround = node.asBoolean(); break;
             case "friendly": this.friendly = node.asBoolean(); break;
             case "year": this.year = node.asText(); break;

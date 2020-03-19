@@ -32,8 +32,8 @@ public class TopListEntryEntity extends BaseTimeEntity {
     private Integer totalFirstHalfCards;
     private Integer totalSecondHalfCards;
 
-    public TopListEntryEntity(BaseEntity parent, long timeStamp) {
-        super(parent, timeStamp);
+    public TopListEntryEntity(BaseEntity parent, long id, long timeStamp) {
+        super(parent, id, timeStamp);
     }
 
     @Override
@@ -94,7 +94,6 @@ public class TopListEntryEntity extends BaseTimeEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("TopListEntryEntity{");
         sb.append("id=").append(getId());
-        sb.append(", timeStamp=").append(getTimeStamp());
         sb.append(", playerId=").append(playerId);
         sb.append(", totalGoals=").append(totalGoals);
         sb.append(", totalAssists=").append(totalAssists);

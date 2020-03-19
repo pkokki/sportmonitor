@@ -23,8 +23,8 @@ public class UniqueTeamStatsEntity extends BaseTimeEntity {
             goalsByHeadMatches, attendanceMatches, yellowCardsMatches, redCardsMatches, goalsScoredMatches, goalsConcededMatches,
             yellowRedCardsMatches, shootingEfficiencyMatches;
 
-    public UniqueTeamStatsEntity(BaseEntity parent, long timeStamp) {
-        super(parent, timeStamp);
+    public UniqueTeamStatsEntity(BaseEntity parent, long id, long timeStamp) {
+        super(parent, id, timeStamp);
     }
 
     @Override
@@ -118,7 +118,6 @@ public class UniqueTeamStatsEntity extends BaseTimeEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("UniqueTeamStatsEntity{");
         sb.append("id=").append(getId());
-        sb.append(", timeStamp=").append(getTimeStamp());
         sb.append(", uniqueTeamId=").append(uniqueTeamId);
         sb.append(", goalAttempts=").append(goalAttempts);
         sb.append(", shotsOnGoal=").append(shotsOnGoal);

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class SportMonitorConsole {
 
     public static void main(String[] args) throws IOException {
-        StatsStore store = new StatsStore(true);
+        StatsStore store = new StatsStore();
         StatsParser parser = new StatsParser(store);
 
         File folder = new File("C:\\panos\\betting\\radar\\");
@@ -23,6 +23,6 @@ public class SportMonitorConsole {
             parser.parse(file);
         }
 
-        store.print();
+        store.submitChanges();
     }
 }

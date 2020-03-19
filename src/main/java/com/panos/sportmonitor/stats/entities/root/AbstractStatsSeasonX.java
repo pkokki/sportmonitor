@@ -31,7 +31,6 @@ public class AbstractStatsSeasonX extends BaseRootEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder(this.getClass().getSimpleName()).append("{");
         sb.append("name=").append(getName());
-        sb.append(", timeStamp=").append(getTimeStamp());
         sb.append(", seasonId=").append(seasonId);
         sb.append(", matches=").append(matches);
         sb.append(", tournaments=").append(tournaments);

@@ -9,8 +9,8 @@ public class MatchFunFactEntity extends BaseTimeEntity {
     private Long typeId;
     private String sentence;
 
-    public MatchFunFactEntity(BaseEntity parent, long timeStamp) {
-        super(parent, timeStamp);
+    public MatchFunFactEntity(BaseEntity parent, long id, long timeStamp) {
+        super(parent, id, timeStamp);
     }
 
     @Override
@@ -27,7 +27,6 @@ public class MatchFunFactEntity extends BaseTimeEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("MatchFunFactEntity{");
         sb.append("id=").append(getId());
-        sb.append(", timeStamp=").append(getTimeStamp());
         sb.append(", typeId=").append(typeId);
         sb.append(", sentence='").append(sentence).append('\'');
         sb.append('}');

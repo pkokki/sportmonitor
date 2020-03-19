@@ -12,8 +12,8 @@ public class TeamGoalStatsEntity extends BaseTimeEntity {
     private Integer concededSum, conceded0015, conceded1630, conceded3145, conceded4660, conceded6175, conceded7690;
     private Integer firstGoal, lastGoal, penaltySuccessCount, penaltyFailCount;
 
-    public TeamGoalStatsEntity(BaseEntity parent, long timeStamp) {
-        super(parent, timeStamp);
+    public TeamGoalStatsEntity(BaseEntity parent, long id, long timeStamp) {
+        super(parent, id, timeStamp);
     }
 
     @Override
@@ -56,7 +56,6 @@ public class TeamGoalStatsEntity extends BaseTimeEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("TeamGoalStatsEntity{");
         sb.append("id=").append(getId());
-        sb.append(", timeStamp=").append(getTimeStamp());
         sb.append(", teamId=").append(teamId);
         sb.append(", matches=").append(matches);
         sb.append(", scoredSum=").append(scoredSum);
