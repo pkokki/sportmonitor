@@ -25,6 +25,8 @@ public class StatsTeamInfo extends BaseRootEntity {
             case "tournaments[]": this.tournaments.add(childEntity.getId()); return true;
             case "stadium": this.stadiumId = childEntity.getId(); return true;
             case "manager": this.managerId = childEntity.getId(); return true;
+            case "historytournaments[]":
+                return  true;
             default:
                 return super.handleChildEntity(entityName, childEntity);
         }

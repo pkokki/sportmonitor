@@ -13,11 +13,13 @@ public class SportEntity extends BaseEntity {
 
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
-        switch (nodeName) {
-            case "name": this.name = node.asText(); break;
-            default:
-                return super.handleProperty(nodeName, nodeType, node);
-        }
+        if (nodeName.equals("name"))
+            this.name = node.asText();
+        return true;
+    }
+
+    @Override
+    protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         return true;
     }
 

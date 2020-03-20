@@ -22,7 +22,7 @@ public class TeamEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "uid": this.uid = new EntityId(node.asLong()); break;
+            case "uid": if (node.asLong() > 0) this.uid = new EntityId(node.asLong()); break;
             case "name": this.name = node.asText(); break;
             case "abbr": this.abbr = node.asText(); break;
             case "nickname": this.nickname = node.asText(); break;

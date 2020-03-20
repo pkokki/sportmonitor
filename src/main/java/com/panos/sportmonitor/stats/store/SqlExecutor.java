@@ -3,6 +3,8 @@ package com.panos.sportmonitor.stats.store;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.StatsConsole;
+import com.panos.sportmonitor.stats.entities.ref.NullEntity;
+import com.panos.sportmonitor.stats.entities.root.NullRootEntity;
 import org.apache.commons.lang3.builder.Diff;
 import org.postgresql.ds.PGPoolingDataSource;
 import scala.Tuple2;
@@ -40,6 +42,8 @@ public class SqlExecutor extends StatsStoreListener {
 
     @Override
     public void onCreate(BaseEntity entity) {
+        if (entity instanceof NullRootEntity || entity instanceof NullEntity)
+            return;
         Tuple2<String, EntityId> key = getKey(entity);
         SqlStatement stm = statements.get(key);
         if (stm != null)
@@ -157,7 +161,7 @@ public class SqlExecutor extends StatsStoreListener {
                     String.join(", ", fields.keySet()) +
                     ") VALUES (" +
                     fields.values().stream().map(SqlUtils::prepareSql).collect(Collectors.joining(", ")) +
-                    ");"; // ON CONFLICT DO NOTHING
+                    ") ON CONFLICT DO NOTHING;";
         }
     }
 

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.panos.sportmonitor.spark.util.PostgresHelper;
+import com.panos.sportmonitor.stats.StatsConsole;
+import com.panos.sportmonitor.stats.StatsParser;
+import com.panos.sportmonitor.stats.StatsStore;
 import com.panos.sportmonitor.webapi.kafka.OverviewProducer;
 import com.panos.sportmonitor.webapi.kafka.RadarProducer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +47,19 @@ public class LiveOverviewController {
     @PostMapping(value = "/sportradar", consumes = "text/plain")
     String sportradar(@RequestBody String message) {
         this.radarProducer.sendMessage(message);
+
+        final ObjectMapper mapper = new ObjectMapper();
+        JsonNode json = null;
+        try {
+            json = mapper.readTree(message);
+        } catch (JsonProcessingException e) {
+            StatsConsole.printlnWarn("sportradar: invalid json");
+            return "ERROR";
+        }
+        StatsStore store = new StatsStore();
+        StatsParser parser = new StatsParser(store);
+        parser.parse(json);
+        store.submitChanges();
         return "OK";
     }
 

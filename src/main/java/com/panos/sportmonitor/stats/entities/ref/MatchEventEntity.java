@@ -13,7 +13,7 @@ public class MatchEventEntity extends BaseEntity {
     private EntityId matchId;
     private EntityId playerId, scorerId, playerOutId, playerInId, statusId;
     private Integer typeId, minute, seconds;
-    private String type, name;
+    private String type, name, goalType;
     private Long eventTime, updatedTime;
     private Boolean disabled, header, ownGoal, penalty;
     private Integer minutes, injuryTime, period, periodScoreHome, periodScoreAway, resultHome, resultAway;
@@ -38,6 +38,7 @@ public class MatchEventEntity extends BaseEntity {
             case "time": this.minute = node.asInt(); break;
             case "seconds": this.seconds = node.asInt(); break;
             case "name": this.name = node.asText(); break;
+            case "goaltypeid": this.goalType = node.asText(); break;
             case "injurytime": this.injuryTime = node.asInt(); break;
             case "team": this.team = node.asText(); break;
             case "period": this.period = node.asInt(); break;
@@ -104,6 +105,7 @@ public class MatchEventEntity extends BaseEntity {
         sb.append(", seconds=").append(seconds);
         sb.append(", type='").append(type).append('\'');
         sb.append(", name='").append(name).append('\'');
+        sb.append(", goalType='").append(goalType).append('\'');
         sb.append(", matchId=").append(matchId);
         sb.append(", eventTime=").append(eventTime);
         sb.append(", updatedTime=").append(updatedTime);

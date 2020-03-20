@@ -46,7 +46,7 @@ public class StatsSeasonMeta extends BaseRootEntity {
     private Boolean statsCoverageStaffManagers;
     private Boolean statsCoverageStaffTeamOfficials;
     private Boolean statsCoverageStaffAssistantCoaches;
-    private Boolean statsCoverageJerseys;
+    private Boolean statsCoverageJerseys, statsCoverageCupRoster;
     private EntityIdList tournaments = new EntityIdList();
     private EntityIdList tables = new EntityIdList();
     private EntityId seasonId;
@@ -116,6 +116,7 @@ public class StatsSeasonMeta extends BaseRootEntity {
             case "statscoverage.staffteamofficials": this.statsCoverageStaffTeamOfficials = node.asBoolean(); break;
             case "statscoverage.staffassistantcoaches": this.statsCoverageStaffAssistantCoaches = node.asBoolean(); break;
             case "statscoverage.jerseys": this.statsCoverageJerseys = node.asBoolean(); break;
+            case "statscoverage.cuproster": this.statsCoverageCupRoster = node.asBoolean(); break;
             default:
                 return super.handleProperty(nodeName, nodeType, node);
         }
@@ -171,6 +172,7 @@ public class StatsSeasonMeta extends BaseRootEntity {
         sb.append(", statsCoverageStaffTeamOfficials=").append(statsCoverageStaffTeamOfficials);
         sb.append(", statsCoverageStaffAssistantCoaches=").append(statsCoverageStaffAssistantCoaches);
         sb.append(", statsCoverageJerseys=").append(statsCoverageJerseys);
+        sb.append(", statsCoverageCupRoster=").append(statsCoverageCupRoster);
         sb.append(", tournamentIds=").append(tournaments);
         sb.append(", tableIds=").append(tables);
         sb.append('}');

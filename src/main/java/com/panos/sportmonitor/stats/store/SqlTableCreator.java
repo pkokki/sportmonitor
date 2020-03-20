@@ -36,8 +36,8 @@ public class SqlTableCreator extends StatsStoreListener {
 
     @Override
     public void onRelationChanged(BaseEntity entity, String entityFieldName, EntityId oldValue, EntityId newValue) {
-        createOrUpdateFieldInfo(entity, entityFieldName, newValue.getId());
-        if (newValue.isComposite()) {
+        boolean isNew = createOrUpdateFieldInfo(entity, entityFieldName, newValue.getId());
+        if (isNew && newValue.isComposite()) {
             String tsPrefix = entityFieldName;
             if (entityFieldName.endsWith("Id"))
                 tsPrefix = entityFieldName.substring(0, entityFieldName.length() - 2);
@@ -70,7 +70,7 @@ public class SqlTableCreator extends StatsStoreListener {
             sb.append("\tPRIMARY KEY (").append(fields.stream().filter(e -> e.isPK).map(e -> e.name).collect(Collectors.joining(", "))).append(")");
             sb.append(");\n");
         });
-        StatsConsole.printlnState(sb.toString());
+        //StatsConsole.printlnState(sb.toString());
     }
 
     private String getTableName(BaseEntity entity) {
@@ -81,7 +81,7 @@ public class SqlTableCreator extends StatsStoreListener {
         return sqlData.computeIfAbsent(tableName, k -> new LinkedList<>());
     }
 
-    private void createOrUpdateFieldInfo(BaseEntity entity, String entityFieldName, Object value) {
+    private boolean createOrUpdateFieldInfo(BaseEntity entity, String entityFieldName, Object value) {
         String tableName = getTableName(entity);
         List<FieldInfo> sqlFields = getTableFields(tableName);
         String sqlFieldName = SqlUtils.transform(entityFieldName);
@@ -90,12 +90,14 @@ public class SqlTableCreator extends StatsStoreListener {
         if (sqlField.isPresent()) {
             fieldInfo = sqlField.get();
             fieldInfo.size = Math.max(fieldInfo.size, calcSize(value));
+            return false;
         }
         else {
             if (sqlFieldName.startsWith(SqlUtils.FIELD_REL_SOURCE_PREFIX) || sqlFieldName.startsWith(SqlUtils.FIELD_REL_TARGET_PREFIX))
                 throw new IllegalArgumentException("Invalid field name: " + sqlFieldName);
             fieldInfo = new FieldInfo(sqlFieldName, value.getClass().getSimpleName(), calcSize(value), false);
             sqlFields.add(fieldInfo);
+            return true;
         }
     }
 

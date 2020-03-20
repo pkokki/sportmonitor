@@ -38,17 +38,19 @@ public class StatsParser {
     public void parse(JsonNode rootNode) {
         if (rootNode.has("doc") && rootNode.get("doc").getNodeType() == JsonNodeType.ARRAY)
             rootNode = rootNode.get("doc").iterator().next();
-        final long timeStamp = rootNode.get("_dob").asLong();
-        final String name = rootNode.get("event").asText();
-        final BaseRootEntity baseRootEntity = createRootEntity(name, timeStamp);
-        if (baseRootEntity != null) {
-            traverse(1, timeStamp, "", rootNode.get("data"), baseRootEntity);
-            //if (baseRootEntity instanceof StatsFormTable)
-            //    baseRootEntity.print();
-            statsStore.submit(baseRootEntity);
+        if (rootNode.has("_dob")) {
+            final long timeStamp = rootNode.get("_dob").asLong();
+            final String name = rootNode.get("event").asText();
+            final BaseRootEntity baseRootEntity = createRootEntity(name, timeStamp);
+            if (baseRootEntity != null) {
+                traverse(1, timeStamp, "", rootNode.get("data"), baseRootEntity);
+                statsStore.submit(baseRootEntity);
+            } else
+                StatsConsole.printlnWarn(String.format("StatsParser.parse [IGNORED ROOT TYPE]: %s", name));
+        } else {
+            String json = rootNode.toString();
+            StatsConsole.printlnWarn(String.format("StatsParser.parse [INVALID ROOT NODE]: %s", json.substring(Math.min(100, json.length()))));
         }
-        else
-            StatsConsole.printlnWarn(String.format("StatsParser.parse [IGNORED ROOT TYPE]: %s", name));
     }
 
     private void traverse(final int level, final long timeStamp, final String currentNodeName, final JsonNode currentNode, final BaseEntity parentEntity) {
@@ -139,6 +141,7 @@ public class StatsParser {
     public BaseRootEntity createRootEntity(final String name, final long timeStamp) {
         BaseRootEntity entity;
         switch (name) {
+            case "config_sports": entity = null; break;
             case "match_timeline":
             case "match_timelinedelta":
                 entity = new MatchTimeline(timeStamp); break;

@@ -18,7 +18,7 @@ CREATE TABLE country (
 DROP TABLE IF EXISTS cup_round;
 CREATE TABLE cup_round (
 	id bigint NOT NULL,
-	name varchar(8),
+	name varchar(32),
 	short_name varchar(4),
 	statistics_sort_order int,
 	PRIMARY KEY (id));
@@ -32,8 +32,8 @@ CREATE TABLE league_table (
 	max_rounds int,
 	current_round int,
 	presentation_id int,
-	name varchar(16),
-	abbr varchar(8),
+	name varchar(32),
+	abbr varchar(16),
 	total_rows int,
 	PRIMARY KEY (id));
 DROP TABLE IF EXISTS league_table__match_types;
@@ -113,6 +113,7 @@ CREATE TABLE match (
 	inlivescore boolean,
 	retired boolean,
 	disqualified boolean,
+	dbfa boolean,
 	manager_home_id bigint,
 	manager_away_id bigint,
 	stadium_id bigint,
@@ -132,6 +133,8 @@ CREATE TABLE match (
 	match_difficulty_rating_away int,
 	ot_home int,
 	ot_away int,
+	ap_home int,
+	ap_away int,
 	cup_round_match_number int,
 	cup_round_number_of_matches int,
 	odds_bookmaker_id bigint,
@@ -144,6 +147,10 @@ CREATE TABLE match (
 	odds_active boolean,
 	odds_betstop boolean,
 	odds_updated bigint,
+	cards_home_yellow int,
+	cards_home_red int,
+	cards_away_yellow int,
+	cards_away_red int,
 	PRIMARY KEY (id));
 DROP TABLE IF EXISTS match__referees;
 CREATE TABLE match__referees (
@@ -174,7 +181,7 @@ CREATE TABLE match_details_extended (
 	time_stamp bigint NOT NULL,
 	match_id bigint,
 	team_home varchar(16),
-	team_away varchar(8),
+	team_away varchar(16),
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS match_details_extended__entries;
 CREATE TABLE match_details_extended__entries (
@@ -192,6 +199,7 @@ CREATE TABLE match_event (
 	seconds int,
 	type varchar(32),
 	name varchar(32),
+	goal_type varchar(8),
 	event_time bigint,
 	updated_time bigint,
 	disabled boolean,
@@ -489,8 +497,8 @@ CREATE TABLE stadium (
 	id bigint NOT NULL,
 	country_id bigint,
 	name varchar(32),
-	city varchar(16),
-	country varchar(8),
+	city varchar(32),
+	country varchar(32),
 	capacity varchar(8),
 	constr_year varchar(4),
 	address varchar(32),
@@ -697,6 +705,7 @@ CREATE TABLE stats_season_meta (
 	stats_coverage_staff_team_officials boolean,
 	stats_coverage_staff_assistant_coaches boolean,
 	stats_coverage_jerseys boolean,
+	stats_coverage_cup_roster boolean,
 	season_id bigint,
 	real_category_id bigint,
 	unique_tournament_id bigint,
@@ -1375,7 +1384,7 @@ CREATE TABLE unique_team_stats (
 DROP TABLE IF EXISTS unique_tournament;
 CREATE TABLE unique_tournament (
 	id bigint NOT NULL,
-	name varchar(16),
+	name varchar(32),
 	real_category_id bigint,
 	friendly boolean,
 	PRIMARY KEY (id));
