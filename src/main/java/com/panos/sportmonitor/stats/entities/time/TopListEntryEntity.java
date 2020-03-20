@@ -53,11 +53,9 @@ public class TopListEntryEntity extends BaseTimeEntity {
     @Override
     public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
         if (currentNodeName.startsWith("teams.")) {
-            long teamId = Long.parseLong(currentNodeName.substring(6));
-            long id = (playerId.asLong() << 8) + teamId;
             ObjectNode objNode = (ObjectNode)childNode;
             objNode.put("_doc", "team_player_top_list_entry");
-            objNode.put("_id", id);
+            objNode.put("_id", this.getRoot().getNext());
             objNode.put("playerid", playerId.asLong());
         }
         return super.transformChildNode(currentNodeName, index, childNode);

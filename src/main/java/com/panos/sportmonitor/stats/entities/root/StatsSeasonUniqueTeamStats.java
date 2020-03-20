@@ -34,7 +34,7 @@ public class StatsSeasonUniqueTeamStats extends BaseRootEntity {
         if (currentNodeName.startsWith("stats.uniqueteams.")) {
             ObjectNode objNode = (ObjectNode)childNode;
             objNode.put("_doc", "unique_team_stats");
-            objNode.put("_id", childNode.get("uniqueteam").get("_id").asLong());
+            objNode.put("_id", this.getRoot().getNext());
         }
         return super.transformChildNode(currentNodeName, index, childNode);
     }

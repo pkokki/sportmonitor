@@ -12,7 +12,7 @@ public abstract class BaseRootEntity extends BaseTimeEntity {
     private final List<Tuple2<Integer, BaseEntity>> __childEntities = new ArrayList<>();
 
     public BaseRootEntity(BaseRootEntityType type, long timeStamp) {
-        super(null, new EntityId(type.getId(), timeStamp));
+        super(null, new EntityId((timeStamp << 2) + type.getId(), timeStamp));
         this.__name = type.getName();
         this.addChildEntity(1, this);
     }

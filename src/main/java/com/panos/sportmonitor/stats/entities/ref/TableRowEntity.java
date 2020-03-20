@@ -44,7 +44,7 @@ public class TableRowEntity extends BaseEntity {
         if (currentNodeName.equals("promotion")) {
             ObjectNode objNode = (ObjectNode)childNode;
             objNode.put("code", childNode.get("_id").asInt());
-            objNode.put("_id", childNode.get("position").asInt());
+            objNode.put("_id", this.getRoot().getNext());
         }
         return super.transformChildNode(currentNodeName, index, childNode);
     }

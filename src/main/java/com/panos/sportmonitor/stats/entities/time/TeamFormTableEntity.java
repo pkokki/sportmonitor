@@ -44,12 +44,8 @@ public class TeamFormTableEntity extends BaseTimeEntity {
     @Override
     public JsonNode transformChildNode(final String currentNodeName, final int index, final JsonNode childNode) {
         if (currentNodeName.equals("form.total") || currentNodeName.equals("form.home") || currentNodeName.equals("form.away")) {
-            int groupId = currentNodeName.equals("form.total") ? 1 : (currentNodeName.equals("form.home") ? 2 : 3);
             ObjectNode objNode = (ObjectNode)childNode;
-            //objNode.put("_id", Long.parseLong(String.format("%d%02d", groupId, index)));
-            long id = (this.getId().getId() << 3) + (index << 2) + groupId;
-            System.out.println(String.format("%s %d %d %d -> %d", this.getClass().getSimpleName(), (this.getId().getId() << 3), (index << 2), groupId, id));
-            objNode.put("_id", id);
+            objNode.put("_id", this.getRoot().getNext());
             objNode.put("_doc", "team_form_entry");
             objNode.put("_index", index);
             objNode.put("group", currentNodeName.substring(5));

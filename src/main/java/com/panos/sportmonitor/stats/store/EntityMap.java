@@ -1,6 +1,5 @@
 package com.panos.sportmonitor.stats.store;
 
-import com.google.common.collect.Lists;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.EntityIdList;
@@ -99,12 +98,13 @@ public class EntityMap {
                     listeners.forEach(o -> o.onRelationChanged(entity, entityFieldName, (EntityId)oldValue, (EntityId)newValue));
                 break;
             case "EntityIdList":
+                final EntityIdList oldList = (EntityIdList) oldValue;
                 final List<EntityId> newIds = ((EntityIdList) newValue)
                         .stream()
-                        .filter(o -> oldValue == null || !((EntityIdList) oldValue).contains(o))
+                        .filter(o -> oldList == null || !oldList.contains(o))
                         .collect(Collectors.toList());
                 newIds.forEach(id -> {
-                    if (isUpdate) ((EntityIdList) oldValue).add(id);
+                    if (oldList != null && isUpdate) oldList.add(id);
                     listeners.forEach(o -> o.onRelationAdded(entity, entityFieldName, id));
                 });
                 break;

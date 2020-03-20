@@ -48,9 +48,9 @@ public class StatsFormTable extends BaseRootEntity {
     public JsonNode transformChildNode(final String currentNodeName, final int index, final JsonNode childNode) {
         if (currentNodeName.equals("teams")) {
             ObjectNode objNode = (ObjectNode)childNode;
-            JsonNode teamNode = objNode.remove("team");
+            objNode.remove("team");
             objNode.put("_doc", "team_form_table");
-            objNode.put("_id", teamNode.get("_id").asLong());
+            objNode.put("_id", this.getRoot().getNext());
         }
         return super.transformChildNode(currentNodeName, index, childNode);
     }

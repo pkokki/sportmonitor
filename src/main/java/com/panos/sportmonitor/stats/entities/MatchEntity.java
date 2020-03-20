@@ -151,7 +151,7 @@ public class MatchEntity extends BaseEntity {
     public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
         if (currentNodeName.equals("form[]")) {
             ObjectNode objNode = (ObjectNode)childNode;
-            objNode.put("_id", (childNode.get("uniqueteamid").asLong() << 8) + childNode.get("matchid").asLong());
+            objNode.put("_id", this.getRoot().getNext());
         }
         return super.transformChildNode(currentNodeName, index, childNode);
     }

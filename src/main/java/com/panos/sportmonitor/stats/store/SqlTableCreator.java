@@ -4,7 +4,6 @@ import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.StatsConsole;
 import org.apache.commons.lang3.builder.Diff;
-import scala.Tuple2;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,24 +31,24 @@ public class SqlTableCreator extends StatsStoreListener {
 
     @Override
     public void onPropertyChange(BaseEntity entity, String entityFieldName, Object oldValue, Object newValue) {
-        getOrCreateFieldInfo(entity, entityFieldName, newValue);
+        createOrUpdateFieldInfo(entity, entityFieldName, newValue);
     }
 
     @Override
     public void onRelationChanged(BaseEntity entity, String entityFieldName, EntityId oldValue, EntityId newValue) {
-        getOrCreateFieldInfo(entity, entityFieldName, newValue.getId());
+        createOrUpdateFieldInfo(entity, entityFieldName, newValue.getId());
         if (newValue.isComposite()) {
             String tsPrefix = entityFieldName;
             if (entityFieldName.endsWith("Id"))
                 tsPrefix = entityFieldName.substring(0, entityFieldName.length() - 2);
-            getOrCreateFieldInfo(entity, tsPrefix + "_" + SqlUtils.FIELD_TIMESTAMP, newValue.getTimeStamp());
+            createOrUpdateFieldInfo(entity, tsPrefix + "_" + SqlUtils.FIELD_TIMESTAMP, newValue.getTimeStamp());
         }
     }
 
     @Override
     public void onRelationAdded(BaseEntity entity, String entityFieldName, EntityId id) {
         String tableName = getTableName(entity);
-        String relTableName = String.format("%s%s%s", tableName, SqlUtils.RELATION_SEPARATOR, entityFieldName);
+        String relTableName = String.format("%s%s%s", tableName, SqlUtils.RELATION_SEPARATOR, SqlUtils.transformTableName(entityFieldName));
         List<FieldInfo> sqlFields = getTableFields(relTableName);
         if (sqlFields.isEmpty()) {
             sqlFields.add(new FieldInfo(SqlUtils.FIELD_REL_SOURCE_PREFIX + SqlUtils.FIELD_ID, "Long", 0, true));
@@ -79,15 +78,10 @@ public class SqlTableCreator extends StatsStoreListener {
     }
 
     private List<FieldInfo> getTableFields(String tableName) {
-        List<FieldInfo> fields = sqlData.get(tableName);
-        if (fields == null) {
-            fields = new LinkedList<>();
-            sqlData.put(tableName, fields);
-        }
-        return fields;
+        return sqlData.computeIfAbsent(tableName, k -> new LinkedList<>());
     }
 
-    private FieldInfo getOrCreateFieldInfo(BaseEntity entity, String entityFieldName, Object value) {
+    private void createOrUpdateFieldInfo(BaseEntity entity, String entityFieldName, Object value) {
         String tableName = getTableName(entity);
         List<FieldInfo> sqlFields = getTableFields(tableName);
         String sqlFieldName = SqlUtils.transform(entityFieldName);
@@ -103,7 +97,6 @@ public class SqlTableCreator extends StatsStoreListener {
             fieldInfo = new FieldInfo(sqlFieldName, value.getClass().getSimpleName(), calcSize(value), false);
             sqlFields.add(fieldInfo);
         }
-        return fieldInfo;
     }
 
     private static class FieldInfo {

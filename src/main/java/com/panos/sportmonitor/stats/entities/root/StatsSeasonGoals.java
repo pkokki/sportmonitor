@@ -32,7 +32,7 @@ public class StatsSeasonGoals extends BaseRootEntity {
         if (currentNodeName.equals("teams")) {
             ObjectNode objNode = (ObjectNode)childNode;
             objNode.put("_doc", "team_goal_stats");
-            objNode.put("_id", childNode.get("team").get("_id").asLong());
+            objNode.put("_id", this.getRoot().getNext());
         }
         return super.transformChildNode(currentNodeName, index, childNode);
     }

@@ -56,14 +56,11 @@ public class StatsSeasonTeamPositionHistory extends BaseRootEntity {
         if (currentNodeName.startsWith("positiondata.")) {
             ObjectNode objNode = (ObjectNode)childNode;
             objNode.put("code", childNode.get("_id").asInt());
-            objNode.put("_id", currentNodeName.substring(currentNodeName.indexOf('.') + 1));
+            objNode.put("_id", this.getRoot().getNext());
         }
         else if (currentNodeName.startsWith("previousseason.") || currentNodeName.startsWith("currentseason.")) {
             ObjectNode objNode = (ObjectNode)childNode;
-            long seasonId = childNode.get("seasonid").asInt();
-            long teamId =  Long.parseLong(currentNodeName.substring(currentNodeName.indexOf('.') + 1).replace("[", "").replace("]", ""));
-            long roundId = childNode.get("round").asInt();
-            objNode.put("_id", (seasonId << 10) + (teamId << 2) + roundId);
+            objNode.put("_id", this.getRoot().getNext());
         }
         return super.transformChildNode(currentNodeName, index, childNode);
     }

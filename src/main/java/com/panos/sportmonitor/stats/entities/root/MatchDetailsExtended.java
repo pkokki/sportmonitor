@@ -45,7 +45,7 @@ public class MatchDetailsExtended extends BaseRootEntity {
         if (currentNodeName.startsWith("values.")) {
             ObjectNode objNode = (ObjectNode)childNode;
             objNode.put("_doc", "match_details_entry");
-            objNode.put("_id", (matchId.asLong() << 4) + (++__valueIndex));
+            objNode.put("_id", this.getRoot().getNext());
             objNode.put("code", currentNodeName.substring(7));
         }
         return super.transformChildNode(currentNodeName, index, childNode);

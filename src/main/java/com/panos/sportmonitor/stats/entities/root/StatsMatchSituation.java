@@ -27,7 +27,7 @@ public class StatsMatchSituation extends BaseRootEntity {
         if (currentNodeName.equals("data[]")) {
             ObjectNode objNode = (ObjectNode)childNode;
             objNode.put("_doc", "match_situation_entry");
-            objNode.put("_id", (matchId.asLong() << 12) +  (childNode.get("time").asInt() << 2) + childNode.get("injurytime").asInt());
+            objNode.put("_id", this.getRoot().getNext());
         }
         return super.transformChildNode(currentNodeName, index, childNode);
     }

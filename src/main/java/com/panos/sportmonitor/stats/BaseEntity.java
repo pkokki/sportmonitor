@@ -3,6 +3,7 @@ package com.panos.sportmonitor.stats;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.google.common.collect.Lists;
+import org.apache.commons.math3.exception.OutOfRangeException;
 
 import java.util.List;
 
@@ -73,6 +74,12 @@ public abstract class BaseEntity {
     }
     public final long getAuxId() { return this.__auxId; }
     public final void setAuxId(long auxId) { this.__auxId = auxId; }
+    public long getNext() {
+        ++__next;
+        if (__next < 1 || __next > 999)
+            throw new OutOfRangeException(__next, 1, 999);
+        return (this.id.getId() << 3) + __next;
+    }
 
     @Override
     public String toString() {
@@ -82,7 +89,4 @@ public abstract class BaseEntity {
         return sb.toString();
     }
 
-    protected int getNext() {
-        return ++__next;
-    }
 }

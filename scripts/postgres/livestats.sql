@@ -1,3 +1,4 @@
+
 DROP TABLE IF EXISTS bookmaker;
 CREATE TABLE bookmaker (
 	id bigint NOT NULL,
@@ -38,18 +39,18 @@ CREATE TABLE league_table (
 DROP TABLE IF EXISTS league_table__match_types;
 CREATE TABLE league_table__match_types (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, dst_id));
 DROP TABLE IF EXISTS league_table__table_rows;
 CREATE TABLE league_table__table_rows (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, dst_id));
 DROP TABLE IF EXISTS league_table__table_types;
 CREATE TABLE league_table__table_types (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, dst_id));
 DROP TABLE IF EXISTS match;
 CREATE TABLE match (
 	id bigint NOT NULL,
@@ -147,13 +148,13 @@ CREATE TABLE match (
 DROP TABLE IF EXISTS match__referees;
 CREATE TABLE match__referees (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, dst_id));
 DROP TABLE IF EXISTS match__team_forms;
 CREATE TABLE match__team_forms (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, dst_id));
 DROP TABLE IF EXISTS match_details_entry;
 CREATE TABLE match_details_entry (
 	id bigint NOT NULL,
@@ -171,8 +172,6 @@ DROP TABLE IF EXISTS match_details_extended;
 CREATE TABLE match_details_extended (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(32),
-	next_id int,
 	match_id bigint,
 	team_home varchar(16),
 	team_away varchar(8),
@@ -180,8 +179,10 @@ CREATE TABLE match_details_extended (
 DROP TABLE IF EXISTS match_details_extended__entries;
 CREATE TABLE match_details_extended__entries (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	dst_time_stamp bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp));
 DROP TABLE IF EXISTS match_event;
 CREATE TABLE match_event (
 	id bigint NOT NULL,
@@ -217,8 +218,8 @@ CREATE TABLE match_event (
 DROP TABLE IF EXISTS match_event__assists;
 CREATE TABLE match_event__assists (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, dst_id));
 DROP TABLE IF EXISTS match_fun_fact;
 CREATE TABLE match_fun_fact (
 	id bigint NOT NULL,
@@ -230,14 +231,14 @@ DROP TABLE IF EXISTS match_fun_facts;
 CREATE TABLE match_fun_facts (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(16),
-	next_id int,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS match_fun_facts__facts;
 CREATE TABLE match_fun_facts__facts (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	dst_time_stamp bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp));
 DROP TABLE IF EXISTS match_situation_entry;
 CREATE TABLE match_situation_entry (
 	id bigint NOT NULL,
@@ -267,15 +268,14 @@ DROP TABLE IF EXISTS match_timeline;
 CREATE TABLE match_timeline (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(16),
-	next_id int,
 	match_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS match_timeline__events;
 CREATE TABLE match_timeline__events (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS match_type;
 CREATE TABLE match_type (
 	id bigint NOT NULL,
@@ -364,6 +364,33 @@ CREATE TABLE season (
 	coverage_lineups boolean,
 	real_category_id bigint,
 	PRIMARY KEY (id));
+DROP TABLE IF EXISTS season__ise_odds;
+CREATE TABLE season__ise_odds (
+	src_id bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	dst_time_stamp bigint NOT NULL,
+	PRIMARY KEY (src_id, dst_id, dst_time_stamp));
+DROP TABLE IF EXISTS season__matches;
+CREATE TABLE season__matches (
+	src_id bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, dst_id));
+DROP TABLE IF EXISTS season__odds;
+CREATE TABLE season__odds (
+	src_id bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	dst_time_stamp bigint NOT NULL,
+	PRIMARY KEY (src_id, dst_id, dst_time_stamp));
+DROP TABLE IF EXISTS season__tables;
+CREATE TABLE season__tables (
+	src_id bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, dst_id));
+DROP TABLE IF EXISTS season__tournaments;
+CREATE TABLE season__tournaments (
+	src_id bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, dst_id));
 DROP TABLE IF EXISTS season_over_under;
 CREATE TABLE season_over_under (
 	id bigint NOT NULL,
@@ -476,8 +503,8 @@ CREATE TABLE stadium (
 DROP TABLE IF EXISTS stadium__team_homes;
 CREATE TABLE stadium__team_homes (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, dst_id));
 DROP TABLE IF EXISTS statistics_table;
 CREATE TABLE statistics_table (
 	id bigint NOT NULL,
@@ -495,14 +522,12 @@ CREATE TABLE statistics_table (
 DROP TABLE IF EXISTS statistics_table__matches;
 CREATE TABLE statistics_table__matches (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, dst_id));
 DROP TABLE IF EXISTS stats_form_table;
 CREATE TABLE stats_form_table (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(16),
-	next_id int,
 	season_id bigint,
 	win_points int,
 	loss_points int,
@@ -511,53 +536,50 @@ CREATE TABLE stats_form_table (
 DROP TABLE IF EXISTS stats_form_table__match_types;
 CREATE TABLE stats_form_table__match_types (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_form_table__table_types;
 CREATE TABLE stats_form_table__table_types (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_form_table__team_form_tables;
 CREATE TABLE stats_form_table__team_form_tables (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	dst_time_stamp bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp));
 DROP TABLE IF EXISTS stats_match_get;
 CREATE TABLE stats_match_get (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(16),
-	next_id int,
 	match_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_match_situation;
 CREATE TABLE stats_match_situation (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(32),
-	next_id int,
 	match_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_match_situation__entries;
 CREATE TABLE stats_match_situation__entries (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_fixtures;
 CREATE TABLE stats_season_fixtures (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(32),
-	next_id int,
 	season_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_season_goals;
 CREATE TABLE stats_season_goals (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(16),
-	next_id int,
 	season_id bigint,
 	matches int,
 	scored_sum int,
@@ -571,49 +593,49 @@ CREATE TABLE stats_season_goals (
 DROP TABLE IF EXISTS stats_season_goals__tables;
 CREATE TABLE stats_season_goals__tables (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_goals__team_goal_stats;
 CREATE TABLE stats_season_goals__team_goal_stats (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	dst_time_stamp bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp));
 DROP TABLE IF EXISTS stats_season_injuries;
 CREATE TABLE stats_season_injuries (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(32),
-	next_id int,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_season_injuries__player_statuses;
 CREATE TABLE stats_season_injuries__player_statuses (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_last_x;
 CREATE TABLE stats_season_last_x (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(16),
-	next_id int,
 	season_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_season_last_x__matches;
 CREATE TABLE stats_season_last_x__matches (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_last_x__tournaments;
 CREATE TABLE stats_season_last_x__tournaments (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_league_summary;
 CREATE TABLE stats_season_league_summary (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(32),
-	next_id int,
 	matches_played int,
 	goals_total int,
 	matches_home_wins real,
@@ -633,8 +655,6 @@ DROP TABLE IF EXISTS stats_season_meta;
 CREATE TABLE stats_season_meta (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(16),
-	next_id int,
 	stats_coverage_complex_stat boolean,
 	stats_coverage_live_table boolean,
 	stats_coverage_halftime_table boolean,
@@ -684,67 +704,64 @@ CREATE TABLE stats_season_meta (
 DROP TABLE IF EXISTS stats_season_meta__tables;
 CREATE TABLE stats_season_meta__tables (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_meta__tournaments;
 CREATE TABLE stats_season_meta__tournaments (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_next_x;
 CREATE TABLE stats_season_next_x (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(16),
-	next_id int,
 	season_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_season_next_x__matches;
 CREATE TABLE stats_season_next_x__matches (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_next_x__tournaments;
 CREATE TABLE stats_season_next_x__tournaments (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_odds;
 CREATE TABLE stats_season_odds (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(16),
-	next_id int,
 	season_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_season_over_under;
 CREATE TABLE stats_season_over_under (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(32),
-	next_id int,
 	season_id bigint,
-	stats_season_over_under_id bigint,
+	league_totals_id bigint,
+	league_totals_time_stamp bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_season_over_under__stats_team_over_unders;
 CREATE TABLE stats_season_over_under__stats_team_over_unders (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	dst_time_stamp bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp));
 DROP TABLE IF EXISTS stats_season_tables;
 CREATE TABLE stats_season_tables (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(32),
-	next_id int,
 	season_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_season_team_position_history;
 CREATE TABLE stats_season_team_position_history (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(32),
-	next_id int,
 	season_id bigint,
 	team_count int,
 	round_count int,
@@ -752,114 +769,119 @@ CREATE TABLE stats_season_team_position_history (
 DROP TABLE IF EXISTS stats_season_team_position_history__promotions;
 CREATE TABLE stats_season_team_position_history__promotions (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_team_position_history__season_positions;
 CREATE TABLE stats_season_team_position_history__season_positions (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_team_position_history__tables;
 CREATE TABLE stats_season_team_position_history__tables (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_team_position_history__teams;
 CREATE TABLE stats_season_team_position_history__teams (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_teams2;
 CREATE TABLE stats_season_teams2 (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(32),
-	next_id int,
 	season_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_season_teams2__stats_tables;
 CREATE TABLE stats_season_teams2__stats_tables (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_teams2__teams;
 CREATE TABLE stats_season_teams2__teams (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_top_assists;
 CREATE TABLE stats_season_top_assists (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(32),
-	next_id int,
 	season_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_season_top_assists__players;
 CREATE TABLE stats_season_top_assists__players (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	dst_time_stamp bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp));
 DROP TABLE IF EXISTS stats_season_top_assists__unique_teams;
 CREATE TABLE stats_season_top_assists__unique_teams (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_top_cards;
 CREATE TABLE stats_season_top_cards (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(32),
-	next_id int,
 	season_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_season_top_cards__players;
 CREATE TABLE stats_season_top_cards__players (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	dst_time_stamp bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp));
 DROP TABLE IF EXISTS stats_season_top_cards__unique_teams;
 CREATE TABLE stats_season_top_cards__unique_teams (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_top_goals;
 CREATE TABLE stats_season_top_goals (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(32),
-	next_id int,
 	season_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_season_top_goals__players;
 CREATE TABLE stats_season_top_goals__players (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	dst_time_stamp bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp));
 DROP TABLE IF EXISTS stats_season_top_goals__unique_teams;
 CREATE TABLE stats_season_top_goals__unique_teams (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_season_unique_team_stats;
 CREATE TABLE stats_season_unique_team_stats (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(32),
-	next_id int,
 	season_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_season_unique_team_stats__unique_team_stats;
 CREATE TABLE stats_season_unique_team_stats__unique_team_stats (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	dst_time_stamp bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp));
 DROP TABLE IF EXISTS stats_team_info;
 CREATE TABLE stats_team_info (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(16),
-	next_id int,
 	unique_team_id bigint,
 	stadium_id bigint,
 	manager_id bigint,
@@ -871,106 +893,113 @@ CREATE TABLE stats_team_info (
 DROP TABLE IF EXISTS stats_team_info__tournaments;
 CREATE TABLE stats_team_info__tournaments (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_team_last_x;
 CREATE TABLE stats_team_last_x (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(16),
-	next_id int,
 	unique_team_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_team_last_x__matches;
 CREATE TABLE stats_team_last_x__matches (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_team_last_x__real_categories;
 CREATE TABLE stats_team_last_x__real_categories (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_team_last_x__tournaments;
 CREATE TABLE stats_team_last_x__tournaments (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_team_last_x__unique_tournaments;
 CREATE TABLE stats_team_last_x__unique_tournaments (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_team_next_x;
 CREATE TABLE stats_team_next_x (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(16),
-	next_id int,
 	unique_team_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_team_next_x__matches;
 CREATE TABLE stats_team_next_x__matches (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_team_next_x__real_categories;
 CREATE TABLE stats_team_next_x__real_categories (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_team_next_x__tournaments;
 CREATE TABLE stats_team_next_x__tournaments (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_team_next_x__unique_tournaments;
 CREATE TABLE stats_team_next_x__unique_tournaments (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_team_odds_client;
 CREATE TABLE stats_team_odds_client (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(32),
-	next_id int,
 	unique_team_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_team_odds_client__odds;
 CREATE TABLE stats_team_odds_client__odds (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	dst_time_stamp bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp));
 DROP TABLE IF EXISTS stats_team_versus;
 CREATE TABLE stats_team_versus (
 	id bigint NOT NULL,
 	time_stamp bigint NOT NULL,
-	name varchar(16),
-	next_id int,
 	next_match_id bigint,
 	live_match_id bigint,
 	PRIMARY KEY (id, time_stamp));
 DROP TABLE IF EXISTS stats_team_versus__matches;
 CREATE TABLE stats_team_versus__matches (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_team_versus__real_categories;
 CREATE TABLE stats_team_versus__real_categories (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_team_versus__tournaments;
 CREATE TABLE stats_team_versus__tournaments (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS stats_team_versus__unique_teams;
 CREATE TABLE stats_team_versus__unique_teams (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id));
 DROP TABLE IF EXISTS table_round;
 CREATE TABLE table_round (
 	id bigint NOT NULL,
@@ -1096,8 +1125,10 @@ CREATE TABLE team_form_table (
 DROP TABLE IF EXISTS team_form_table__form_entries;
 CREATE TABLE team_form_table__form_entries (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	dst_time_stamp bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp));
 DROP TABLE IF EXISTS team_goal_stats;
 CREATE TABLE team_goal_stats (
 	id bigint NOT NULL,
@@ -1205,8 +1236,10 @@ CREATE TABLE top_list_entry (
 DROP TABLE IF EXISTS top_list_entry__teams_entries;
 CREATE TABLE top_list_entry__teams_entries (
 	src_id bigint NOT NULL,
-	dest_id bigint NOT NULL,
-	PRIMARY KEY (src_id, dest_id));
+	src_time_stamp bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	dst_time_stamp bigint NOT NULL,
+	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp));
 DROP TABLE IF EXISTS tournament;
 CREATE TABLE tournament (
 	id bigint NOT NULL,
@@ -1230,6 +1263,11 @@ CREATE TABLE tournament (
 	cup_roster_id varchar(8),
 	group_name varchar(8),
 	PRIMARY KEY (id));
+DROP TABLE IF EXISTS tournament__matches;
+CREATE TABLE tournament__matches (
+	src_id bigint NOT NULL,
+	dst_id bigint NOT NULL,
+	PRIMARY KEY (src_id, dst_id));
 DROP TABLE IF EXISTS unique_team;
 CREATE TABLE unique_team (
 	id bigint NOT NULL,
@@ -1341,4 +1379,3 @@ CREATE TABLE unique_tournament (
 	real_category_id bigint,
 	friendly boolean,
 	PRIMARY KEY (id));
-

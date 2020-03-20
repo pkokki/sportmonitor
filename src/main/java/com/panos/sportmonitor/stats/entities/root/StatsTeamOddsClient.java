@@ -33,8 +33,7 @@ public class StatsTeamOddsClient extends BaseRootEntity {
     public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
         if (currentNodeName.startsWith("odds.") && !currentNodeName.endsWith("[]")) {
             ObjectNode objNode = (ObjectNode)childNode;
-            long mid = Long.parseLong(childNode.get("_mid").asText());
-            objNode.put("_id", Long.parseLong(String.format("%d%03d", mid, index)));
+            objNode.put("_id", this.getRoot().getNext());
         }
         return super.transformChildNode(currentNodeName, index, childNode);
     }
