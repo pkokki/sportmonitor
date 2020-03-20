@@ -10,7 +10,7 @@ public class StatsStore {
         entities = new EntityMap();
         entities.addListener(new StoreCounterListener());
         //entities.addListener(new SqlTableCreator());
-        entities.addListener(new SqlExecutor(false));
+        entities.addListener(new SqlExecutor(false,false));
     }
 
     public void submit(BaseRootEntity rootEntity) {

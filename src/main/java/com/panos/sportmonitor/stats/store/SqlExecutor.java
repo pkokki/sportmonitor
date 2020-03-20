@@ -26,10 +26,11 @@ public class SqlExecutor extends StatsStoreListener {
     }
 
     private final HashMap<Tuple2<String, EntityId>, SqlStatement> statements = new LinkedHashMap<>();
-    private boolean printSql;
+    private boolean printSql, execSql;
     private long relationIndex = 0;
 
-    public SqlExecutor(boolean printSql) {
+    public SqlExecutor(boolean execSql, boolean printSql) {
+        this.execSql = execSql;
         this.printSql = printSql;
     }
 
@@ -118,7 +119,7 @@ public class SqlExecutor extends StatsStoreListener {
                     statement.addBatch(sql);
                 }
             }
-            statement.executeBatch();
+            if (execSql) statement.executeBatch();
         }
         catch (SQLException e) {
             while (e != null) {
