@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.EntityIdList;
+import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.entities.ref.UniqueTournamentEntity;
 
 public class SeasonEntity extends BaseEntity {
     private EntityId uniqueTournamentId;
@@ -25,14 +26,14 @@ public class SeasonEntity extends BaseEntity {
     private EntityIdList tournaments = new EntityIdList();
 
     public SeasonEntity(BaseEntity parent, long id) {
-        super(parent, id);
+        super(parent, new EntityId(id, SeasonEntity.class));
     }
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "uniquetournament": this.uniqueTournamentId = childEntity.getId(); break;
-            case "realcategory": this.realCategoryId = childEntity.getId(); break;
+            case "uniquetournament": this.uniqueTournamentId = new EntityId(childEntity); break;
+            case "realcategory": this.realCategoryId = new EntityId(childEntity); break;
             case "tables[]": this.tables.add(childEntity.getId()); break;
             case "matches[]": this.matches.add(childEntity.getId()); break;
             default:
@@ -61,7 +62,7 @@ public class SeasonEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "_utid": this.uniqueTournamentId = new EntityId(node.asLong()); break;
+            case "_utid": this.uniqueTournamentId = new EntityId(node.asLong(), UniqueTournamentEntity.class); break;
             case "name": this.name = node.asText(); break;
             case "abbr": this.abbr = node.asText(); break;
             case "start.uts": this.startDate = node.asLong(); break;
@@ -93,24 +94,22 @@ public class SeasonEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("SeasonEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", uniqueTournamentId=").append(uniqueTournamentId);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", abbr='").append(abbr).append('\'');
-        sb.append(", startDate=").append(startDate);
-        sb.append(", endDate=").append(endDate);
-        sb.append(", neutralGround=").append(neutralGround);
-        sb.append(", friendly=").append(friendly);
-        sb.append(", year='").append(year).append('\'');
-        sb.append(", coverageLineups=").append(coverageLineups);
-        sb.append(", tables=").append(tables);
-        sb.append(", realCategoryId=").append(realCategoryId);
-        sb.append(", iseOdds=").append(iseOdds);
-        sb.append(", odds=").append(odds);
-        sb.append(", matches=").append(matches);
-        sb.append(", tournaments=").append(tournaments);
-        sb.append('}');
-        return sb.toString();
+        return "SeasonEntity{" + "id=" + getId() +
+                ", uniqueTournamentId=" + uniqueTournamentId +
+                ", name='" + name + '\'' +
+                ", abbr='" + abbr + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", neutralGround=" + neutralGround +
+                ", friendly=" + friendly +
+                ", year='" + year + '\'' +
+                ", coverageLineups=" + coverageLineups +
+                ", tables=" + tables +
+                ", realCategoryId=" + realCategoryId +
+                ", iseOdds=" + iseOdds +
+                ", odds=" + odds +
+                ", matches=" + matches +
+                ", tournaments=" + tournaments +
+                '}';
     }
 }

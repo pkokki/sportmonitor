@@ -21,10 +21,10 @@ public class StatsTeamInfo extends BaseRootEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "team": this.uniqueTeamId = childEntity.getId(); return true;
+            case "team": this.uniqueTeamId = new EntityId(childEntity); return true;
             case "tournaments[]": this.tournaments.add(childEntity.getId()); return true;
-            case "stadium": this.stadiumId = childEntity.getId(); return true;
-            case "manager": this.managerId = childEntity.getId(); return true;
+            case "stadium": this.stadiumId = new EntityId(childEntity); return true;
+            case "manager": this.managerId = new EntityId(childEntity); return true;
             case "historytournaments[]":
                 return  true;
             default:

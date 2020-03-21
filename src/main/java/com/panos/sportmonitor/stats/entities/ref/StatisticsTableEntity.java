@@ -3,12 +3,8 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.EntityIdList;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class StatisticsTableEntity extends BaseEntity {
     private String name;
@@ -24,7 +20,7 @@ public class StatisticsTableEntity extends BaseEntity {
     private EntityIdList matches = new EntityIdList();
 
     public StatisticsTableEntity(BaseEntity parent, long id) {
-        super(parent, id);
+        super(parent, new EntityId(id, StatisticsTableEntity.class));
     }
 
     @Override
@@ -45,7 +41,7 @@ public class StatisticsTableEntity extends BaseEntity {
             case "seasontypeunique": this.seasonTypeUnique = node.asText(); break;
             case "start.uts": this.seasonStart = node.asLong(); break;
             case "end.uts": this.seasonEnd = node.asLong(); break;
-            case "matches[]": matches.add(new EntityId(node.asLong())); break;
+            case "matches[]": matches.add(new EntityId(node.asLong(), MatchSituationEntryEntity.class)); break;
             case "uniqueteams[].id":
             case "uniqueteams[].name":
                 break;
@@ -71,20 +67,18 @@ public class StatisticsTableEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("StatisticsTableEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", abbr='").append(abbr).append('\'');
-        sb.append(", maxRounds='").append(maxRounds).append('\'');
-        sb.append(", tournamentId=").append(tournamentId);
-        sb.append(", seasonId='").append(seasonId).append('\'');
-        sb.append(", seasonType='").append(seasonType).append('\'');
-        sb.append(", seasonTypeName='").append(seasonTypeName).append('\'');
-        sb.append(", seasonTypeUnique='").append(seasonTypeUnique).append('\'');
-        sb.append(", seasonStart=").append(seasonStart);
-        sb.append(", seasonEnd=").append(seasonEnd);
-        sb.append(", matches=").append(matches);
-        sb.append('}');
-        return sb.toString();
+        return "StatisticsTableEntity{" + "id=" + getId() +
+                ", name='" + name + '\'' +
+                ", abbr='" + abbr + '\'' +
+                ", maxRounds='" + maxRounds + '\'' +
+                ", tournamentId=" + tournamentId +
+                ", seasonId='" + seasonId + '\'' +
+                ", seasonType='" + seasonType + '\'' +
+                ", seasonTypeName='" + seasonTypeName + '\'' +
+                ", seasonTypeUnique='" + seasonTypeUnique + '\'' +
+                ", seasonStart=" + seasonStart +
+                ", seasonEnd=" + seasonEnd +
+                ", matches=" + matches +
+                '}';
     }
 }

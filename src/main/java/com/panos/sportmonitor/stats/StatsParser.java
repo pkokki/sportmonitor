@@ -115,7 +115,6 @@ public class StatsParser {
                 long auxEntityId = getAuxEntityId(currentNodeName);
                 long childEntityId = currentNode.get("_id").asLong();
                 final BaseEntity childEntity = createEntity(parentEntity, docType, childEntityId, timeStamp);
-                childEntity.setAuxId(auxEntityId);
                 if (!childEntity.handleAuxId(auxEntityId)) {
                     StatsConsole.printlnError(String.format("%s [UNHANDLED AUX ID]: '%s' --- id=%s, aux=%s",
                             childEntity.getClass().getSimpleName(),

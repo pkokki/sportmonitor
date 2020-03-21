@@ -19,7 +19,7 @@ public class StatsSeasonGoals extends BaseRootEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "season": this.seasonId = childEntity.getId(); break;
+            case "season": this.seasonId = new EntityId(childEntity); break;
             case "tables[]": this.tables.add(childEntity.getId()); break;
             case "teams[]": this.teamGoalStats.add(childEntity.getId()); break;
             default: return super.handleChildEntity(entityName, childEntity);

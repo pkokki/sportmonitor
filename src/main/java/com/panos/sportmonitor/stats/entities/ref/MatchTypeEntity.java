@@ -3,13 +3,14 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class MatchTypeEntity extends BaseEntity {
     private String name;
     private Long setTypeId;
 
     public MatchTypeEntity(BaseEntity parent, long id) {
-        super(parent, id);
+        super(parent, new EntityId(id, MatchTypeEntity.class));
     }
 
     @Override
@@ -25,11 +26,9 @@ public class MatchTypeEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("MatchTypeEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", setTypeId=").append(setTypeId);
-        sb.append('}');
-        return sb.toString();
+        return "MatchTypeEntity{" + "id=" + getId() +
+                ", name='" + name + '\'' +
+                ", setTypeId=" + setTypeId +
+                '}';
     }
 }

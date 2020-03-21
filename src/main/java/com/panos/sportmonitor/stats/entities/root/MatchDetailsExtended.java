@@ -4,17 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.panos.sportmonitor.stats.entities.MatchEntity;
 
 public class MatchDetailsExtended extends BaseRootEntity {
-    private transient int __valueIndex = 0;
     private EntityId matchId;
     private String teamHome, teamAway;
     private EntityIdList entries = new EntityIdList();
-    //private HashMap<String, String> types = new HashMap<>();
 
     public MatchDetailsExtended(long timeStamp) {
         super(BaseRootEntityType.MatchDetailsExtended, timeStamp);
@@ -23,7 +18,7 @@ public class MatchDetailsExtended extends BaseRootEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "_matchid": this.matchId = new EntityId(node.asLong()); break;
+            case "_matchid": this.matchId = new EntityId(node.asLong(), MatchEntity.class); break;
             case "teams.home": this.teamHome = node.asText(); break;
             case "teams.away": this.teamAway = node.asText(); break;
 

@@ -7,13 +7,13 @@ public class TeamOverUnderEntity extends OverUnderEntryEntity {
     private EntityId teamId;
 
     public TeamOverUnderEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+        super(parent, new EntityId(id, timeStamp, TeamOverUnderEntity.class));
     }
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         if (entityName.equals("team")) {
-            this.teamId = childEntity.getId();
+            this.teamId = new EntityId(childEntity);
             return true;
         }
         return super.handleChildEntity(entityName, childEntity);
@@ -27,10 +27,8 @@ public class TeamOverUnderEntity extends OverUnderEntryEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("TeamOverUnderEntity{");
-        sb.append(super.toString());
-        sb.append(", teamId=").append(teamId);
-        sb.append('}');
-        return sb.toString();
+        return "TeamOverUnderEntity{" + super.toString() +
+                ", teamId=" + teamId +
+                '}';
     }
 }

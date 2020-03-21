@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
 import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.entities.MatchEntity;
 
 public class TeamFormEntryEntity extends BaseTimeEntity {
     private Integer _index;
@@ -16,7 +17,7 @@ public class TeamFormEntryEntity extends BaseTimeEntity {
     private EntityId matchId;
 
     public TeamFormEntryEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+        super(parent, new EntityId(id, timeStamp, TeamFormEntryEntity.class));
     }
 
     @Override
@@ -28,7 +29,7 @@ public class TeamFormEntryEntity extends BaseTimeEntity {
             case "value": this.value = node.asText(); break;
             case "homematch": this.homeMatch = node.asBoolean(); break;
             case "neutralground": this.neutralGround = node.asBoolean(); break;
-            case "matchid": this.matchId = new EntityId(node.asLong()); break;
+            case "matchid": this.matchId = new EntityId(node.asLong(), MatchEntity.class); break;
             default: return super.handleProperty(nodeName, nodeType, node);
         }
         return true;
@@ -36,16 +37,14 @@ public class TeamFormEntryEntity extends BaseTimeEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("TeamFormEntryEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", group_name='").append(group_name).append('\'');
-        sb.append(", index=").append(_index);
-        sb.append(", typeId='").append(typeId).append('\'');
-        sb.append(", value='").append(value).append('\'');
-        sb.append(", homeMatch=").append(homeMatch);
-        sb.append(", neutralGround=").append(neutralGround);
-        sb.append(", matchId=").append(matchId);
-        sb.append('}');
-        return sb.toString();
+        return "TeamFormEntryEntity{" + "id=" + getId() +
+                ", group_name='" + group_name + '\'' +
+                ", index=" + _index +
+                ", typeId='" + typeId + '\'' +
+                ", value='" + value + '\'' +
+                ", homeMatch=" + homeMatch +
+                ", neutralGround=" + neutralGround +
+                ", matchId=" + matchId +
+                '}';
     }
 }

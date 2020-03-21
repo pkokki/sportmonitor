@@ -7,6 +7,8 @@ import com.panos.sportmonitor.spark.util.PostgresHelper;
 import com.panos.sportmonitor.stats.StatsConsole;
 import com.panos.sportmonitor.stats.StatsParser;
 import com.panos.sportmonitor.stats.StatsStore;
+import com.panos.sportmonitor.stats.store.SqlExecutor;
+import com.panos.sportmonitor.stats.store.StoreCounterListener;
 import com.panos.sportmonitor.webapi.kafka.OverviewProducer;
 import com.panos.sportmonitor.webapi.kafka.RadarProducer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +59,8 @@ public class LiveOverviewController {
             return "ERROR";
         }
         StatsStore store = new StatsStore();
+        store.addListener(new StoreCounterListener());
+        store.addListener(new SqlExecutor(true,false));
         StatsParser parser = new StatsParser(store);
         parser.parse(json);
         store.submitChanges();

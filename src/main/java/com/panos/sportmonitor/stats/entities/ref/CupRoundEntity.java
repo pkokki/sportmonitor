@@ -3,6 +3,7 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class CupRoundEntity extends BaseEntity {
     private String name;
@@ -10,7 +11,7 @@ public class CupRoundEntity extends BaseEntity {
     private Integer statisticsSortOrder;
 
     public CupRoundEntity(BaseEntity parent, long id) {
-        super(parent, id);
+        super(parent, new EntityId(id, CupRoundEntity.class));
     }
 
     @Override
@@ -27,12 +28,10 @@ public class CupRoundEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("CupRoundEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", shortName='").append(shortName).append('\'');
-        sb.append(", statisticsSortOrder=").append(statisticsSortOrder);
-        sb.append('}');
-        return sb.toString();
+        return "CupRoundEntity{" + "id=" + getId() +
+                ", name='" + name + '\'' +
+                ", shortName='" + shortName + '\'' +
+                ", statisticsSortOrder=" + statisticsSortOrder +
+                '}';
     }
 }

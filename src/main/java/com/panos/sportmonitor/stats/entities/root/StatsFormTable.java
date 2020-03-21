@@ -5,9 +5,6 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class StatsFormTable extends BaseRootEntity {
     private EntityId seasonId;
     private EntityIdList teamFormTables = new EntityIdList();
@@ -36,7 +33,7 @@ public class StatsFormTable extends BaseRootEntity {
         switch(entityName) {
             case "matchtype[]": this.matchTypes.add(childEntity.getId()); break;
             case "tabletype[]": this.tableTypes.add(childEntity.getId()); break;
-            case "season": this.seasonId = childEntity.getId(); break;
+            case "season": this.seasonId = new EntityId(childEntity); break;
             case "teams[]": this.teamFormTables.add(childEntity.getId()); break;
             default:
                 return super.handleChildEntity(entityName, childEntity);

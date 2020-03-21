@@ -4,13 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class MatchFunFactEntity extends BaseTimeEntity {
     private Long typeId;
     private String sentence;
 
     public MatchFunFactEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+        super(parent, new EntityId(id, timeStamp, MatchFunFactEntity.class));
     }
 
     @Override
@@ -25,11 +26,9 @@ public class MatchFunFactEntity extends BaseTimeEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("MatchFunFactEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", typeId=").append(typeId);
-        sb.append(", sentence='").append(sentence).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "MatchFunFactEntity{" + "id=" + getId() +
+                ", typeId=" + typeId +
+                ", sentence='" + sentence + '\'' +
+                '}';
     }
 }

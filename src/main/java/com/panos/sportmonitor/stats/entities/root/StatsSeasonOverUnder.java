@@ -17,8 +17,8 @@ public class StatsSeasonOverUnder extends BaseRootEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "season": this.seasonId = childEntity.getId(); return true;
-            case "league.totals": this.leagueTotalsId = childEntity.getId(); return true;
+            case "season": this.seasonId = new EntityId(childEntity); return true;
+            case "league.totals": this.leagueTotalsId = new EntityId(childEntity); return true;
             default:
                 if (entityName.startsWith("stats.")) {
                     statsTeamOverUnders.add(childEntity.getId());

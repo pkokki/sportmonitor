@@ -3,13 +3,8 @@ package com.panos.sportmonitor.stats.entities.time;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseTimeEntity;
-import com.panos.sportmonitor.stats.EntityId;
-import com.panos.sportmonitor.stats.EntityIdList;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.panos.sportmonitor.stats.*;
+import com.panos.sportmonitor.stats.entities.PlayerEntity;
 
 public class TopListEntryEntity extends BaseTimeEntity {
     private EntityId playerId;
@@ -33,19 +28,19 @@ public class TopListEntryEntity extends BaseTimeEntity {
     private Integer totalSecondHalfCards;
 
     public TopListEntryEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+        super(parent, new EntityId(id, timeStamp, TopListEntryEntity.class));
     }
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
-        switch (entityName) {
-            case "player": this.playerId = childEntity.getId(); break;
-            default:
-                if (entityName.startsWith("teams.")) {
-                    this.teamsEntries.add(childEntity.getId());
-                    break;
-                }
-                return super.handleChildEntity(entityName, childEntity);
+        if ("player".equals(entityName)) {
+            this.playerId = new EntityId(childEntity);
+        } else {
+            if (entityName.startsWith("teams.")) {
+                this.teamsEntries.add(childEntity.getId());
+                return true;
+            }
+            return super.handleChildEntity(entityName, childEntity);
         }
         return true;
     }
@@ -56,7 +51,7 @@ public class TopListEntryEntity extends BaseTimeEntity {
             ObjectNode objNode = (ObjectNode)childNode;
             objNode.put("_doc", "team_player_top_list_entry");
             objNode.put("_id", this.getRoot().getNext());
-            objNode.put("playerid", playerId.asLong());
+            objNode.put("playerid", playerId.getId());
         }
         return super.transformChildNode(currentNodeName, index, childNode);
     }
@@ -64,7 +59,7 @@ public class TopListEntryEntity extends BaseTimeEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "playerid": this.playerId = new EntityId(node.asLong()); break;
+            case "playerid": this.playerId = new EntityId(node.asLong(), PlayerEntity.class); break;
             case "total.goals": this.totalGoals = node.asInt(); break;
             case "total.assists": this.totalAssists = node.asInt(); break;
             case "total.matches": this.totalMatches = node.asInt(); break;
@@ -90,29 +85,27 @@ public class TopListEntryEntity extends BaseTimeEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("TopListEntryEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", playerId=").append(playerId);
-        sb.append(", totalGoals=").append(totalGoals);
-        sb.append(", totalAssists=").append(totalAssists);
-        sb.append(", totalMatches=").append(totalMatches);
-        sb.append(", totalPenalties=").append(totalPenalties);
-        sb.append(", goalPoints=").append(goalPoints);
-        sb.append(", minutesPlayed=").append(minutesPlayed);
-        sb.append(", substitutedIn=").append(substitutedIn);
-        sb.append(", firstGoals=").append(firstGoals);
-        sb.append(", lastGoals=").append(lastGoals);
-        sb.append(", homeGoals=").append(homeGoals);
-        sb.append(", awayGoals=").append(awayGoals);
-        sb.append(", firstHalfGoals=").append(firstHalfGoals);
-        sb.append(", secondHalfGoals=").append(secondHalfGoals);
-        sb.append(", teamsEntries=").append(teamsEntries);
-        sb.append(", totalYellowCards=").append(totalYellowCards);
-        sb.append(", totalYellowRedCards=").append(totalYellowRedCards);
-        sb.append(", totalRedCards=").append(totalRedCards);
-        sb.append(", totalFirstHalfCards=").append(totalFirstHalfCards);
-        sb.append(", totalSecondHalfCards=").append(totalSecondHalfCards);
-        sb.append('}');
-        return sb.toString();
+        return "TopListEntryEntity{" + "id=" + getId() +
+                ", playerId=" + playerId +
+                ", totalGoals=" + totalGoals +
+                ", totalAssists=" + totalAssists +
+                ", totalMatches=" + totalMatches +
+                ", totalPenalties=" + totalPenalties +
+                ", goalPoints=" + goalPoints +
+                ", minutesPlayed=" + minutesPlayed +
+                ", substitutedIn=" + substitutedIn +
+                ", firstGoals=" + firstGoals +
+                ", lastGoals=" + lastGoals +
+                ", homeGoals=" + homeGoals +
+                ", awayGoals=" + awayGoals +
+                ", firstHalfGoals=" + firstHalfGoals +
+                ", secondHalfGoals=" + secondHalfGoals +
+                ", teamsEntries=" + teamsEntries +
+                ", totalYellowCards=" + totalYellowCards +
+                ", totalYellowRedCards=" + totalYellowRedCards +
+                ", totalRedCards=" + totalRedCards +
+                ", totalFirstHalfCards=" + totalFirstHalfCards +
+                ", totalSecondHalfCards=" + totalSecondHalfCards +
+                '}';
     }
 }

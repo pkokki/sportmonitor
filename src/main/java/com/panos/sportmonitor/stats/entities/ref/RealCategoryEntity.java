@@ -10,7 +10,7 @@ public class RealCategoryEntity extends BaseEntity {
     private EntityId countryId;
 
     public RealCategoryEntity(BaseEntity parent, long id) {
-        super(parent, id);
+        super(parent, new EntityId(id, RealCategoryEntity.class));
     }
 
     @Override
@@ -28,7 +28,7 @@ public class RealCategoryEntity extends BaseEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         if (entityName.equals("cc")) {
-            this.countryId = childEntity.getId();
+            this.countryId = new EntityId(childEntity);
             return true;
         }
         return super.handleChildEntity(entityName, childEntity);
@@ -36,11 +36,9 @@ public class RealCategoryEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("RealCategoryEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", countryId=").append(countryId);
-        sb.append('}');
-        return sb.toString();
+        return "RealCategoryEntity{" + "id=" + getId() +
+                ", name='" + name + '\'' +
+                ", countryId=" + countryId +
+                '}';
     }
 }

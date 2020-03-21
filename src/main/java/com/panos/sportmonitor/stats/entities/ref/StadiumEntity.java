@@ -3,11 +3,8 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.EntityIdList;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class StadiumEntity extends BaseEntity {
     private EntityId countryId;
@@ -27,13 +24,13 @@ public class StadiumEntity extends BaseEntity {
     private String phone;
 
     public StadiumEntity(BaseEntity parent, long id) {
-        super(parent, id);
+        super(parent, new EntityId(id, StadiumEntity.class));
     }
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         if (entityName.equals("cc")) {
-            this.countryId = childEntity.getId();
+            this.countryId = new EntityId(childEntity);
         }
         else if (entityName.equals("hometeams[]")) {
             this.teamHomes.add(childEntity.getId());
@@ -68,24 +65,22 @@ public class StadiumEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("StadiumEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", teamHomes=").append(teamHomes);
-        sb.append(", countryId=").append(countryId);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append(", city=").append(city);
-        sb.append(", country=").append(country);
-        sb.append(", state='").append(state).append('\'');
-        sb.append(", capacity='").append(capacity).append('\'');
-        sb.append(", constrYear='").append(constrYear).append('\'');
-        sb.append(", address='").append(address).append('\'');
-        sb.append(", googlecoords='").append(googlecoords).append('\'');
-        sb.append(", pitchsizeX=").append(pitchsizeX);
-        sb.append(", pitchsizeY=").append(pitchsizeY);
-        sb.append(", url=").append(url);
-        sb.append(", phone=").append(phone);
-        sb.append('}');
-        return sb.toString();
+        return "StadiumEntity{" + "id=" + getId() +
+                ", teamHomes=" + teamHomes +
+                ", countryId=" + countryId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", city=" + city +
+                ", country=" + country +
+                ", state='" + state + '\'' +
+                ", capacity='" + capacity + '\'' +
+                ", constrYear='" + constrYear + '\'' +
+                ", address='" + address + '\'' +
+                ", googlecoords='" + googlecoords + '\'' +
+                ", pitchsizeX=" + pitchsizeX +
+                ", pitchsizeY=" + pitchsizeY +
+                ", url=" + url +
+                ", phone=" + phone +
+                '}';
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.entities.ref.RealCategoryEntity;
 
 public class TeamEntity extends BaseEntity {
     private EntityId uid;
@@ -16,19 +17,19 @@ public class TeamEntity extends BaseEntity {
     private EntityId countryId;
 
     public TeamEntity(BaseEntity parent, long id) {
-        super(parent, id);
+        super(parent, new EntityId(id, TeamEntity.class));
     }
 
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "uid": if (node.asLong() > 0) this.uid = new EntityId(node.asLong()); break;
+            case "uid": if (node.asLong() > 0) this.uid = new EntityId(node.asLong(), UniqueTeamEntity.class); break;
             case "name": this.name = node.asText(); break;
             case "abbr": this.abbr = node.asText(); break;
             case "nickname": this.nickname = node.asText(); break;
             case "mediumname": this.mediumName = node.asText(); break;
             case "iscountry": this.isCountry = node.asBoolean(); break;
-            case "homerealcategoryid": this.homeRealCategoryId = new EntityId(node.asLong()); break;
+            case "homerealcategoryid": this.homeRealCategoryId = new EntityId(node.asLong(), RealCategoryEntity.class); break;
 
             case "haslogo":
             case "virtual":
@@ -42,7 +43,7 @@ public class TeamEntity extends BaseEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         if (entityName.equals("countrycode")) {
-            this.countryId = childEntity.getId();
+            this.countryId = new EntityId(childEntity);
             return true;
         }
         return super.handleChildEntity(entityName, childEntity);
@@ -50,18 +51,16 @@ public class TeamEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("TeamEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", uid=").append(getUid());
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", abbr='").append(abbr).append('\'');
-        sb.append(", nickname='").append(nickname).append('\'');
-        sb.append(", mediumName='").append(mediumName).append('\'');
-        sb.append(", isCountry=").append(isCountry);
-        sb.append(", countryId=").append(countryId);
-        sb.append(", homeRealCategoryId=").append(homeRealCategoryId);
-        sb.append('}');
-        return sb.toString();
+        return "TeamEntity{" + "id=" + getId() +
+                ", uid=" + getUid() +
+                ", name='" + name + '\'' +
+                ", abbr='" + abbr + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", mediumName='" + mediumName + '\'' +
+                ", isCountry=" + isCountry +
+                ", countryId=" + countryId +
+                ", homeRealCategoryId=" + homeRealCategoryId +
+                '}';
     }
 
     public EntityId getUid() {

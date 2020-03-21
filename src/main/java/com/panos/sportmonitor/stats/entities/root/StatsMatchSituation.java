@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.*;
+import com.panos.sportmonitor.stats.entities.MatchEntity;
 
 public class StatsMatchSituation extends BaseRootEntity {
     private EntityId matchId;
@@ -16,7 +17,7 @@ public class StatsMatchSituation extends BaseRootEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "matchid": this.matchId = new EntityId(node.asLong()); break;
+            case "matchid": this.matchId = new EntityId(node.asLong(), MatchEntity.class); break;
             default: return super.handleProperty(nodeName, nodeType, node);
         }
         return true;

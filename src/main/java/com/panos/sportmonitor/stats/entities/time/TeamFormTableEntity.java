@@ -3,13 +3,7 @@ package com.panos.sportmonitor.stats.entities.time;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseTimeEntity;
-import com.panos.sportmonitor.stats.EntityId;
-import com.panos.sportmonitor.stats.EntityIdList;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.panos.sportmonitor.stats.*;
 
 public class TeamFormTableEntity extends BaseTimeEntity {
     private Integer positionTotal, positionHome, positionAway, playedTotal, playedTotalHome, playedTotalAway, playedHome, playedAway;
@@ -26,13 +20,13 @@ public class TeamFormTableEntity extends BaseTimeEntity {
     private EntityIdList formEntries = new EntityIdList();
 
     public TeamFormTableEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+        super(parent, new EntityId(id, timeStamp, TeamFormTableEntity.class));
     }
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         if (entityName.equals("nextopponent.team")) {
-            this.nextOpponentTeamId = childEntity.getId();
+            this.nextOpponentTeamId = new EntityId(childEntity);
             return true;
         } else if (entityName.startsWith("form.")) {
             this.formEntries.add(childEntity.getId());
@@ -117,57 +111,55 @@ public class TeamFormTableEntity extends BaseTimeEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("TeamFormTableEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", positionTotal=").append(positionTotal);
-        sb.append(", positionHome=").append(positionHome);
-        sb.append(", positionAway=").append(positionAway);
-        sb.append(", playedTotal=").append(playedTotal);
-        sb.append(", playedTotalHome=").append(playedTotalHome);
-        sb.append(", playedTotalAway=").append(playedTotalAway);
-        sb.append(", playedHome=").append(playedHome);
-        sb.append(", playedAway=").append(playedAway);
-        sb.append(", winTotal=").append(winTotal);
-        sb.append(", winTotalHome=").append(winTotalHome);
-        sb.append(", winTotalAway=").append(winTotalAway);
-        sb.append(", winHome=").append(winHome);
-        sb.append(", winAway=").append(winAway);
-        sb.append(", drawTotal=").append(drawTotal);
-        sb.append(", drawTotalHome=").append(drawTotalHome);
-        sb.append(", drawTotalAway=").append(drawTotalAway);
-        sb.append(", drawHome=").append(drawHome);
-        sb.append(", drawAway=").append(drawAway);
-        sb.append(", lossTotal=").append(lossTotal);
-        sb.append(", lossTotalHome=").append(lossTotalHome);
-        sb.append(", lossTotalAway=").append(lossTotalAway);
-        sb.append(", lossHome=").append(lossHome);
-        sb.append(", lossAway=").append(lossAway);
-        sb.append(", goalsForTotal=").append(goalsForTotal);
-        sb.append(", goalsForTotalHome=").append(goalsForTotalHome);
-        sb.append(", goalsForTotalAway=").append(goalsForTotalAway);
-        sb.append(", goalsForHome=").append(goalsForHome);
-        sb.append(", goalsForAway=").append(goalsForAway);
-        sb.append(", goalsAgainstTotal=").append(goalsAgainstTotal);
-        sb.append(", goalsAgainstTotalHome=").append(goalsAgainstTotalHome);
-        sb.append(", goalsAgainstTotalAway=").append(goalsAgainstTotalAway);
-        sb.append(", goalsAgainstHome=").append(goalsAgainstHome);
-        sb.append(", goalsAgainstAway=").append(goalsAgainstAway);
-        sb.append(", goalDiffTotal=").append(goalDiffTotal);
-        sb.append(", goalDiffTotalHome=").append(goalDiffTotalHome);
-        sb.append(", goalDiffTotalAway=").append(goalDiffTotalAway);
-        sb.append(", goalDiffHome=").append(goalDiffHome);
-        sb.append(", goalDiffAway=").append(goalDiffAway);
-        sb.append(", pointsTotal=").append(pointsTotal);
-        sb.append(", pointsTotalHome=").append(pointsTotalHome);
-        sb.append(", pointsTotalAway=").append(pointsTotalAway);
-        sb.append(", pointsHome=").append(pointsHome);
-        sb.append(", pointsAway=").append(pointsAway);
-        sb.append(", nextOpponentTeamId=").append(nextOpponentTeamId);
-        sb.append(", nextOpponentTime=").append(nextOpponentTime);
-        sb.append(", nextOpponentMatchDifficultyRatingHome=").append(nextOpponentMatchDifficultyRatingHome);
-        sb.append(", nextOpponentMatchDifficultyRatingAway=").append(nextOpponentMatchDifficultyRatingAway);
-        sb.append(", formEntries=").append(formEntries);
-        sb.append('}');
-        return sb.toString();
+        return "TeamFormTableEntity{" + "id=" + getId() +
+                ", positionTotal=" + positionTotal +
+                ", positionHome=" + positionHome +
+                ", positionAway=" + positionAway +
+                ", playedTotal=" + playedTotal +
+                ", playedTotalHome=" + playedTotalHome +
+                ", playedTotalAway=" + playedTotalAway +
+                ", playedHome=" + playedHome +
+                ", playedAway=" + playedAway +
+                ", winTotal=" + winTotal +
+                ", winTotalHome=" + winTotalHome +
+                ", winTotalAway=" + winTotalAway +
+                ", winHome=" + winHome +
+                ", winAway=" + winAway +
+                ", drawTotal=" + drawTotal +
+                ", drawTotalHome=" + drawTotalHome +
+                ", drawTotalAway=" + drawTotalAway +
+                ", drawHome=" + drawHome +
+                ", drawAway=" + drawAway +
+                ", lossTotal=" + lossTotal +
+                ", lossTotalHome=" + lossTotalHome +
+                ", lossTotalAway=" + lossTotalAway +
+                ", lossHome=" + lossHome +
+                ", lossAway=" + lossAway +
+                ", goalsForTotal=" + goalsForTotal +
+                ", goalsForTotalHome=" + goalsForTotalHome +
+                ", goalsForTotalAway=" + goalsForTotalAway +
+                ", goalsForHome=" + goalsForHome +
+                ", goalsForAway=" + goalsForAway +
+                ", goalsAgainstTotal=" + goalsAgainstTotal +
+                ", goalsAgainstTotalHome=" + goalsAgainstTotalHome +
+                ", goalsAgainstTotalAway=" + goalsAgainstTotalAway +
+                ", goalsAgainstHome=" + goalsAgainstHome +
+                ", goalsAgainstAway=" + goalsAgainstAway +
+                ", goalDiffTotal=" + goalDiffTotal +
+                ", goalDiffTotalHome=" + goalDiffTotalHome +
+                ", goalDiffTotalAway=" + goalDiffTotalAway +
+                ", goalDiffHome=" + goalDiffHome +
+                ", goalDiffAway=" + goalDiffAway +
+                ", pointsTotal=" + pointsTotal +
+                ", pointsTotalHome=" + pointsTotalHome +
+                ", pointsTotalAway=" + pointsTotalAway +
+                ", pointsHome=" + pointsHome +
+                ", pointsAway=" + pointsAway +
+                ", nextOpponentTeamId=" + nextOpponentTeamId +
+                ", nextOpponentTime=" + nextOpponentTime +
+                ", nextOpponentMatchDifficultyRatingHome=" + nextOpponentMatchDifficultyRatingHome +
+                ", nextOpponentMatchDifficultyRatingAway=" + nextOpponentMatchDifficultyRatingAway +
+                ", formEntries=" + formEntries +
+                '}';
     }
 }

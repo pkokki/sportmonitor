@@ -16,7 +16,7 @@ public class StatsTeamLastX extends BaseRootEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "team": this.uniqueTeamId = childEntity.getId(); return true;
+            case "team": this.uniqueTeamId = new EntityId(childEntity); return true;
             case "matches[]": this.matches.add(childEntity.getId()); return true;
             default:
                 if (entityName.matches("tournaments\\.\\d+")) {

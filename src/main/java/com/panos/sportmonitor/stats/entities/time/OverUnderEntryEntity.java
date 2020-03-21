@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public abstract class OverUnderEntryEntity extends BaseTimeEntity {
     private Integer matches;
@@ -80,8 +81,8 @@ public abstract class OverUnderEntryEntity extends BaseTimeEntity {
     private Integer p255Over;
     private Integer p255Under;
 
-    public OverUnderEntryEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+    public OverUnderEntryEntity(BaseEntity parent, EntityId id) {
+        super(parent, id);
     }
 
     @Override
@@ -167,81 +168,79 @@ public abstract class OverUnderEntryEntity extends BaseTimeEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("id=").append(getId());
-        sb.append(", matches=").append(matches);
-        sb.append(", goalsscoredFtAverage=").append(goalsscoredFtAverage);
-        sb.append(", goalsscoredFtTotal=").append(goalsscoredFtTotal);
-        sb.append(", goalsscoredFtMatches=").append(goalsscoredFtMatches);
-        sb.append(", goalsscoredP1Average=").append(goalsscoredP1Average);
-        sb.append(", goalsscoredP1Total=").append(goalsscoredP1Total);
-        sb.append(", goalsscoredP1Matches=").append(goalsscoredP1Matches);
-        sb.append(", goalsscoredP2Average=").append(goalsscoredP2Average);
-        sb.append(", goalsscoredP2Total=").append(goalsscoredP2Total);
-        sb.append(", goalsscoredP2Matches=").append(goalsscoredP2Matches);
-        sb.append(", concededFtAverage=").append(concededFtAverage);
-        sb.append(", concededFtTotal=").append(concededFtTotal);
-        sb.append(", concededFtMatches=").append(concededFtMatches);
-        sb.append(", concededP1Average=").append(concededP1Average);
-        sb.append(", concededP1Total=").append(concededP1Total);
-        sb.append(", concededP1Matches=").append(concededP1Matches);
-        sb.append(", concededP2Average=").append(concededP2Average);
-        sb.append(", concededP2Total=").append(concededP2Total);
-        sb.append(", concededP2Matches=").append(concededP2Matches);
-        sb.append(", ft05Totalover=").append(ft05Totalover);
-        sb.append(", ft05Over=").append(ft05Over);
-        sb.append(", ft05Under=").append(ft05Under);
-        sb.append(", ft15Totalover=").append(ft15Totalover);
-        sb.append(", ft15Over=").append(ft15Over);
-        sb.append(", ft15Under=").append(ft15Under);
-        sb.append(", ft25Totalover=").append(ft25Totalover);
-        sb.append(", ft25Over=").append(ft25Over);
-        sb.append(", ft25Under=").append(ft25Under);
-        sb.append(", ft35Totalover=").append(ft35Totalover);
-        sb.append(", ft35Over=").append(ft35Over);
-        sb.append(", ft35Under=").append(ft35Under);
-        sb.append(", ft45Totalover=").append(ft45Totalover);
-        sb.append(", ft45Over=").append(ft45Over);
-        sb.append(", ft45Under=").append(ft45Under);
-        sb.append(", ft55Totalover=").append(ft55Totalover);
-        sb.append(", ft55Over=").append(ft55Over);
-        sb.append(", ft55Under=").append(ft55Under);
-        sb.append(", p105Totalover=").append(p105Totalover);
-        sb.append(", p105Over=").append(p105Over);
-        sb.append(", p105Under=").append(p105Under);
-        sb.append(", p115Totalover=").append(p115Totalover);
-        sb.append(", p115Over=").append(p115Over);
-        sb.append(", p115Under=").append(p115Under);
-        sb.append(", p125Totalover=").append(p125Totalover);
-        sb.append(", p125Over=").append(p125Over);
-        sb.append(", p125Under=").append(p125Under);
-        sb.append(", p135Totalover=").append(p135Totalover);
-        sb.append(", p135Over=").append(p135Over);
-        sb.append(", p135Under=").append(p135Under);
-        sb.append(", p145Totalover=").append(p145Totalover);
-        sb.append(", p145Over=").append(p145Over);
-        sb.append(", p145Under=").append(p145Under);
-        sb.append(", p155Totalover=").append(p155Totalover);
-        sb.append(", p155Over=").append(p155Over);
-        sb.append(", p155Under=").append(p155Under);
-        sb.append(", p205Totalover=").append(p205Totalover);
-        sb.append(", p205Over=").append(p205Over);
-        sb.append(", p205Under=").append(p205Under);
-        sb.append(", p215Totalover=").append(p215Totalover);
-        sb.append(", p215Over=").append(p215Over);
-        sb.append(", p215Under=").append(p215Under);
-        sb.append(", p225Totalover=").append(p225Totalover);
-        sb.append(", p225Over=").append(p225Over);
-        sb.append(", p225Under=").append(p225Under);
-        sb.append(", p235Totalover=").append(p235Totalover);
-        sb.append(", p235Over=").append(p235Over);
-        sb.append(", p235Under=").append(p235Under);
-        sb.append(", p245Totalover=").append(p245Totalover);
-        sb.append(", p245Over=").append(p245Over);
-        sb.append(", p245Under=").append(p245Under);
-        sb.append(", p255Totalover=").append(p255Totalover);
-        sb.append(", p255Over=").append(p255Over);
-        sb.append(", p255Under=").append(p255Under);
-        return sb.toString();
+        return "id=" + getId() +
+                ", matches=" + matches +
+                ", goalsscoredFtAverage=" + goalsscoredFtAverage +
+                ", goalsscoredFtTotal=" + goalsscoredFtTotal +
+                ", goalsscoredFtMatches=" + goalsscoredFtMatches +
+                ", goalsscoredP1Average=" + goalsscoredP1Average +
+                ", goalsscoredP1Total=" + goalsscoredP1Total +
+                ", goalsscoredP1Matches=" + goalsscoredP1Matches +
+                ", goalsscoredP2Average=" + goalsscoredP2Average +
+                ", goalsscoredP2Total=" + goalsscoredP2Total +
+                ", goalsscoredP2Matches=" + goalsscoredP2Matches +
+                ", concededFtAverage=" + concededFtAverage +
+                ", concededFtTotal=" + concededFtTotal +
+                ", concededFtMatches=" + concededFtMatches +
+                ", concededP1Average=" + concededP1Average +
+                ", concededP1Total=" + concededP1Total +
+                ", concededP1Matches=" + concededP1Matches +
+                ", concededP2Average=" + concededP2Average +
+                ", concededP2Total=" + concededP2Total +
+                ", concededP2Matches=" + concededP2Matches +
+                ", ft05Totalover=" + ft05Totalover +
+                ", ft05Over=" + ft05Over +
+                ", ft05Under=" + ft05Under +
+                ", ft15Totalover=" + ft15Totalover +
+                ", ft15Over=" + ft15Over +
+                ", ft15Under=" + ft15Under +
+                ", ft25Totalover=" + ft25Totalover +
+                ", ft25Over=" + ft25Over +
+                ", ft25Under=" + ft25Under +
+                ", ft35Totalover=" + ft35Totalover +
+                ", ft35Over=" + ft35Over +
+                ", ft35Under=" + ft35Under +
+                ", ft45Totalover=" + ft45Totalover +
+                ", ft45Over=" + ft45Over +
+                ", ft45Under=" + ft45Under +
+                ", ft55Totalover=" + ft55Totalover +
+                ", ft55Over=" + ft55Over +
+                ", ft55Under=" + ft55Under +
+                ", p105Totalover=" + p105Totalover +
+                ", p105Over=" + p105Over +
+                ", p105Under=" + p105Under +
+                ", p115Totalover=" + p115Totalover +
+                ", p115Over=" + p115Over +
+                ", p115Under=" + p115Under +
+                ", p125Totalover=" + p125Totalover +
+                ", p125Over=" + p125Over +
+                ", p125Under=" + p125Under +
+                ", p135Totalover=" + p135Totalover +
+                ", p135Over=" + p135Over +
+                ", p135Under=" + p135Under +
+                ", p145Totalover=" + p145Totalover +
+                ", p145Over=" + p145Over +
+                ", p145Under=" + p145Under +
+                ", p155Totalover=" + p155Totalover +
+                ", p155Over=" + p155Over +
+                ", p155Under=" + p155Under +
+                ", p205Totalover=" + p205Totalover +
+                ", p205Over=" + p205Over +
+                ", p205Under=" + p205Under +
+                ", p215Totalover=" + p215Totalover +
+                ", p215Over=" + p215Over +
+                ", p215Under=" + p215Under +
+                ", p225Totalover=" + p225Totalover +
+                ", p225Over=" + p225Over +
+                ", p225Under=" + p225Under +
+                ", p235Totalover=" + p235Totalover +
+                ", p235Over=" + p235Over +
+                ", p235Under=" + p235Under +
+                ", p245Totalover=" + p245Totalover +
+                ", p245Over=" + p245Over +
+                ", p245Under=" + p245Under +
+                ", p255Totalover=" + p255Totalover +
+                ", p255Over=" + p255Over +
+                ", p255Under=" + p255Under;
     }
 }

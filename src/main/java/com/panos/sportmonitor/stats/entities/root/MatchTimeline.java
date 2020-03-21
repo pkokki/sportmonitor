@@ -14,7 +14,7 @@ public class MatchTimeline extends BaseRootEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         if (entityName.equals("match")) {
-            this.matchId = childEntity.getId();
+            this.matchId = new EntityId(childEntity);
             return true;
         } else if (entityName.equals("events[]")) {
             this.events.add(childEntity.getId());

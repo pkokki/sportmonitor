@@ -26,14 +26,14 @@ public class TableRowEntity extends BaseEntity {
             pctAway, pctGoalsAway, pctGamePointsAway;
 
     public TableRowEntity(BaseEntity parent, long id) {
-        super(parent, id);
+        super(parent, new EntityId(id, TableRowEntity.class));
     }
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "promotion": this.promotionId = childEntity.getId(); return true;
-            case "team": this.teamId = childEntity.getId(); return true;
+            case "promotion": this.promotionId = new EntityId(childEntity); return true;
+            case "team": this.teamId = new EntityId(childEntity); return true;
             default:
                 return super.handleChildEntity(entityName, childEntity);
         }
@@ -137,83 +137,81 @@ public class TableRowEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("TableRowEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", promotionId=").append(promotionId);
-        sb.append(", teamId=").append(teamId);
-        sb.append(", changeTotal=").append(changeTotal);
-        sb.append(", changeHome=").append(changeHome);
-        sb.append(", changeAway=").append(changeAway);
-        sb.append(", drawTotal=").append(drawTotal);
-        sb.append(", drawHome=").append(drawHome);
-        sb.append(", drawAway=").append(drawAway);
-        sb.append(", goalDiffTotal=").append(goalDiffTotal);
-        sb.append(", goalDiffHome=").append(goalDiffHome);
-        sb.append(", goalDiffAway=").append(goalDiffAway);
-        sb.append(", goalsAgainstTotal=").append(goalsAgainstTotal);
-        sb.append(", goalsAgainstHome=").append(goalsAgainstHome);
-        sb.append(", goalsAgainstAway=").append(goalsAgainstAway);
-        sb.append(", goalsForTotal=").append(goalsForTotal);
-        sb.append(", goalsForHome=").append(goalsForHome);
-        sb.append(", goalsForAway=").append(goalsForAway);
-        sb.append(", lossTotal=").append(lossTotal);
-        sb.append(", lossHome=").append(lossHome);
-        sb.append(", lossAway=").append(lossAway);
-        sb.append(", total=").append(total);
-        sb.append(", home=").append(home);
-        sb.append(", away=").append(away);
-        sb.append(", pointsTotal=").append(pointsTotal);
-        sb.append(", pointsHome=").append(pointsHome);
-        sb.append(", pointsAway=").append(pointsAway);
-        sb.append(", pos=").append(pos);
-        sb.append(", posHome=").append(posHome);
-        sb.append(", posAway=").append(posAway);
-        sb.append(", sortPositionTotal=").append(sortPositionTotal);
-        sb.append(", sortPositionHome=").append(sortPositionHome);
-        sb.append(", sortPositionAway=").append(sortPositionAway);
-        sb.append(", winTotal=").append(winTotal);
-        sb.append(", winHome=").append(winHome);
-        sb.append(", winAway=").append(winAway);
-        sb.append(", pointsGivenTotal=").append(pointsGivenTotal);
-        sb.append(", maxPointsTotal=").append(maxPointsTotal);
-        sb.append(", goalsTotal=").append(goalsTotal);
-        sb.append(", suddenDeathWinTotal=").append(suddenDeathWinTotal);
-        sb.append(", gamePointsForTotal=").append(gamePointsForTotal);
-        sb.append(", gamePointsAgainstTotal=").append(gamePointsAgainstTotal);
-        sb.append(", suddenDeathWinHome=").append(suddenDeathWinHome);
-        sb.append(", gamePointsForHome=").append(gamePointsForHome);
-        sb.append(", gamePointsAgainstHome=").append(gamePointsAgainstHome);
-        sb.append(", maxPointsHome=").append(maxPointsHome);
-        sb.append(", suddenDeathWinAway=").append(suddenDeathWinAway);
-        sb.append(", gamePointsForAway=").append(gamePointsForAway);
-        sb.append(", gamePointsAgainstAway=").append(gamePointsAgainstAway);
-        sb.append(", maxPointsAway=").append(maxPointsAway);
-        sb.append(", lastTenGamesWin=").append(lastTenGamesWin);
-        sb.append(", lastTenGamesLoss=").append(lastTenGamesLoss);
-        sb.append(", lastTenGamesAllLoss=").append(lastTenGamesAllLoss);
-        sb.append(", streak=").append(streak);
-        sb.append(", streakLoss=").append(streakLoss);
-        sb.append(", currentlyPlaying=").append(currentlyPlaying);
-        sb.append(", fullTimeWinTotal=").append(fullTimeWinTotal);
-        sb.append(", fullTimeDrawTotal=").append(fullTimeDrawTotal);
-        sb.append(", fullTimeLossTotal=").append(fullTimeLossTotal);
-        sb.append(", fullTimeWinHome=").append(fullTimeWinHome);
-        sb.append(", fullTimeDrawHome=").append(fullTimeDrawHome);
-        sb.append(", fullTimeLossHome=").append(fullTimeLossHome);
-        sb.append(", fullTimeWinAway=").append(fullTimeWinAway);
-        sb.append(", fullTimeDrawAway=").append(fullTimeDrawAway);
-        sb.append(", fullTimeLossAway=").append(fullTimeLossAway);
-        sb.append(", lastTenGamesDraw=").append(lastTenGamesDraw);
-        sb.append(", pctTotal=").append(pctTotal);
-        sb.append(", pctGoalsTotal=").append(pctGoalsTotal);
-        sb.append(", pctGamePointsTotal=").append(pctGamePointsTotal);
-        sb.append(", pctHome=").append(pctHome);
-        sb.append(", pctGoalsHome=").append(pctGoalsHome);
-        sb.append(", pctGamePointsHome=").append(pctGamePointsHome);
-        sb.append(", pctAway=").append(pctAway);
-        sb.append(", pctGoalsAway=").append(pctGoalsAway);
-        sb.append(", pctGamePointsAway=").append(pctGamePointsAway);
-        sb.append('}');
-        return sb.toString();
+        return "TableRowEntity{" + "id=" + getId() +
+                ", promotionId=" + promotionId +
+                ", teamId=" + teamId +
+                ", changeTotal=" + changeTotal +
+                ", changeHome=" + changeHome +
+                ", changeAway=" + changeAway +
+                ", drawTotal=" + drawTotal +
+                ", drawHome=" + drawHome +
+                ", drawAway=" + drawAway +
+                ", goalDiffTotal=" + goalDiffTotal +
+                ", goalDiffHome=" + goalDiffHome +
+                ", goalDiffAway=" + goalDiffAway +
+                ", goalsAgainstTotal=" + goalsAgainstTotal +
+                ", goalsAgainstHome=" + goalsAgainstHome +
+                ", goalsAgainstAway=" + goalsAgainstAway +
+                ", goalsForTotal=" + goalsForTotal +
+                ", goalsForHome=" + goalsForHome +
+                ", goalsForAway=" + goalsForAway +
+                ", lossTotal=" + lossTotal +
+                ", lossHome=" + lossHome +
+                ", lossAway=" + lossAway +
+                ", total=" + total +
+                ", home=" + home +
+                ", away=" + away +
+                ", pointsTotal=" + pointsTotal +
+                ", pointsHome=" + pointsHome +
+                ", pointsAway=" + pointsAway +
+                ", pos=" + pos +
+                ", posHome=" + posHome +
+                ", posAway=" + posAway +
+                ", sortPositionTotal=" + sortPositionTotal +
+                ", sortPositionHome=" + sortPositionHome +
+                ", sortPositionAway=" + sortPositionAway +
+                ", winTotal=" + winTotal +
+                ", winHome=" + winHome +
+                ", winAway=" + winAway +
+                ", pointsGivenTotal=" + pointsGivenTotal +
+                ", maxPointsTotal=" + maxPointsTotal +
+                ", goalsTotal=" + goalsTotal +
+                ", suddenDeathWinTotal=" + suddenDeathWinTotal +
+                ", gamePointsForTotal=" + gamePointsForTotal +
+                ", gamePointsAgainstTotal=" + gamePointsAgainstTotal +
+                ", suddenDeathWinHome=" + suddenDeathWinHome +
+                ", gamePointsForHome=" + gamePointsForHome +
+                ", gamePointsAgainstHome=" + gamePointsAgainstHome +
+                ", maxPointsHome=" + maxPointsHome +
+                ", suddenDeathWinAway=" + suddenDeathWinAway +
+                ", gamePointsForAway=" + gamePointsForAway +
+                ", gamePointsAgainstAway=" + gamePointsAgainstAway +
+                ", maxPointsAway=" + maxPointsAway +
+                ", lastTenGamesWin=" + lastTenGamesWin +
+                ", lastTenGamesLoss=" + lastTenGamesLoss +
+                ", lastTenGamesAllLoss=" + lastTenGamesAllLoss +
+                ", streak=" + streak +
+                ", streakLoss=" + streakLoss +
+                ", currentlyPlaying=" + currentlyPlaying +
+                ", fullTimeWinTotal=" + fullTimeWinTotal +
+                ", fullTimeDrawTotal=" + fullTimeDrawTotal +
+                ", fullTimeLossTotal=" + fullTimeLossTotal +
+                ", fullTimeWinHome=" + fullTimeWinHome +
+                ", fullTimeDrawHome=" + fullTimeDrawHome +
+                ", fullTimeLossHome=" + fullTimeLossHome +
+                ", fullTimeWinAway=" + fullTimeWinAway +
+                ", fullTimeDrawAway=" + fullTimeDrawAway +
+                ", fullTimeLossAway=" + fullTimeLossAway +
+                ", lastTenGamesDraw=" + lastTenGamesDraw +
+                ", pctTotal=" + pctTotal +
+                ", pctGoalsTotal=" + pctGoalsTotal +
+                ", pctGamePointsTotal=" + pctGamePointsTotal +
+                ", pctHome=" + pctHome +
+                ", pctGoalsHome=" + pctGoalsHome +
+                ", pctGamePointsHome=" + pctGamePointsHome +
+                ", pctAway=" + pctAway +
+                ", pctGoalsAway=" + pctGoalsAway +
+                ", pctGamePointsAway=" + pctGamePointsAway +
+                '}';
     }
 }

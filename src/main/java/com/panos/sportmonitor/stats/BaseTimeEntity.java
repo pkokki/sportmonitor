@@ -2,9 +2,9 @@ package com.panos.sportmonitor.stats;
 
 
 public abstract class BaseTimeEntity extends BaseEntity {
-    public BaseTimeEntity(BaseEntity parent, long id, long timeStamp) {
-        this(parent, new EntityId(id, timeStamp));
-    }
+//    public BaseTimeEntity(BaseEntity parent, long id, long timeStamp) {
+//        this(parent, new EntityId(id, timeStamp));
+//    }
 
     protected BaseTimeEntity(BaseEntity parent, EntityId id) {
         super(parent, id);

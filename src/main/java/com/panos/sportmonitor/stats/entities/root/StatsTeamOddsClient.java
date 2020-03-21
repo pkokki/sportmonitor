@@ -4,9 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class StatsTeamOddsClient extends BaseRootEntity {
     private EntityId uniqueTeamId;
     private EntityIdList odds = new EntityIdList();
@@ -18,7 +15,7 @@ public class StatsTeamOddsClient extends BaseRootEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         if (entityName.equals("team")) {
-            this.uniqueTeamId = childEntity.getId();
+            this.uniqueTeamId = new EntityId(childEntity);
         }
         else if (entityName.startsWith("odds.")) {
             this.odds.add(childEntity.getId());

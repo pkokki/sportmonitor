@@ -3,6 +3,7 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class MatchSituationEntryEntity extends BaseEntity {
     private Integer time, injuryTime, safe, safeCount;
@@ -10,7 +11,7 @@ public class MatchSituationEntryEntity extends BaseEntity {
     private Integer awayAttack, awayDangerous, awaySafe,awayAttackCount, awayDangerousCount, awaySafeCount;
 
     public MatchSituationEntryEntity(BaseEntity parent, long id) {
-        super(parent, id);
+        super(parent, new EntityId(id, MatchSituationEntryEntity.class));
     }
 
     @Override
@@ -39,25 +40,23 @@ public class MatchSituationEntryEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("MatchSituationEntryEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", time=").append(time);
-        sb.append(", injuryTime=").append(injuryTime);
-        sb.append(", safe=").append(safe);
-        sb.append(", safeCount=").append(safeCount);
-        sb.append(", homeAttack=").append(homeAttack);
-        sb.append(", homeDangerous=").append(homeDangerous);
-        sb.append(", homeSafe=").append(homeSafe);
-        sb.append(", homeAttackCount=").append(homeAttackCount);
-        sb.append(", homeDangerousCount=").append(homeDangerousCount);
-        sb.append(", homeSafeCount=").append(homeSafeCount);
-        sb.append(", awayAttack=").append(awayAttack);
-        sb.append(", awayDangerous=").append(awayDangerous);
-        sb.append(", awaySafe=").append(awaySafe);
-        sb.append(", awayAttackCount=").append(awayAttackCount);
-        sb.append(", awayDangerousCount=").append(awayDangerousCount);
-        sb.append(", awaySafeCount=").append(awaySafeCount);
-        sb.append('}');
-        return sb.toString();
+        return "MatchSituationEntryEntity{" + "id=" + getId() +
+                ", time=" + time +
+                ", injuryTime=" + injuryTime +
+                ", safe=" + safe +
+                ", safeCount=" + safeCount +
+                ", homeAttack=" + homeAttack +
+                ", homeDangerous=" + homeDangerous +
+                ", homeSafe=" + homeSafe +
+                ", homeAttackCount=" + homeAttackCount +
+                ", homeDangerousCount=" + homeDangerousCount +
+                ", homeSafeCount=" + homeSafeCount +
+                ", awayAttack=" + awayAttack +
+                ", awayDangerous=" + awayDangerous +
+                ", awaySafe=" + awaySafe +
+                ", awayAttackCount=" + awayAttackCount +
+                ", awayDangerousCount=" + awayDangerousCount +
+                ", awaySafeCount=" + awaySafeCount +
+                '}';
     }
 }

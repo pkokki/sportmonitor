@@ -3,6 +3,8 @@ package com.panos.sportmonitor.stats.entities.root;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.*;
+import com.panos.sportmonitor.stats.entities.ref.LeagueTableEntity;
+import com.panos.sportmonitor.stats.entities.ref.TournamentEntity;
 
 public class StatsSeasonMeta extends BaseRootEntity {
     private Boolean statsCoverageComplexStat;
@@ -60,10 +62,10 @@ public class StatsSeasonMeta extends BaseRootEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "season": this.seasonId = childEntity.getId(); return true;
+            case "season": this.seasonId = new EntityId(childEntity); return true;
             case "sport": return true;
-            case "realcategory": this.realCategoryId = childEntity.getId(); return true;
-            case "uniquetournament": this.uniqueTournamentId = childEntity.getId(); return true;
+            case "realcategory": this.realCategoryId = new EntityId(childEntity); return true;
+            case "uniquetournament": this.uniqueTournamentId = new EntityId(childEntity); return true;
             default:
                 return super.handleChildEntity(entityName, childEntity);
         }
@@ -72,8 +74,8 @@ public class StatsSeasonMeta extends BaseRootEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "tournamentids[]": tournaments.add(new EntityId(node.asLong())); break;
-            case "tableids[]": tables.add(new EntityId(node.asLong())); break;
+            case "tournamentids[]": tournaments.add(new EntityId(node.asLong(), TournamentEntity.class)); break;
+            case "tableids[]": tables.add(new EntityId(node.asLong(), LeagueTableEntity.class)); break;
             case "statscoverage.complexstat": this.statsCoverageComplexStat = node.asBoolean(); break;
             case "statscoverage.livetable": this.statsCoverageLiveTable = node.asBoolean(); break;
             case "statscoverage.halftimetable": this.statsCoverageHalftimeTable = node.asBoolean(); break;

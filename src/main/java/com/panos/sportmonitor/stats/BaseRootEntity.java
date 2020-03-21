@@ -12,7 +12,13 @@ public abstract class BaseRootEntity extends BaseTimeEntity {
     private final List<Tuple2<Integer, BaseEntity>> __childEntities = new ArrayList<>();
 
     public BaseRootEntity(BaseRootEntityType type, long timeStamp) {
-        super(null, new EntityId((timeStamp << 2) + type.getId(), timeStamp));
+        super(null, new EntityId((timeStamp << 2) + type.getId(), timeStamp, BaseRootEntity.class));
+        this.__name = type.getName();
+        this.addChildEntity(1, this);
+    }
+
+    public BaseRootEntity(BaseRootEntityType type, EntityId id) {
+        super(null, id);
         this.__name = type.getName();
         this.addChildEntity(1, this);
     }
@@ -40,11 +46,10 @@ public abstract class BaseRootEntity extends BaseTimeEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder(this.getClass().getSimpleName()).append("{");
-        sb.append("name='").append(getName()).append('\'');
-        sb.append(", ......}");
-        sb.append('}');
-        return sb.toString();
+        return this.getClass().getSimpleName() + "{" +
+                "name='" + getName() + '\'' +
+                ", ......}" +
+                '}';
     }
 
 }

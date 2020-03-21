@@ -7,13 +7,13 @@ public class SeasonOverUnderEntity extends OverUnderEntryEntity {
     private EntityId seasonId;
 
     public SeasonOverUnderEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+        super(parent, new EntityId(id, timeStamp, SeasonOverUnderEntity.class));
     }
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         if (entityName.equals("team")) {
-            this.seasonId = childEntity.getId();
+            this.seasonId = new EntityId(childEntity);
             return true;
         }
         return super.handleChildEntity(entityName, childEntity);
@@ -21,10 +21,8 @@ public class SeasonOverUnderEntity extends OverUnderEntryEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("SeasonOverUnderEntity{");
-        sb.append(super.toString());
-        sb.append(", seasonId=").append(seasonId);
-        sb.append('}');
-        return sb.toString();
+        return "SeasonOverUnderEntity{" + super.toString() +
+                ", seasonId=" + seasonId +
+                '}';
     }
 }

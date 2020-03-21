@@ -3,6 +3,7 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class PromotionEntity extends BaseEntity {
     private Integer code;
@@ -11,7 +12,7 @@ public class PromotionEntity extends BaseEntity {
     private Integer position;
 
     public PromotionEntity(BaseEntity parent, long id) {
-        super(parent, id);
+        super(parent, new EntityId(id, PromotionEntity.class));
     }
 
     @Override
@@ -35,13 +36,11 @@ public class PromotionEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("PromotionEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", code=").append(code);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", shortName='").append(shortName).append('\'');
-        sb.append(", position=").append(position);
-        sb.append('}');
-        return sb.toString();
+        return "PromotionEntity{" + "id=" + getId() +
+                ", code=" + code +
+                ", name='" + name + '\'' +
+                ", shortName='" + shortName + '\'' +
+                ", position=" + position +
+                '}';
     }
 }

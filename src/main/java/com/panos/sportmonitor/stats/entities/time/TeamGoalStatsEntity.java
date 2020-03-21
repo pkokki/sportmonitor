@@ -13,14 +13,15 @@ public class TeamGoalStatsEntity extends BaseTimeEntity {
     private Integer firstGoal, lastGoal, penaltySuccessCount, penaltyFailCount;
 
     public TeamGoalStatsEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+        super(parent, new EntityId(id, timeStamp, TeamGoalStatsEntity.class));
     }
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
-        switch (entityName) {
-            case "team": this.teamId = childEntity.getId(); break;
-            default: return super.handleChildEntity(entityName, childEntity);
+        if ("team".equals(entityName)) {
+            this.teamId = new EntityId(childEntity);
+        } else {
+            return super.handleChildEntity(entityName, childEntity);
         }
         return true;
     }
@@ -54,29 +55,27 @@ public class TeamGoalStatsEntity extends BaseTimeEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("TeamGoalStatsEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", teamId=").append(teamId);
-        sb.append(", matches=").append(matches);
-        sb.append(", scoredSum=").append(scoredSum);
-        sb.append(", scored0015=").append(scored0015);
-        sb.append(", scored1630=").append(scored1630);
-        sb.append(", scored3145=").append(scored3145);
-        sb.append(", scored4660=").append(scored4660);
-        sb.append(", scored6175=").append(scored6175);
-        sb.append(", scored7690=").append(scored7690);
-        sb.append(", concededSum=").append(concededSum);
-        sb.append(", conceded0015=").append(conceded0015);
-        sb.append(", conceded1630=").append(conceded1630);
-        sb.append(", conceded3145=").append(conceded3145);
-        sb.append(", conceded4660=").append(conceded4660);
-        sb.append(", conceded6175=").append(conceded6175);
-        sb.append(", conceded7690=").append(conceded7690);
-        sb.append(", firstGoal=").append(firstGoal);
-        sb.append(", lastGoal=").append(lastGoal);
-        sb.append(", penaltySuccessCount=").append(penaltySuccessCount);
-        sb.append(", penaltyFailCount=").append(penaltyFailCount);
-        sb.append('}');
-        return sb.toString();
+        return "TeamGoalStatsEntity{" + "id=" + getId() +
+                ", teamId=" + teamId +
+                ", matches=" + matches +
+                ", scoredSum=" + scoredSum +
+                ", scored0015=" + scored0015 +
+                ", scored1630=" + scored1630 +
+                ", scored3145=" + scored3145 +
+                ", scored4660=" + scored4660 +
+                ", scored6175=" + scored6175 +
+                ", scored7690=" + scored7690 +
+                ", concededSum=" + concededSum +
+                ", conceded0015=" + conceded0015 +
+                ", conceded1630=" + conceded1630 +
+                ", conceded3145=" + conceded3145 +
+                ", conceded4660=" + conceded4660 +
+                ", conceded6175=" + conceded6175 +
+                ", conceded7690=" + conceded7690 +
+                ", firstGoal=" + firstGoal +
+                ", lastGoal=" + lastGoal +
+                ", penaltySuccessCount=" + penaltySuccessCount +
+                ", penaltyFailCount=" + penaltyFailCount +
+                '}';
     }
 }

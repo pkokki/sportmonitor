@@ -1,9 +1,6 @@
 package com.panos.sportmonitor.stats.entities.root;
 
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseRootEntity;
-import com.panos.sportmonitor.stats.BaseRootEntityType;
-import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.*;
 
 public class StatsSeasonOdds extends BaseRootEntity {
     private EntityId seasonId;
@@ -15,7 +12,7 @@ public class StatsSeasonOdds extends BaseRootEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "": this.seasonId = childEntity.getId(); break;
+            case "": this.seasonId = new EntityId(childEntity); break;
             default: return super.handleChildEntity(entityName, childEntity);
         }
         return true;

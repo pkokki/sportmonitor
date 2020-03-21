@@ -14,7 +14,7 @@ public abstract class AbstractStatsSeasonTop extends BaseRootEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "season": this.seasonId = childEntity.getId(); break;
+            case "season": this.seasonId = new EntityId(childEntity); break;
             case "players[]": this.players.add(childEntity.getId()); break;
             default:
                 if (entityName.startsWith("teams."))

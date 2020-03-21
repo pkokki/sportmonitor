@@ -1,10 +1,11 @@
-package com.panos.sportmonitor.stats.entities.ref;
+package com.panos.sportmonitor.stats.entities.time;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
 import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.entities.MatchEntity;
 
 public class OddsEntity extends BaseTimeEntity {
     private EntityId bookmakerId;
@@ -28,12 +29,12 @@ public class OddsEntity extends BaseTimeEntity {
     private String extra, closingTime;
 
     public OddsEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+        super(parent, new EntityId(id, timeStamp, OddsEntity.class));
     }
 
     @Override
     public boolean handleAuxId(long auxEntityId) {
-        this.matchId = new EntityId(auxEntityId);
+        this.matchId = new EntityId(auxEntityId, MatchEntity.class);
         return true;
     }
 
@@ -72,7 +73,7 @@ public class OddsEntity extends BaseTimeEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         if (entityName.equals("bookmaker")) {
-            this.bookmakerId = childEntity.getId();
+            this.bookmakerId = new EntityId(childEntity);
         }
         else {
             return super.handleChildEntity(entityName, childEntity);
@@ -82,29 +83,27 @@ public class OddsEntity extends BaseTimeEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("OddsEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", matchId=").append(matchId);
-        sb.append(", bookmakerId=").append(bookmakerId);
-        sb.append(", homeOdds=").append(homeOdds);
-        sb.append(", drawOdds=").append(drawOdds);
-        sb.append(", awayOdds=").append(awayOdds);
-        sb.append(", homeTbId=").append(homeTbId);
-        sb.append(", homeOddsFieldId=").append(homeOddsFieldId);
-        sb.append(", homeChange=").append(homeChange);
-        sb.append(", drawTbId=").append(drawTbId);
-        sb.append(", drawOddsFieldId=").append(drawOddsFieldId);
-        sb.append(", drawChange=").append(drawChange);
-        sb.append(", awayTbId=").append(awayTbId);
-        sb.append(", awayOddsFieldId=").append(awayOddsFieldId);
-        sb.append(", awayChange=").append(awayChange);
-        sb.append(", type='").append(type).append('\'');
-        sb.append(", oddsTypeId=").append(oddsTypeId);
-        sb.append(", exchange=").append(exchange);
-        sb.append(", key='").append(key).append('\'');
-        sb.append(", extra='").append(extra).append('\'');
-        sb.append(", closingtime='").append(closingTime).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "OddsEntity{" + "id=" + getId() +
+                ", matchId=" + matchId +
+                ", bookmakerId=" + bookmakerId +
+                ", homeOdds=" + homeOdds +
+                ", drawOdds=" + drawOdds +
+                ", awayOdds=" + awayOdds +
+                ", homeTbId=" + homeTbId +
+                ", homeOddsFieldId=" + homeOddsFieldId +
+                ", homeChange=" + homeChange +
+                ", drawTbId=" + drawTbId +
+                ", drawOddsFieldId=" + drawOddsFieldId +
+                ", drawChange=" + drawChange +
+                ", awayTbId=" + awayTbId +
+                ", awayOddsFieldId=" + awayOddsFieldId +
+                ", awayChange=" + awayChange +
+                ", type='" + type + '\'' +
+                ", oddsTypeId=" + oddsTypeId +
+                ", exchange=" + exchange +
+                ", key='" + key + '\'' +
+                ", extra='" + extra + '\'' +
+                ", closingtime='" + closingTime + '\'' +
+                '}';
     }
 }

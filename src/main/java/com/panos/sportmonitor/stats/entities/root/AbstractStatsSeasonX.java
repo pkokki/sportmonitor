@@ -2,9 +2,6 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.panos.sportmonitor.stats.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class AbstractStatsSeasonX extends BaseRootEntity {
     private EntityId seasonId;
     private EntityIdList matches = new EntityIdList();
@@ -17,7 +14,7 @@ public class AbstractStatsSeasonX extends BaseRootEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "season": this.seasonId = childEntity.getId(); break;
+            case "season": this.seasonId = new EntityId(childEntity); break;
             case "matches[]": this.matches.add(childEntity.getId()); break;
             default:
                 if (entityName.startsWith("tournaments."))

@@ -13,7 +13,7 @@ public class PlayerEntity extends BaseEntity {
     private EntityId positionId;
 
     public PlayerEntity(BaseEntity parent, long id) {
-        super(parent, id);
+        super(parent, new EntityId(id, PlayerEntity.class));
     }
 
     @Override
@@ -60,32 +60,31 @@ public class PlayerEntity extends BaseEntity {
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
-        if (entityName.equals("nationality")) {
-            this.nationalityId = childEntity.getId();
-        }
-        else  if (entityName.equals("secondarynationality")) {
-            this.secondNationalityId = childEntity.getId();
-        }
-        else if (entityName.equals("position")) {
-            this.positionId = childEntity.getId();
-        }
-        else {
-            return super.handleChildEntity(entityName, childEntity);
+        switch (entityName) {
+            case "nationality":
+                this.nationalityId = new EntityId(childEntity);
+                break;
+            case "secondarynationality":
+                this.secondNationalityId = new EntityId(childEntity);
+                break;
+            case "position":
+                this.positionId = new EntityId(childEntity);
+                break;
+            default:
+                return super.handleChildEntity(entityName, childEntity);
         }
         return true;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("PlayerEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", fullname='").append(fullName).append('\'');
-        sb.append(", birthdate=").append(birthDate);
-        sb.append(", nationalityId=").append(nationalityId);
-        sb.append(", secondNationalityId=").append(secondNationalityId);
-        sb.append(", positionId=").append(positionId);
-        sb.append('}');
-        return sb.toString();
+        return "PlayerEntity{" + "id=" + getId() +
+                ", name='" + name + '\'' +
+                ", fullname='" + fullName + '\'' +
+                ", birthdate=" + birthDate +
+                ", nationalityId=" + nationalityId +
+                ", secondNationalityId=" + secondNationalityId +
+                ", positionId=" + positionId +
+                '}';
     }
 }

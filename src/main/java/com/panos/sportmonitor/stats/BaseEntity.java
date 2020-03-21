@@ -6,17 +6,14 @@ import com.google.common.collect.Lists;
 import org.apache.commons.math3.exception.OutOfRangeException;
 
 import java.util.List;
+import java.util.Objects;
 
 public abstract class BaseEntity {
     private final static List<String> __IGNORED = Lists.newArrayList("_doc", "_id", "_sid");
     private final EntityId id;
-    private long __auxId;
     private final BaseEntity __parent;
     private int __next;
 
-    public BaseEntity(BaseEntity parent, long id) {
-        this(parent, new EntityId(id));
-    }
     public BaseEntity(BaseEntity parent, EntityId id) {
         this.__parent = parent;
         this.id = id;
@@ -56,7 +53,7 @@ public abstract class BaseEntity {
     }
 
     public boolean handleAuxId(long auxEntityId) {
-        return auxEntityId == 0 || id.equals(new EntityId(auxEntityId));
+        return auxEntityId == 0 || Objects.equals(id.getId(), auxEntityId);
     }
 
     public JsonNode transformChildNode(final String currentNodeName, final int index, final JsonNode childNode) {
@@ -72,8 +69,7 @@ public abstract class BaseEntity {
     public final BaseRootEntity getRoot() {
         return __parent == null ? (BaseRootEntity)this : __parent.getRoot();
     }
-    public final long getAuxId() { return this.__auxId; }
-    public final void setAuxId(long auxId) { this.__auxId = auxId; }
+
     public long getNext() {
         ++__next;
         if (__next < 1 || __next > 999)
@@ -83,10 +79,9 @@ public abstract class BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder(this.getClass().getSimpleName()).append('{');
-        sb.append("id=").append(getId());
-        sb.append(", ......}");
-        return sb.toString();
+        return this.getClass().getSimpleName() + '{' +
+                "id=" + getId() +
+                ", ......}";
     }
 
 }

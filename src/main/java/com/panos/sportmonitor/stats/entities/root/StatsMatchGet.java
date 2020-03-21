@@ -1,9 +1,6 @@
 package com.panos.sportmonitor.stats.entities.root;
 
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseRootEntity;
-import com.panos.sportmonitor.stats.BaseRootEntityType;
-import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.*;
 
 public class StatsMatchGet extends BaseRootEntity {
     private EntityId matchId;
@@ -15,7 +12,7 @@ public class StatsMatchGet extends BaseRootEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "": this.matchId = childEntity.getId(); return true;
+            case "": this.matchId = new EntityId(childEntity); return true;
             default:
                 return super.handleChildEntity(entityName, childEntity);
         }

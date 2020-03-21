@@ -4,11 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.EntityIdList;
+import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.entities.ref.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +30,6 @@ public class MatchEntity extends BaseEntity {
     private Boolean postponed;
     private Boolean canceled;
     private Boolean inlivescore;
-    private EntityId stadiumid;
     private Boolean walkover;
     private Boolean retired;
     private Boolean disqualified;
@@ -53,7 +51,7 @@ public class MatchEntity extends BaseEntity {
     private Integer matchDifficultyRatingHome, matchDifficultyRatingAway;
     private String oddsClientMatchId;
     private EntityId oddsBookmakerId;
-    private EntityId oddsBookmakerBetId;
+    private Long oddsBookmakerBetId;
     private String oddsType;
     private String oddsTypeShort;
     private String oddsTypeId;
@@ -106,45 +104,46 @@ public class MatchEntity extends BaseEntity {
     private Integer cardsHomeYellow, cardsHomeRed, cardsAwayYellow, cardsAwayRed;
 
     public MatchEntity(BaseEntity parent, long id) {
-        super(parent, id);
+        super(parent, new EntityId(id, MatchEntity.class));
     }
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
-        if (entityName.equals("teams.home")) {
-            this.teamHomeId = childEntity.getId();
-            this.teamHomeUid = ((TeamEntity)childEntity).getUid();
-        }
-        else if (entityName.equals("teams.away")) {
-            this.teamAwayId = childEntity.getId();
-            this.teamAwayUid = ((TeamEntity)childEntity).getUid();
-        }
-        else if (entityName.equals("referee[]")) {
-            this.referees.add(childEntity.getId());
-        }
-        else if (entityName.equals("manager.home")) {
-            this.managerHomeId = childEntity.getId();
-        }
-        else if (entityName.equals("manager.away")) {
-            this.managerAwayId = childEntity.getId();
-        }
-        else if (entityName.equals("roundname")) {
-            this.roundNameId = childEntity.getId();
-        }
-        else if (entityName.equals("tournament")) {
-            //this.tournamentId = childEntity.getId();
-        }
-        else if (entityName.equals("form[]")) {
-            this.teamForms.add(childEntity.getId());
-        }
-        else if (entityName.equals("stadium")) {
-            this.stadiumId = childEntity.getId();
-        }
-        else if (entityName.equals("status")) {
-            this.matchStatusId = childEntity.getId();
-        }
-        else {
-            return super.handleChildEntity(entityName, childEntity);
+        switch (entityName) {
+            case "teams.home":
+                this.teamHomeId = new EntityId(childEntity);
+                this.teamHomeUid = ((TeamEntity) childEntity).getUid();
+                break;
+            case "teams.away":
+                this.teamAwayId = new EntityId(childEntity);
+                this.teamAwayUid = ((TeamEntity) childEntity).getUid();
+                break;
+            case "referee[]":
+                this.referees.add(childEntity.getId());
+                break;
+            case "manager.home":
+                this.managerHomeId = new EntityId(childEntity);
+                break;
+            case "manager.away":
+                this.managerAwayId = new EntityId(childEntity);
+                break;
+            case "roundname":
+                this.roundNameId = new EntityId(childEntity);
+                break;
+            case "tournament":
+                //this.tournamentId = childEntity.getId();
+                break;
+            case "form[]":
+                this.teamForms.add(childEntity.getId());
+                break;
+            case "stadium":
+                this.stadiumId = new EntityId(childEntity);
+                break;
+            case "status":
+                this.matchStatusId = new EntityId(childEntity);
+                break;
+            default:
+                return super.handleChildEntity(entityName, childEntity);
         }
         return true;
     }
@@ -161,10 +160,10 @@ public class MatchEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "_rcid": this.realCategoryId = new EntityId(node.asLong()); break;
-            case "_tid": this.tournamentId = new EntityId(node.asLong()); break;
-            case "_utid": this.uniqueTournamentId = new EntityId(node.asLong()); break;
-            case "_seasonid": this.seasonId = new EntityId(node.asLong()); break;
+            case "_rcid": this.realCategoryId = new EntityId(node.asLong(), RealCategoryEntity.class); break;
+            case "_tid": this.tournamentId = new EntityId(node.asLong(), TournamentEntity.class); break;
+            case "_utid": this.uniqueTournamentId = new EntityId(node.asLong(), UniqueTournamentEntity.class); break;
+            case "_seasonid": this.seasonId = new EntityId(node.asLong(), SeasonEntity.class); break;
             case "time.uts":
             case "_dt.uts":
                 this.time = node.asLong(); break;
@@ -178,18 +177,20 @@ public class MatchEntity extends BaseEntity {
             case "neutralground": this.neutralGround = node.asBoolean(); break;
             case "comment": this.comment = node.asText(); break;
             case "status": this.status = node.asText(); break;
-            case "nextmatchid": this.nextMatchiId = new EntityId(node.asLong()); break;
+            case "nextmatchid": this.nextMatchiId = new EntityId(node.asLong(), MatchEntity.class); break;
             case "tobeannounced": this.toBeAnnounced = node.asBoolean(); break;
             case "postponed": this.postponed = node.asBoolean(); break;
             case "canceled": this.canceled = node.asBoolean(); break;
             case "inlivescore": this.inlivescore = node.asBoolean(); break;
-            case "stadiumid": this.stadiumid = node.asLong() > 0 ? new EntityId(node.asLong()) : null; break;
+            case "stadiumid":
+            case "stadiumId":
+                this.stadiumId = node.asLong() > 0 ? new EntityId(node.asLong(), StadiumEntity.class) : null; break;
             case "walkover": this.walkover = node.asBoolean(); break;
             case "retired": this.retired = node.asBoolean(); break;
             case "disqualified": this.disqualified = node.asBoolean(); break;
             case "dbfa": this.dbfa = node.asBoolean(); break;
-            case "history.previous": this.historyPreviousMatchId = node.isNull() ? null : new EntityId(node.asLong()); break;
-            case "history.next": this.historyNextMatchId = node.isNull() ? null : new EntityId(node.asLong()); break;
+            case "history.previous": this.historyPreviousMatchId = node.isNull() ? null : new EntityId(node.asLong(), MatchEntity.class); break;
+            case "history.next": this.historyNextMatchId = node.isNull() ? null : new EntityId(node.asLong(), MatchEntity.class); break;
             case "periods.p1.home": this.p1Home = node.asInt(); break;
             case "periods.p1.away": this.p1Away = node.asInt(); break;
             case "periods.ft.home": this.ftHome = node.asInt(); break;
@@ -209,8 +210,8 @@ public class MatchEntity extends BaseEntity {
             case "cards.away.red_count": this.cardsAwayRed = node.asInt(); break;
 
             case "odds.clientmatchid": this.oddsClientMatchId = node.asText(); break;
-            case "odds.bookmakerid": this.oddsBookmakerId = new EntityId(node.asLong()); break;
-            case "odds.bookmakerbetid": this.oddsBookmakerBetId = new EntityId(node.asLong()); break;
+            case "odds.bookmakerid": this.oddsBookmakerId = new EntityId(node.asLong(), BookmakerEntity.class); break;
+            case "odds.bookmakerbetid": this.oddsBookmakerBetId = node.asLong(); break;
             case "odds.oddstype": this.oddsType = node.asText(); break;
             case "odds.oddstypeshort": this.oddsTypeShort = node.asText(); break;
             case "odds.oddstypeid": this.oddsTypeId = node.asText(); break;
@@ -248,7 +249,10 @@ public class MatchEntity extends BaseEntity {
             case "updated_uts": this.updatedTime = node.asLong(); break;
             case "ended_uts": this.endedTime = node.asLong(); break;
             case "ptime": this.pTime = node.asLong(); break;
-            case "timeinfo.ended": /* ignore */ break;
+            case "timeinfo.ended": /* ignore */
+            case "p":
+            case "hf":
+                break;
             case "timeinfo.running": this.timeInfoRunning = node.asBoolean(); break;
             case "removed": this.removed = node.asBoolean(); break;
             case "facts": this.facts = node.asBoolean(); break;
@@ -259,8 +263,6 @@ public class MatchEntity extends BaseEntity {
             case "windadvantage": this.windAdvantage = node.asInt(); break;
             case "matchstatus": this.matchStatus = node.asText(); break;
             case "cancelled": this.cancelled = node.asBoolean(); break;
-            case "hf": /* ignore */ break;
-            case "p": /* ignore */ break;
 
             case "bestof":
                 if (!node.isNull()) return false;
@@ -297,14 +299,14 @@ public class MatchEntity extends BaseEntity {
         Matcher matcher = regEx.matcher(nodeName);
         if (matcher.find()) {
             if (!node.isNull() && matcher.group(1).equals("teamhistory")) {
-                EntityId teamId = new EntityId(Long.parseLong(matcher.group(2)));
+                EntityId teamId = new EntityId(Long.parseLong(matcher.group(2)), UniqueTeamEntity.class);
                 String prevNext = matcher.group(3);
-                EntityId matchId = new EntityId(node.asLong());
-                if (teamId == this.teamHomeUid) {
+                EntityId matchId = new EntityId(node.asLong(), MatchEntity.class);
+                if (teamId.equals(this.teamHomeUid)) {
                     if (prevNext.equals("previous")) this.homeTeamHistoryPrevMatchId = matchId;
                     if (prevNext.equals("next")) this.homeTeamHistoryNextMatchId = matchId;
                 }
-                else if (teamId == this.teamAwayUid) {
+                else if (teamId.equals(this.teamAwayUid)) {
                     if (prevNext.equals("previous")) this.awayTeamHistoryPrevMatchId = matchId;
                     if (prevNext.equals("next")) this.awayTeamHistoryNextMatchId = matchId;
                 }
@@ -316,115 +318,112 @@ public class MatchEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("MatchEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", realCategoryId=").append(realCategoryId);
-        sb.append(", tournamentId=").append(tournamentId);
-        sb.append(", uniqueTournamentId=").append(uniqueTournamentId);
-        sb.append(", time=").append(time);
-        sb.append(", week='").append(week).append('\'');
-        sb.append(", round=").append(round);
-        sb.append(", resultHome=").append(resultHome);
-        sb.append(", resultAway=").append(resultAway);
-        sb.append(", resultPeriod='").append(resultPeriod).append('\'');
-        sb.append(", resultWinner='").append(resultWinner).append('\'');
-        sb.append(", resultBettingWinner='").append(resultBettingWinner).append('\'');
-        sb.append(", seasonId=").append(seasonId);
-        sb.append(", teamHomeId=").append(teamHomeId);
-        sb.append(", teamAwayId=").append(teamAwayId);
-        sb.append(", teamHomeUid=").append(teamHomeUid);
-        sb.append(", teamAwayUid=").append(teamAwayUid);
-        sb.append(", neutralGround=").append(neutralGround);
-        sb.append(", comment='").append(comment).append('\'');
-        sb.append(", toBeAnnounced=").append(toBeAnnounced);
-        sb.append(", postponed=").append(postponed);
-        sb.append(", canceled=").append(canceled);
-        sb.append(", inlivescore=").append(inlivescore);
-        sb.append(", stadiumid=").append(stadiumid);
-        sb.append(", walkover=").append(walkover);
-        sb.append(", retired=").append(retired);
-        sb.append(", disqualified=").append(disqualified);
-        sb.append(", dbfa=").append(dbfa);
-        sb.append(", referees=").append(referees);
-        sb.append(", managerHomeId=").append(managerHomeId);
-        sb.append(", managerAwayId=").append(managerAwayId);
-        sb.append(", roundNameId=").append(roundNameId);
-        sb.append(", stadiumId=").append(stadiumId);
-        sb.append(", historyPreviousMatchId=").append(historyPreviousMatchId);
-        sb.append(", historyNextMatchId=").append(historyNextMatchId);
-        sb.append(", homeTeamHistoryPrevMatchId=").append(homeTeamHistoryPrevMatchId);
-        sb.append(", homeTeamHistoryNextMatchId=").append(homeTeamHistoryNextMatchId);
-        sb.append(", awayTeamHistoryPrevMatchId=").append(awayTeamHistoryPrevMatchId);
-        sb.append(", awayTeamHistoryNextMatchId=").append(awayTeamHistoryNextMatchId);
-        sb.append(", p1Home=").append(p1Home);
-        sb.append(", p1Away=").append(p1Away);
-        sb.append(", ftHome=").append(ftHome);
-        sb.append(", ftAway=").append(ftAway);
-        sb.append(", otHome=").append(otHome);
-        sb.append(", otAway=").append(otAway);
-        sb.append(", apHome=").append(apHome);
-        sb.append(", apAway=").append(apAway);
-        sb.append(", cupRoundMatchNumber=").append(cupRoundMatchNumber);
-        sb.append(", cupRoundNumberOfMatches=").append(cupRoundNumberOfMatches);
-        sb.append(", matchDifficultyRatingHome=").append(matchDifficultyRatingHome);
-        sb.append(", matchDifficultyRatingAway=").append(matchDifficultyRatingAway);
-        sb.append(", oddsClientMatchId='").append(oddsClientMatchId).append('\'');
-        sb.append(", oddsBookmakerId=").append(oddsBookmakerId);
-        sb.append(", oddsBookmakerBetId=").append(oddsBookmakerBetId);
-        sb.append(", oddsType='").append(oddsType).append('\'');
-        sb.append(", oddsTypeShort='").append(oddsTypeShort).append('\'');
-        sb.append(", oddsTypeId='").append(oddsTypeId).append('\'');
-        sb.append(", oddsLivebet=").append(oddsLivebet);
-        sb.append(", oddsIsMatchOdds=").append(oddsIsMatchOdds);
-        sb.append(", oddsExtra='").append(oddsExtra).append('\'');
-        sb.append(", oddsActive=").append(oddsActive);
-        sb.append(", oddsBetstop=").append(oddsBetstop);
-        sb.append(", oddsUpdated=").append(oddsUpdated);
-        sb.append(", status='").append(status).append('\'');
-        sb.append(", nextMatchiId=").append(nextMatchiId);
-        sb.append(", teamForms=").append(teamForms);
-        sb.append(", coverageLineup=").append(coverageLineup);
-        sb.append(", coverageFormations=").append(coverageFormations);
-        sb.append(", coverageLiveTable=").append(coverageLiveTable);
-        sb.append(", coverageInjuries=").append(coverageInjuries);
-        sb.append(", coverageBallSpotting=").append(coverageBallSpotting);
-        sb.append(", coverageCornersOnly=").append(coverageCornersOnly);
-        sb.append(", coverageMultiCast=").append(coverageMultiCast);
-        sb.append(", coverageScoutMatch=").append(coverageScoutMatch);
-        sb.append(", coverageScoutCoverageStatus=").append(coverageScoutCoverageStatus);
-        sb.append(", coverageScoutConnected=").append(coverageScoutConnected);
-        sb.append(", coverageLiveOdds=").append(coverageLiveOdds);
-        sb.append(", coverageDeeperCoverage=").append(coverageDeeperCoverage);
-        sb.append(", coverageTacticalLineup=").append(coverageTacticalLineup);
-        sb.append(", coverageBasicLineup=").append(coverageBasicLineup);
-        sb.append(", coverageHasStats=").append(coverageHasStats);
-        sb.append(", coverageInLiveScore=").append(coverageInLiveScore);
-        sb.append(", coveragePenaltyShootout=").append(coveragePenaltyShootout);
-        sb.append(", coverageScoutTest=").append(coverageScoutTest);
-        sb.append(", coverageLmtSupport=").append(coverageLmtSupport);
-        sb.append(", coverageVenue=").append(coverageVenue);
-        sb.append(", coverageMatchDataComplete=").append(coverageMatchDataComplete);
-        sb.append(", coverageMediaCoverage=").append(coverageMediaCoverage);
-        sb.append(", coverageSubstitutions=").append(coverageSubstitutions);
-        sb.append(", updatedTime=").append(updatedTime);
-        sb.append(", endedTime=").append(endedTime);
-        sb.append(", pTime=").append(pTime);
-        sb.append(", timeInfoRunning=").append(timeInfoRunning);
-        sb.append(", removed=").append(removed);
-        sb.append(", facts=").append(facts);
-        sb.append(", localDerby=").append(localDerby);
-        sb.append(", distance=").append(distance);
-        sb.append(", weather=").append(weather);
-        sb.append(", pitchCondition=").append(pitchCondition);
-        sb.append(", windAdvantage=").append(windAdvantage);
-        sb.append(", matchStatus='").append(matchStatus).append('\'');
-        sb.append(", matchStatusId=").append(matchStatusId);
-        sb.append(", cancelled=").append(cancelled);
-        sb.append(", cardsHomeYellow=").append(cardsHomeYellow);
-        sb.append(", cardsHomeRed=").append(cardsHomeRed);
-        sb.append(", cardsAwayYellow=").append(cardsAwayYellow);
-        sb.append(", cardsAwayRed=").append(cardsAwayRed);
-        sb.append('}');
-        return sb.toString();
+        return "MatchEntity{" + "id=" + getId() +
+                ", realCategoryId=" + realCategoryId +
+                ", tournamentId=" + tournamentId +
+                ", uniqueTournamentId=" + uniqueTournamentId +
+                ", time=" + time +
+                ", week='" + week + '\'' +
+                ", round=" + round +
+                ", resultHome=" + resultHome +
+                ", resultAway=" + resultAway +
+                ", resultPeriod='" + resultPeriod + '\'' +
+                ", resultWinner='" + resultWinner + '\'' +
+                ", resultBettingWinner='" + resultBettingWinner + '\'' +
+                ", seasonId=" + seasonId +
+                ", teamHomeId=" + teamHomeId +
+                ", teamAwayId=" + teamAwayId +
+                ", teamHomeUid=" + teamHomeUid +
+                ", teamAwayUid=" + teamAwayUid +
+                ", neutralGround=" + neutralGround +
+                ", comment='" + comment + '\'' +
+                ", toBeAnnounced=" + toBeAnnounced +
+                ", postponed=" + postponed +
+                ", canceled=" + canceled +
+                ", inlivescore=" + inlivescore +
+                ", walkover=" + walkover +
+                ", retired=" + retired +
+                ", disqualified=" + disqualified +
+                ", dbfa=" + dbfa +
+                ", referees=" + referees +
+                ", managerHomeId=" + managerHomeId +
+                ", managerAwayId=" + managerAwayId +
+                ", roundNameId=" + roundNameId +
+                ", stadiumId=" + stadiumId +
+                ", historyPreviousMatchId=" + historyPreviousMatchId +
+                ", historyNextMatchId=" + historyNextMatchId +
+                ", homeTeamHistoryPrevMatchId=" + homeTeamHistoryPrevMatchId +
+                ", homeTeamHistoryNextMatchId=" + homeTeamHistoryNextMatchId +
+                ", awayTeamHistoryPrevMatchId=" + awayTeamHistoryPrevMatchId +
+                ", awayTeamHistoryNextMatchId=" + awayTeamHistoryNextMatchId +
+                ", p1Home=" + p1Home +
+                ", p1Away=" + p1Away +
+                ", ftHome=" + ftHome +
+                ", ftAway=" + ftAway +
+                ", otHome=" + otHome +
+                ", otAway=" + otAway +
+                ", apHome=" + apHome +
+                ", apAway=" + apAway +
+                ", cupRoundMatchNumber=" + cupRoundMatchNumber +
+                ", cupRoundNumberOfMatches=" + cupRoundNumberOfMatches +
+                ", matchDifficultyRatingHome=" + matchDifficultyRatingHome +
+                ", matchDifficultyRatingAway=" + matchDifficultyRatingAway +
+                ", oddsClientMatchId='" + oddsClientMatchId + '\'' +
+                ", oddsBookmakerId=" + oddsBookmakerId +
+                ", oddsBookmakerBetId=" + oddsBookmakerBetId +
+                ", oddsType='" + oddsType + '\'' +
+                ", oddsTypeShort='" + oddsTypeShort + '\'' +
+                ", oddsTypeId='" + oddsTypeId + '\'' +
+                ", oddsLivebet=" + oddsLivebet +
+                ", oddsIsMatchOdds=" + oddsIsMatchOdds +
+                ", oddsExtra='" + oddsExtra + '\'' +
+                ", oddsActive=" + oddsActive +
+                ", oddsBetstop=" + oddsBetstop +
+                ", oddsUpdated=" + oddsUpdated +
+                ", status='" + status + '\'' +
+                ", nextMatchiId=" + nextMatchiId +
+                ", teamForms=" + teamForms +
+                ", coverageLineup=" + coverageLineup +
+                ", coverageFormations=" + coverageFormations +
+                ", coverageLiveTable=" + coverageLiveTable +
+                ", coverageInjuries=" + coverageInjuries +
+                ", coverageBallSpotting=" + coverageBallSpotting +
+                ", coverageCornersOnly=" + coverageCornersOnly +
+                ", coverageMultiCast=" + coverageMultiCast +
+                ", coverageScoutMatch=" + coverageScoutMatch +
+                ", coverageScoutCoverageStatus=" + coverageScoutCoverageStatus +
+                ", coverageScoutConnected=" + coverageScoutConnected +
+                ", coverageLiveOdds=" + coverageLiveOdds +
+                ", coverageDeeperCoverage=" + coverageDeeperCoverage +
+                ", coverageTacticalLineup=" + coverageTacticalLineup +
+                ", coverageBasicLineup=" + coverageBasicLineup +
+                ", coverageHasStats=" + coverageHasStats +
+                ", coverageInLiveScore=" + coverageInLiveScore +
+                ", coveragePenaltyShootout=" + coveragePenaltyShootout +
+                ", coverageScoutTest=" + coverageScoutTest +
+                ", coverageLmtSupport=" + coverageLmtSupport +
+                ", coverageVenue=" + coverageVenue +
+                ", coverageMatchDataComplete=" + coverageMatchDataComplete +
+                ", coverageMediaCoverage=" + coverageMediaCoverage +
+                ", coverageSubstitutions=" + coverageSubstitutions +
+                ", updatedTime=" + updatedTime +
+                ", endedTime=" + endedTime +
+                ", pTime=" + pTime +
+                ", timeInfoRunning=" + timeInfoRunning +
+                ", removed=" + removed +
+                ", facts=" + facts +
+                ", localDerby=" + localDerby +
+                ", distance=" + distance +
+                ", weather=" + weather +
+                ", pitchCondition=" + pitchCondition +
+                ", windAdvantage=" + windAdvantage +
+                ", matchStatus='" + matchStatus + '\'' +
+                ", matchStatusId=" + matchStatusId +
+                ", cancelled=" + cancelled +
+                ", cardsHomeYellow=" + cardsHomeYellow +
+                ", cardsHomeRed=" + cardsHomeRed +
+                ", cardsAwayYellow=" + cardsAwayYellow +
+                ", cardsAwayRed=" + cardsAwayRed +
+                '}';
     }
 }

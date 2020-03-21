@@ -91,7 +91,7 @@ public class SqlExecutor extends StatsStoreListener {
     public void onRelationAdded(BaseEntity entity, String entityFieldName, EntityId id) {
         String masterTableName = SqlUtils.transformTableName(entity.getClass().getSimpleName());
         String relTableName = String.format("%s%s%s", masterTableName, SqlUtils.RELATION_SEPARATOR, SqlUtils.transform(entityFieldName));
-        Tuple2<String, EntityId> key = new Tuple2<>(relTableName, new EntityId(++relationIndex));
+        Tuple2<String, EntityId> key = new Tuple2<>(relTableName, new EntityId(++relationIndex, NullEntity.class));
         InsertStatement insertStm = new InsertStatement(relTableName);
         addEntityId(insertStm, entity.getId(), SqlUtils.FIELD_REL_SOURCE_PREFIX);
         addEntityId(insertStm, id, SqlUtils.FIELD_REL_TARGET_PREFIX);

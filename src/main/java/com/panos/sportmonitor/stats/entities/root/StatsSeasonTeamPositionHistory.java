@@ -5,10 +5,6 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 public class StatsSeasonTeamPositionHistory extends BaseRootEntity {
     private EntityId seasonId;
     private Integer teamCount;
@@ -25,7 +21,7 @@ public class StatsSeasonTeamPositionHistory extends BaseRootEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "season": this.seasonId = childEntity.getId(); return true;
+            case "season": this.seasonId = new EntityId(childEntity); return true;
             default:
                 if (entityName.startsWith("positiondata")) this.promotions.add(childEntity.getId());
                 else if (entityName.startsWith("tables")) this.tables.add(childEntity.getId());

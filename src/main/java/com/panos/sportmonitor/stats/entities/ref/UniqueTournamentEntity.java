@@ -11,14 +11,14 @@ public class UniqueTournamentEntity extends BaseEntity {
     private Boolean friendly;
 
     public UniqueTournamentEntity(BaseEntity parent, long id) {
-        super(parent, id);
+        super(parent, new EntityId(id, UniqueTournamentEntity.class));
     }
 
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
             case "name": this.name = node.asText(); break;
-            case "_rcid": this.realCategoryId = new EntityId(node.asLong()); break;
+            case "_rcid": this.realCategoryId = new EntityId(node.asLong(), RealCategoryEntity.class); break;
             case "friendly": this.friendly = node.asBoolean(); break;
             case "_utid":
             case "currentseason":
@@ -31,12 +31,10 @@ public class UniqueTournamentEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("UniqueTournamentEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", realCategory=").append(realCategoryId);
-        sb.append(", friendly=").append(friendly);
-        sb.append('}');
-        return sb.toString();
+        return "UniqueTournamentEntity{" + "id=" + getId() +
+                ", name='" + name + '\'' +
+                ", realCategory=" + realCategoryId +
+                ", friendly=" + friendly +
+                '}';
     }
 }

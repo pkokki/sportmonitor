@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class MatchDetailsEntryEntity extends BaseTimeEntity {
     private String code;
@@ -12,7 +13,7 @@ public class MatchDetailsEntryEntity extends BaseTimeEntity {
     private Integer valueAway, valueAwayP1, valueAwayP2;
 
     public MatchDetailsEntryEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+        super(parent, new EntityId(id, timeStamp, MatchDetailsEntryEntity.class));
     }
 
     @Override
@@ -54,17 +55,15 @@ public class MatchDetailsEntryEntity extends BaseTimeEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("MatchDetailsEntryEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", code='").append(code).append('\'');
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", valueHome=").append(valueHome);
-        sb.append(", valueHomeP1=").append(valueHomeP1);
-        sb.append(", valueHomeP2=").append(valueHomeP2);
-        sb.append(", valueAway=").append(valueAway);
-        sb.append(", valueAwayP1=").append(valueAwayP1);
-        sb.append(", valueAwayP2=").append(valueAwayP2);
-        sb.append('}');
-        return sb.toString();
+        return "MatchDetailsEntryEntity{" + "id=" + getId() +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", valueHome=" + valueHome +
+                ", valueHomeP1=" + valueHomeP1 +
+                ", valueHomeP2=" + valueHomeP2 +
+                ", valueAway=" + valueAway +
+                ", valueAwayP1=" + valueAwayP1 +
+                ", valueAwayP2=" + valueAwayP2 +
+                '}';
     }
 }

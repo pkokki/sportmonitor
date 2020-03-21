@@ -2,6 +2,9 @@ package com.panos.sportmonitor;
 
 import com.panos.sportmonitor.stats.StatsParser;
 import com.panos.sportmonitor.stats.StatsStore;
+import com.panos.sportmonitor.stats.store.SqlExecutor;
+import com.panos.sportmonitor.stats.store.SqlTableCreator;
+import com.panos.sportmonitor.stats.store.StoreCounterListener;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -13,6 +16,9 @@ public class SportMonitorConsole {
 
     public static void main(String[] args) throws IOException {
         StatsStore store = new StatsStore();
+        store.addListener(new StoreCounterListener());
+        //store.addListener(new SqlTableCreator(true));
+        store.addListener(new SqlExecutor(true,false));
         StatsParser parser = new StatsParser(store);
 
         File folder = new File("C:\\panos\\betting\\radar\\");

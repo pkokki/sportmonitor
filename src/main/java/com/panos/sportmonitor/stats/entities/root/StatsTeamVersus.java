@@ -4,15 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.*;
 
-import java.util.HashMap;
-
 public class StatsTeamVersus extends BaseRootEntity {
     private EntityIdList matches = new EntityIdList();
     private EntityIdList tournaments = new EntityIdList();
     private EntityIdList uniqueTeams = new EntityIdList();
     private EntityIdList realCategories = new EntityIdList();
     private EntityId nextMatchId;
-    private EntityId liveMatchId;
+    private Long liveMatchId;
 
     public StatsTeamVersus(long timeStamp) {
         super(BaseRootEntityType.StatsTeamVersus, timeStamp);
@@ -25,7 +23,7 @@ public class StatsTeamVersus extends BaseRootEntity {
                 this.matches.add(childEntity.getId());
                 return true;
             case "next":
-                this.nextMatchId = childEntity.getId();
+                this.nextMatchId = new EntityId(childEntity);
                 return true;
             default:
                 if (entityName.startsWith("tournaments.")) {
@@ -50,7 +48,7 @@ public class StatsTeamVersus extends BaseRootEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "livematchid": this.liveMatchId = new EntityId(node.asLong()); break;
+            case "livematchid": this.liveMatchId = node.asLong(); break;
             default:
                 if (nodeName.startsWith("jersey.")) return true;
                 return super.handleProperty(nodeName, nodeType, node);

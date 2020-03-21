@@ -4,9 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class StatsSeasonUniqueTeamStats extends BaseRootEntity {
     private EntityId seasonId;
     private EntityIdList uniqueTeamStats = new EntityIdList();
@@ -18,7 +15,7 @@ public class StatsSeasonUniqueTeamStats extends BaseRootEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "season": this.seasonId = childEntity.getId(); break;
+            case "season": this.seasonId = new EntityId(childEntity); break;
             default:
                 if (entityName.startsWith("stats.uniqueteams.")) {
                     this.uniqueTeamStats.add(childEntity.getId());

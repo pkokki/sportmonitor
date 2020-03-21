@@ -3,6 +3,7 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class PlayerPositionTypeEntity extends BaseEntity {
     private String type;
@@ -11,7 +12,7 @@ public class PlayerPositionTypeEntity extends BaseEntity {
     private String abbr;
 
     public PlayerPositionTypeEntity(BaseEntity parent, long id) {
-        super(parent, id);
+        super(parent, new EntityId(id, PlayerPositionTypeEntity.class));
     }
 
     @Override
@@ -28,13 +29,11 @@ public class PlayerPositionTypeEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("PlayerPositionTypeEntity{");
-        sb.append("id='").append(getId()).append('\'');
-        sb.append(", type='").append(type).append('\'');
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", shortName='").append(shortName).append('\'');
-        sb.append(", abbr='").append(abbr).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "PlayerPositionTypeEntity{" + "id='" + getId() + '\'' +
+                ", type='" + type + '\'' +
+                ", name='" + name + '\'' +
+                ", shortName='" + shortName + '\'' +
+                ", abbr='" + abbr + '\'' +
+                '}';
     }
 }

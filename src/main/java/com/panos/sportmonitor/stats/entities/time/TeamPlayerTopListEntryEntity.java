@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
 import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.entities.UniqueTeamEntity;
 
 public class TeamPlayerTopListEntryEntity extends BaseTimeEntity {
     private EntityId uniqueTeamId;
@@ -28,12 +29,12 @@ public class TeamPlayerTopListEntryEntity extends BaseTimeEntity {
     private Integer secondHalfCards;
 
     public TeamPlayerTopListEntryEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+        super(parent, new EntityId(id, timeStamp, TeamPlayerTopListEntryEntity.class));
     }
 
     @Override
     public boolean handleAuxId(long auxEntityId) {
-        this.uniqueTeamId = new EntityId(auxEntityId);
+        this.uniqueTeamId = new EntityId(auxEntityId, UniqueTeamEntity.class);
         return true;
     }
 
@@ -67,29 +68,27 @@ public class TeamPlayerTopListEntryEntity extends BaseTimeEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("TeamPlayerTopListEntryEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", uniqueTeamId=").append(uniqueTeamId);
-        sb.append(", playerId=").append(playerId);
-        sb.append(", active=").append(active);
-        sb.append(", lastEvent='").append(lastEvent).append('\'');
-        sb.append(", started=").append(started);
-        sb.append(", goals=").append(goals);
-        sb.append(", assists=").append(assists);
-        sb.append(", matches=").append(matches);
-        sb.append(", penalties=").append(penalties);
-        sb.append(", goalPoints=").append(goalPoints);
-        sb.append(", minutesPlayed=").append(minutesPlayed);
-        sb.append(", substitutedIn=").append(substitutedIn);
-        sb.append(", firstGoals=").append(firstGoals);
-        sb.append(", lastGoals=").append(lastGoals);
-        sb.append(", shirtNumber=").append(shirtNumber);
-        sb.append(", yellowCards=").append(yellowCards);
-        sb.append(", yellowRedCards=").append(yellowRedCards);
-        sb.append(", redCards=").append(redCards);
-        sb.append(", firstHalfCards=").append(firstHalfCards);
-        sb.append(", secondHalfCards=").append(secondHalfCards);
-        sb.append('}');
-        return sb.toString();
+        return "TeamPlayerTopListEntryEntity{" + "id=" + getId() +
+                ", uniqueTeamId=" + uniqueTeamId +
+                ", playerId=" + playerId +
+                ", active=" + active +
+                ", lastEvent='" + lastEvent + '\'' +
+                ", started=" + started +
+                ", goals=" + goals +
+                ", assists=" + assists +
+                ", matches=" + matches +
+                ", penalties=" + penalties +
+                ", goalPoints=" + goalPoints +
+                ", minutesPlayed=" + minutesPlayed +
+                ", substitutedIn=" + substitutedIn +
+                ", firstGoals=" + firstGoals +
+                ", lastGoals=" + lastGoals +
+                ", shirtNumber=" + shirtNumber +
+                ", yellowCards=" + yellowCards +
+                ", yellowRedCards=" + yellowRedCards +
+                ", redCards=" + redCards +
+                ", firstHalfCards=" + firstHalfCards +
+                ", secondHalfCards=" + secondHalfCards +
+                '}';
     }
 }

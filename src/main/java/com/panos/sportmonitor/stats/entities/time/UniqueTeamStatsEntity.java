@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
 import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.entities.UniqueTeamEntity;
 
 public class UniqueTeamStatsEntity extends BaseTimeEntity {
     private EntityId uniqueTeamId;
@@ -24,19 +25,19 @@ public class UniqueTeamStatsEntity extends BaseTimeEntity {
             yellowRedCardsMatches, shootingEfficiencyMatches;
 
     public UniqueTeamStatsEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, id, timeStamp);
+        super(parent, new EntityId(id, timeStamp, UniqueTeamStatsEntity.class));
     }
 
     @Override
     public boolean handleAuxId(long auxEntityId) {
-        this.uniqueTeamId = new EntityId(auxEntityId);
+        this.uniqueTeamId = new EntityId(auxEntityId, UniqueTeamEntity.class);
         return true;
     }
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         if (entityName.equals("uniqueteam")) {
-            this.uniqueTeamId = childEntity.getId();
+            this.uniqueTeamId = new EntityId(childEntity);
             return true;
         }
         return super.handleChildEntity(entityName, childEntity);
@@ -116,74 +117,72 @@ public class UniqueTeamStatsEntity extends BaseTimeEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("UniqueTeamStatsEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", uniqueTeamId=").append(uniqueTeamId);
-        sb.append(", goalAttempts=").append(goalAttempts);
-        sb.append(", shotsOnGoal=").append(shotsOnGoal);
-        sb.append(", shotsOffGoal=").append(shotsOffGoal);
-        sb.append(", cornerKicks=").append(cornerKicks);
-        sb.append(", ballPossession=").append(ballPossession);
-        sb.append(", shotsBlocked=").append(shotsBlocked);
-        sb.append(", cardsGiven=").append(cardsGiven);
-        sb.append(", freekicks=").append(freekicks);
-        sb.append(", offside=").append(offside);
-        sb.append(", shotsOnPost=").append(shotsOnPost);
-        sb.append(", shotsOnBar=").append(shotsOnBar);
-        sb.append(", goalsByFoot=").append(goalsByFoot);
-        sb.append(", goalsByHead=").append(goalsByHead);
-        sb.append(", attendance=").append(attendance);
-        sb.append(", yellowCards=").append(yellowCards);
-        sb.append(", redCards=").append(redCards);
-        sb.append(", goalsScored=").append(goalsScored);
-        sb.append(", goalsConceded=").append(goalsConceded);
-        sb.append(", yellowRedCards=").append(yellowRedCards);
-        sb.append(", shootingEfficiency=").append(shootingEfficiency);
-        sb.append(", lateWinningGoals=").append(lateWinningGoals);
-        sb.append(", penaltySuccessCount=").append(penaltySuccessCount);
-        sb.append(", penaltyFailCount=").append(penaltyFailCount);
-        sb.append(", cleanSheetCount=").append(cleanSheetCount);
-        sb.append(", goalAttemptsAvg=").append(goalAttemptsAvg);
-        sb.append(", shotsOnGoalAvg=").append(shotsOnGoalAvg);
-        sb.append(", shotsOffGoalAvg=").append(shotsOffGoalAvg);
-        sb.append(", cornerKicksAvg=").append(cornerKicksAvg);
-        sb.append(", ballPossessionAvg=").append(ballPossessionAvg);
-        sb.append(", shotsBlockedAvg=").append(shotsBlockedAvg);
-        sb.append(", cardsGivenAvg=").append(cardsGivenAvg);
-        sb.append(", freekicksAvg=").append(freekicksAvg);
-        sb.append(", offsideAvg=").append(offsideAvg);
-        sb.append(", shotsOnPostAvg=").append(shotsOnPostAvg);
-        sb.append(", shotsOnBarAvg=").append(shotsOnBarAvg);
-        sb.append(", goalsByFootAvg=").append(goalsByFootAvg);
-        sb.append(", goalsByHeadAvg=").append(goalsByHeadAvg);
-        sb.append(", attendanceAvg=").append(attendanceAvg);
-        sb.append(", yellowCardsAvg=").append(yellowCardsAvg);
-        sb.append(", redCardsAvg=").append(redCardsAvg);
-        sb.append(", goalsScoredAvg=").append(goalsScoredAvg);
-        sb.append(", goalsConcededAvg=").append(goalsConcededAvg);
-        sb.append(", yellowRedCardsAvg=").append(yellowRedCardsAvg);
-        sb.append(", shootingEfficiencyAvg='").append(shootingEfficiencyAvg).append('\'');
-        sb.append(", goalAttemptsMatches=").append(goalAttemptsMatches);
-        sb.append(", shotsOnGoalMatches=").append(shotsOnGoalMatches);
-        sb.append(", shotsOffGoalMatches=").append(shotsOffGoalMatches);
-        sb.append(", cornerKicksMatches=").append(cornerKicksMatches);
-        sb.append(", ballPossessionMatches=").append(ballPossessionMatches);
-        sb.append(", shotsBlockedMatches=").append(shotsBlockedMatches);
-        sb.append(", cardsGivenMatches=").append(cardsGivenMatches);
-        sb.append(", freekicksMatches=").append(freekicksMatches);
-        sb.append(", offsideMatches=").append(offsideMatches);
-        sb.append(", shotsOnPostMatches=").append(shotsOnPostMatches);
-        sb.append(", shotsOnBarMatches=").append(shotsOnBarMatches);
-        sb.append(", goalsByFootMatches=").append(goalsByFootMatches);
-        sb.append(", goalsByHeadMatches=").append(goalsByHeadMatches);
-        sb.append(", attendanceMatches=").append(attendanceMatches);
-        sb.append(", yellowCardsMatches=").append(yellowCardsMatches);
-        sb.append(", redCardsMatches=").append(redCardsMatches);
-        sb.append(", goalsScoredMatches=").append(goalsScoredMatches);
-        sb.append(", goalsConcededMatches=").append(goalsConcededMatches);
-        sb.append(", yellowRedCardsMatches=").append(yellowRedCardsMatches);
-        sb.append(", shootingEfficiencyMatches=").append(shootingEfficiencyMatches);
-        sb.append('}');
-        return sb.toString();
+        return "UniqueTeamStatsEntity{" + "id=" + getId() +
+                ", uniqueTeamId=" + uniqueTeamId +
+                ", goalAttempts=" + goalAttempts +
+                ", shotsOnGoal=" + shotsOnGoal +
+                ", shotsOffGoal=" + shotsOffGoal +
+                ", cornerKicks=" + cornerKicks +
+                ", ballPossession=" + ballPossession +
+                ", shotsBlocked=" + shotsBlocked +
+                ", cardsGiven=" + cardsGiven +
+                ", freekicks=" + freekicks +
+                ", offside=" + offside +
+                ", shotsOnPost=" + shotsOnPost +
+                ", shotsOnBar=" + shotsOnBar +
+                ", goalsByFoot=" + goalsByFoot +
+                ", goalsByHead=" + goalsByHead +
+                ", attendance=" + attendance +
+                ", yellowCards=" + yellowCards +
+                ", redCards=" + redCards +
+                ", goalsScored=" + goalsScored +
+                ", goalsConceded=" + goalsConceded +
+                ", yellowRedCards=" + yellowRedCards +
+                ", shootingEfficiency=" + shootingEfficiency +
+                ", lateWinningGoals=" + lateWinningGoals +
+                ", penaltySuccessCount=" + penaltySuccessCount +
+                ", penaltyFailCount=" + penaltyFailCount +
+                ", cleanSheetCount=" + cleanSheetCount +
+                ", goalAttemptsAvg=" + goalAttemptsAvg +
+                ", shotsOnGoalAvg=" + shotsOnGoalAvg +
+                ", shotsOffGoalAvg=" + shotsOffGoalAvg +
+                ", cornerKicksAvg=" + cornerKicksAvg +
+                ", ballPossessionAvg=" + ballPossessionAvg +
+                ", shotsBlockedAvg=" + shotsBlockedAvg +
+                ", cardsGivenAvg=" + cardsGivenAvg +
+                ", freekicksAvg=" + freekicksAvg +
+                ", offsideAvg=" + offsideAvg +
+                ", shotsOnPostAvg=" + shotsOnPostAvg +
+                ", shotsOnBarAvg=" + shotsOnBarAvg +
+                ", goalsByFootAvg=" + goalsByFootAvg +
+                ", goalsByHeadAvg=" + goalsByHeadAvg +
+                ", attendanceAvg=" + attendanceAvg +
+                ", yellowCardsAvg=" + yellowCardsAvg +
+                ", redCardsAvg=" + redCardsAvg +
+                ", goalsScoredAvg=" + goalsScoredAvg +
+                ", goalsConcededAvg=" + goalsConcededAvg +
+                ", yellowRedCardsAvg=" + yellowRedCardsAvg +
+                ", shootingEfficiencyAvg='" + shootingEfficiencyAvg + '\'' +
+                ", goalAttemptsMatches=" + goalAttemptsMatches +
+                ", shotsOnGoalMatches=" + shotsOnGoalMatches +
+                ", shotsOffGoalMatches=" + shotsOffGoalMatches +
+                ", cornerKicksMatches=" + cornerKicksMatches +
+                ", ballPossessionMatches=" + ballPossessionMatches +
+                ", shotsBlockedMatches=" + shotsBlockedMatches +
+                ", cardsGivenMatches=" + cardsGivenMatches +
+                ", freekicksMatches=" + freekicksMatches +
+                ", offsideMatches=" + offsideMatches +
+                ", shotsOnPostMatches=" + shotsOnPostMatches +
+                ", shotsOnBarMatches=" + shotsOnBarMatches +
+                ", goalsByFootMatches=" + goalsByFootMatches +
+                ", goalsByHeadMatches=" + goalsByHeadMatches +
+                ", attendanceMatches=" + attendanceMatches +
+                ", yellowCardsMatches=" + yellowCardsMatches +
+                ", redCardsMatches=" + redCardsMatches +
+                ", goalsScoredMatches=" + goalsScoredMatches +
+                ", goalsConcededMatches=" + goalsConcededMatches +
+                ", yellowRedCardsMatches=" + yellowRedCardsMatches +
+                ", shootingEfficiencyMatches=" + shootingEfficiencyMatches +
+                '}';
     }
 }

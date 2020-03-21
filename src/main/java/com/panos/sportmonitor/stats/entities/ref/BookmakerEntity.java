@@ -3,6 +3,7 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.EntityId;
 
 public class BookmakerEntity extends BaseEntity {
     private String name;
@@ -10,7 +11,7 @@ public class BookmakerEntity extends BaseEntity {
     private Boolean exchange;
 
     public BookmakerEntity(BaseEntity parent, long id) {
-        super(parent, id);
+        super(parent, new EntityId(id, BookmakerEntity.class));
     }
 
     @Override
@@ -25,12 +26,10 @@ public class BookmakerEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("BookmakerEntity{");
-        sb.append("id=").append(getId());
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", url='").append(url).append('\'');
-        sb.append(", exchange=").append(exchange);
-        sb.append('}');
-        return sb.toString();
+        return "BookmakerEntity{" + "id=" + getId() +
+                ", name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", exchange=" + exchange +
+                '}';
     }
 }
