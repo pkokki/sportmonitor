@@ -188,23 +188,8 @@ CREATE TABLE match_event__assists (
 	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
 	PRIMARY KEY (src_id, dst_id)
 );
-DROP TABLE IF EXISTS statistics_table;
-CREATE TABLE statistics_table (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	name varchar(32),
-	abbr varchar(32),
-	max_rounds varchar(4),
-	tournament_id bigint,
-	season_id varchar(16),
-	season_type varchar(4),
-	season_type_name varchar(64),
-	season_type_unique varchar(4),
-	season_start bigint,
-	season_end bigint,
-	PRIMARY KEY (id)
-);
-DROP TABLE IF EXISTS statistics_table__matches;
-CREATE TABLE statistics_table__matches (
+DROP TABLE IF EXISTS league_table__matches;
+CREATE TABLE league_table__matches (
 	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
 	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
 	PRIMARY KEY (src_id, dst_id)
@@ -791,6 +776,30 @@ CREATE TABLE stats_season_fixtures (
 	PRIMARY KEY (id, time_stamp)
 	-- , FOREIGN KEY (season_id) REFERENCES season (id)
 );
+DROP TABLE IF EXISTS league_table;
+CREATE TABLE league_table (
+	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
+	season_id bigint,
+	max_rounds int,
+	name varchar(32),
+	abbr varchar(32),
+	season_type varchar(4),
+	season_type_name varchar(64),
+	season_type_unique varchar(4),
+	season_start bigint,
+	season_end bigint,
+	tournament_id bigint,
+	real_category_id bigint,
+	rules_id bigint,
+	current_round int,
+	presentation_id int,
+	total_rows int,
+	PRIMARY KEY (id)
+	-- , FOREIGN KEY (season_id) REFERENCES season (id)
+	-- , FOREIGN KEY (tournament_id) REFERENCES tournament (id)
+	-- , FOREIGN KEY (real_category_id) REFERENCES real_category (id)
+	-- , FOREIGN KEY (rules_id) REFERENCES tie_break_rule (id)
+);
 DROP TABLE IF EXISTS stats_season_goals;
 CREATE TABLE stats_season_goals (
 	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
@@ -944,25 +953,6 @@ CREATE TABLE stats_season_tables (
 	season_id bigint,
 	PRIMARY KEY (id, time_stamp)
 	-- , FOREIGN KEY (season_id) REFERENCES season (id)
-);
-DROP TABLE IF EXISTS league_table;
-CREATE TABLE league_table (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	season_id bigint,
-	tournament_id bigint,
-	real_category_id bigint,
-	rules_id bigint,
-	max_rounds int,
-	current_round int,
-	presentation_id int,
-	name varchar(32),
-	abbr varchar(16),
-	total_rows int,
-	PRIMARY KEY (id)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
-	-- , FOREIGN KEY (tournament_id) REFERENCES tournament (id)
-	-- , FOREIGN KEY (real_category_id) REFERENCES real_category (id)
-	-- , FOREIGN KEY (rules_id) REFERENCES tie_break_rule (id)
 );
 DROP TABLE IF EXISTS stats_season_team_position_history;
 CREATE TABLE stats_season_team_position_history (
@@ -1601,3 +1591,4 @@ CREATE TABLE match_timeline (
 	PRIMARY KEY (id, time_stamp)
 	-- , FOREIGN KEY (match_id) REFERENCES match (id)
 );
+

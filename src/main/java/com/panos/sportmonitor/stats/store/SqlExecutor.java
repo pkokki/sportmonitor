@@ -112,6 +112,8 @@ public class SqlExecutor extends StatsStoreListener {
     }
 
     public void submitChanges() {
+        int sqlCounter = 0;
+        int[] results = new int[0];
         try (
                 Connection connection = getConnection();
                 Statement statement = connection.createStatement()
@@ -121,9 +123,10 @@ public class SqlExecutor extends StatsStoreListener {
                 if (sql != null) {
                     if (printSql) StatsConsole.printlnState(sql);
                     statement.addBatch(sql);
+                    ++sqlCounter;
                 }
             }
-            if (execSql) statement.executeBatch();
+            if (execSql) results = statement.executeBatch();
         }
         catch (SQLException e) {
             while (e != null) {
@@ -131,6 +134,34 @@ public class SqlExecutor extends StatsStoreListener {
                 e = e.getNextException();
             }
         }
+        int successCounter = 0, successNoInfoCounter = 0, totalRowsAffected = 0, failCounter = 0;
+        for (int i = 0; i < results.length; i++) {
+            int value = results[i];
+            // A number greater than or equal to zero -- indicates that the command was processed successfully and is
+            // an update count giving the number of rows in the database that were affected by the command's execution
+            if (value >= 0) {
+                ++successCounter;
+                totalRowsAffected += value;
+            }
+            // A value of SUCCESS_NO_INFO -- indicates that the command was processed successfully but that the number
+            // of rows affected is unknown. If one of the commands in a batch update fails to execute properly, this
+            // method throws a BatchUpdateException, and a JDBC driver may or may not continue to process the remaining
+            // commands in the batch. However, the driver's behavior must be consistent with a particular DBMS, either
+            // always continuing to process commands or never continuing to process commands. If the driver continues
+            // processing after a failure, the array returned by the method BatchUpdateException.getUpdateCounts will
+            // contain as many elements as there are commands in the batch, and at least one of the elements will be
+            // the following:
+            else if (value == Statement.SUCCESS_NO_INFO) {
+                ++successNoInfoCounter;
+            }
+            // A value of EXECUTE_FAILED -- indicates that the command failed to execute successfully and occurs only
+            // if a driver continues to process commands after a command fails
+            else if (value == Statement.EXECUTE_FAILED) {
+                ++failCounter;
+            }
+        }
+        StatsConsole.printlnState(String.format("SQL statements in batch: Total=%d, Success=%d, SuccessNoInfo=%d, Failed=%d, TotalRowsAffected=%d",
+                sqlCounter, successCounter, successNoInfoCounter, failCounter, totalRowsAffected));
     }
 
     private static class SqlStatement {
