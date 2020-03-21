@@ -18,9 +18,16 @@ public class LeagueTableEntity extends BaseEntity {
     private String name;
     private String abbr, groupName;
     private Integer totalRows;
+    private String seasonType;
+    private String seasonTypeName;
+    private String seasonTypeUnique;
+    private Long seasonStart;
+    private Long seasonEnd;
+    private EntityIdList matches = new EntityIdList();
     private EntityIdList tableTypes = new EntityIdList();
     private EntityIdList matchTypes = new EntityIdList();
     private EntityIdList tableRows = new EntityIdList();
+
 
     public LeagueTableEntity(BaseEntity parent, long id) {
         super(parent, new EntityId(id, LeagueTableEntity.class));
@@ -51,6 +58,28 @@ public class LeagueTableEntity extends BaseEntity {
             case "abbr": this.abbr = node.asText(); break;
             case "groupname": this.groupName = node.asText(); break;
             case "totalrows": this.totalRows = node.asInt(); break;
+            case "seasontype": this.seasonType = node.asText(); break;
+            case "seasontypename": this.seasonTypeName = node.asText(); break;
+            case "seasontypeunique": this.seasonTypeUnique = node.asText(); break;
+            case "start.uts": this.seasonStart = node.asLong(); break;
+            case "end.uts": this.seasonEnd = node.asLong(); break;
+            case "matches[]": matches.add(new EntityId(node.asLong(), MatchSituationEntryEntity.class)); break;
+            case "tournamentid": new EntityId(node.asLong(), TournamentEntity.class); break;
+            case "roundbyround":
+            case "start._doc":
+            case "start.time":
+            case "start.date":
+            case "start.tz":
+            case "start.tzoffset":
+            case "end._doc":
+            case "end.date":
+            case "end.time":
+            case "end.tz":
+            case "id":
+            case "end.tzoffset":
+            case "uniqueteams[].id":
+            case "uniqueteams[].name":
+                return true;
             default:
                 if (nodeName.startsWith("header[]") || nodeName.startsWith("set[]"))
                     return true;
@@ -61,8 +90,10 @@ public class LeagueTableEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        return "LeagueTableEntity{" + "id=" + getId() +
-                ", seasonId=" + seasonId +
+        return "LeagueTableEntity{" + "seasonId=" + seasonId +
+                ", tournamentId=" + tournamentId +
+                ", realCategoryId=" + realCategoryId +
+                ", rulesId=" + rulesId +
                 ", maxRounds=" + maxRounds +
                 ", currentRound=" + currentRound +
                 ", presentationId=" + presentationId +
@@ -70,9 +101,12 @@ public class LeagueTableEntity extends BaseEntity {
                 ", abbr='" + abbr + '\'' +
                 ", groupName='" + groupName + '\'' +
                 ", totalRows=" + totalRows +
-                ", tournamentId=" + tournamentId +
-                ", realCategoryId=" + realCategoryId +
-                ", rulesId=" + rulesId +
+                ", seasonType='" + seasonType + '\'' +
+                ", seasonTypeName='" + seasonTypeName + '\'' +
+                ", seasonTypeUnique='" + seasonTypeUnique + '\'' +
+                ", seasonStart=" + seasonStart +
+                ", seasonEnd=" + seasonEnd +
+                ", matches=" + matches +
                 ", tableTypes=" + tableTypes +
                 ", matchTypes=" + matchTypes +
                 ", tableRows=" + tableRows +

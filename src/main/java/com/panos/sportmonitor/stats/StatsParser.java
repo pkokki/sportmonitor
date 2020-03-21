@@ -208,10 +208,11 @@ public class StatsParser {
             case "roundname": entity = new RoundNameEntity(parent, id); break;
             case "tableround": entity = new TableRoundEntity(parent, id); break;
             case "cupround": entity = new CupRoundEntity(parent, id); break;
-            case "statistics_table": entity = new StatisticsTableEntity(parent, id); break;
             case "bookmaker": entity = new BookmakerEntity(parent, id); break;
             case "uniqueteamform": entity = new UniqueTeamFormEntity(parent, id); break;
-            case "statistics_leaguetable": entity = new LeagueTableEntity(parent, id); break;
+            case "statistics_table":
+            case "statistics_leaguetable":
+                entity = new LeagueTableEntity(parent, id); break;
             case "tiebreakrule": entity = new TieBreakRuleEntity(parent, id); break;
             case "tablerow": entity = new TableRowEntity(parent, id); break;
             case "promotion": entity = new PromotionEntity(parent, id); break;
