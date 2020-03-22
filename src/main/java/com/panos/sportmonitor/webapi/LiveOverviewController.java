@@ -4,9 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.panos.sportmonitor.spark.util.PostgresHelper;
-import com.panos.sportmonitor.stats.StatsConsole;
-import com.panos.sportmonitor.stats.StatsParser;
-import com.panos.sportmonitor.stats.StatsStore;
+import com.panos.sportmonitor.stats.*;
 import com.panos.sportmonitor.stats.store.SqlExecutor;
 import com.panos.sportmonitor.stats.store.StoreCounterListener;
 import com.panos.sportmonitor.webapi.kafka.OverviewProducer;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -58,10 +55,14 @@ public class LiveOverviewController {
             StatsConsole.printlnWarn("sportradar: invalid json");
             return "ERROR";
         }
+        StatsFileWriter statsFileWriter = new StatsFileWriter("C:\\panos\\betting\\radar\\logs\\", json, true);
         StatsStore store = new StatsStore();
         store.addListener(new StoreCounterListener());
-        store.addListener(new SqlExecutor(true,false));
+        SqlExecutor sqlExecutor = new SqlExecutor(true,false);
+        sqlExecutor.addSqlExecutorListener(statsFileWriter);
+        store.addListener(sqlExecutor);
         StatsParser parser = new StatsParser(store);
+        parser.addListener(statsFileWriter);
         parser.parse(json);
         store.submitChanges();
         return "OK";

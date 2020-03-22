@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 public class StatsParser {
     private final StatsStore statsStore;
+    private final List<StatsParserListener> listeners = new LinkedList<>();
 
     public StatsParser(StatsStore statsStore) {
         this.statsStore = statsStore;
@@ -26,10 +27,8 @@ public class StatsParser {
         parse(source);
     }
 
-
-
     public void parse(final File jsonFile) throws IOException {
-        StatsConsole.printlnInfo(String.format("Parsing '%s'", jsonFile.getName()));
+        StatsConsole.printlnInfo(String.format("Parsing file '%s'", jsonFile.getName()));
         final ObjectMapper mapper = new ObjectMapper();
         final JsonNode rootNode = mapper.readTree(jsonFile);
         parse(rootNode);
@@ -43,13 +42,15 @@ public class StatsParser {
             final String name = rootNode.get("event").asText();
             final BaseRootEntity baseRootEntity = createRootEntity(name, timeStamp);
             if (baseRootEntity != null) {
+                StatsConsole.printlnInfo(String.format("Traversing root entity '%s'", baseRootEntity.getName()));
                 traverse(1, timeStamp, "", rootNode.get("data"), baseRootEntity);
                 statsStore.submit(baseRootEntity);
             } else
                 StatsConsole.printlnWarn(String.format("StatsParser.parse [IGNORED ROOT TYPE]: %s", name));
         } else {
             String json = rootNode.toString();
-            StatsConsole.printlnWarn(String.format("StatsParser.parse [INVALID ROOT NODE]: %s", json.substring(Math.min(100, json.length()))));
+            String message = String.format("StatsParser.parse [INVALID ROOT NODE]: %s", json.substring(Math.min(100, json.length())));
+            StatsConsole.printlnWarn(message);
         }
     }
 
@@ -75,12 +76,15 @@ public class StatsParser {
     private void traverseProperty(final String currentNodeName, final JsonNodeType currentNodeType,
                                   final JsonNode currentNode, final BaseEntity parentEntity) {
         boolean r = parentEntity.setProperty(currentNodeName, currentNodeType, currentNode);
-        if (!r)
-            StatsConsole.printlnError(String.format("%s [UNHANDLED PROPERTY]: %s --- %s --- %s",
+        if (!r) {
+            String message = String.format("%s [UNHANDLED PROPERTY]: %s --- %s --- %s",
                     parentEntity.getClass().getSimpleName(),
                     currentNodeName,
                     currentNodeType,
-                    currentNode.asText("<empty>")));
+                    currentNode.asText("<empty>"));
+            StatsConsole.printlnError(message);
+            listeners.forEach(listener -> listener.onParserError(StatsParserListener.UNHANDLED_PROPERTY, message));
+        }
     }
 
     private void traverseObject(final int level, final long timeStamp, final String currentNodeName, final JsonNode currentNode, final BaseEntity parentEntity) {
@@ -100,10 +104,13 @@ public class StatsParser {
         if (childEntity != null) {
             parentEntity.getRoot().addChildEntity(level, childEntity);
             if (!parentEntity.setEntity(currentNodeName, childEntity)) {
-                StatsConsole.printlnError(String.format("%s [UNHANDLED CHILD ENTITY]: '%s' --- %s",
+                String message = String.format("%s [UNHANDLED CHILD ENTITY]: '%s' --- %s %s",
                         parentEntity.getClass().getSimpleName(),
                         currentNodeName,
-                        childEntity.getClass().getSimpleName()));
+                        childEntity.getClass().getSimpleName(),
+                        childEntity.getId());
+                StatsConsole.printlnError(message);
+                listeners.forEach(listener -> listener.onParserError(StatsParserListener.UNHANDLED_CHILD_ENTITY, message));
             }
         }
     }
@@ -116,11 +123,13 @@ public class StatsParser {
                 long childEntityId = currentNode.get("_id").asLong();
                 final BaseEntity childEntity = createEntity(parentEntity, docType, childEntityId, timeStamp);
                 if (!childEntity.handleAuxId(auxEntityId)) {
-                    StatsConsole.printlnError(String.format("%s [UNHANDLED AUX ID]: '%s' --- id=%s, aux=%s",
+                    String message = String.format("%s [UNHANDLED AUX ID]: '%s' --- id=%s, aux=%s",
                             childEntity.getClass().getSimpleName(),
                             currentNodeName,
                             childEntity.getId(),
-                            auxEntityId));
+                            auxEntityId);
+                    StatsConsole.printlnError(message);
+                    listeners.forEach(listener -> listener.onParserError(StatsParserListener.UNHANDLED_AUX_ID, message));
                 }
                 return childEntity;
             }
@@ -140,6 +149,7 @@ public class StatsParser {
     public BaseRootEntity createRootEntity(final String name, final long timeStamp) {
         BaseRootEntity entity;
         switch (name) {
+            case "config_tree": entity = new NullRootEntity(timeStamp); break;
             case "config_sports": entity = null; break;
             case "match_timeline":
             case "match_timelinedelta":
@@ -175,10 +185,15 @@ public class StatsParser {
             case "stats_team_info": entity = new StatsTeamInfo(timeStamp); break;
             case "stats_team_lastx": entity = new StatsTeamLastX(timeStamp); break;
             case "stats_team_nextx": entity = new StatsTeamNextX(timeStamp); break;
+            case "stats_team_squad": entity = new StatsTeamSquad(timeStamp); break;
             case "stats_team_versusrecent":
             case "stats_team_versus":
                 entity = new StatsTeamVersus(timeStamp); break;
-            default: StatsConsole.printlnError("StatsParser.createRootEntity [UNKNOWN ROOT TYPE]: " + name); entity = new NullRootEntity(timeStamp);
+            default:
+                String message = "StatsParser.createRootEntity [UNKNOWN ROOT TYPE]: " + name;
+                StatsConsole.printlnError(message);
+                listeners.forEach(listener -> listener.onParserError(StatsParserListener.UNKNOWN_ROOT_TYPE, message));
+                entity = new NullRootEntity(timeStamp);
         }
         return entity;
     }
@@ -188,7 +203,9 @@ public class StatsParser {
         switch (docType) {
             case "season": entity = new SeasonEntity(parent, id); break;
             case "match": entity = new MatchEntity(parent, id); break;
-            case "player": entity = new PlayerEntity(parent, id); break;
+            case "player":
+            case "extendedplayer":
+                entity = new PlayerEntity(parent, id); break;
             case "team":
             case "teams.home":
             case "teams.away":
@@ -237,8 +254,16 @@ public class StatsParser {
             case "team_over_under": entity = new TeamOverUnderEntity(parent, id, timeStamp); break;
             case "team_player_top_list_entry": entity = new TeamPlayerTopListEntryEntity(parent, id, timeStamp); break;
 
-            default: StatsConsole.printlnError("StatsParser.createEntity [UNKNOWN ENTITY TYPE]: " + docType); entity = new NullEntity(parent);
+            default:
+                String message = "StatsParser.createEntity [UNKNOWN ENTITY TYPE]: " + docType;
+                StatsConsole.printlnError(message);
+                listeners.forEach(listener -> listener.onParserError(StatsParserListener.UNKNOWN_ENTITY_TYPE, message));
+                entity = new NullEntity(parent);
         }
         return entity;
+    }
+
+    public void addListener(StatsParserListener listener) {
+        this.listeners.add(listener);
     }
 }

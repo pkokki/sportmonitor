@@ -17,12 +17,6 @@ public abstract class BaseRootEntity extends BaseTimeEntity {
         this.addChildEntity(1, this);
     }
 
-    public BaseRootEntity(BaseRootEntityType type, EntityId id) {
-        super(null, id);
-        this.__name = type.getName();
-        this.addChildEntity(1, this);
-    }
-
     public final String getName() {
         return __name;
     }

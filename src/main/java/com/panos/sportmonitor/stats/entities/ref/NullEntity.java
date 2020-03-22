@@ -5,6 +5,8 @@ import com.panos.sportmonitor.stats.EntityId;
 
 public class NullEntity extends BaseEntity {
     public NullEntity(BaseEntity parent) {
-        super(parent, new EntityId(-1, NullEntity.class));
+        super(parent, new EntityId(Long.MAX_VALUE, NullEntity.class));
     }
+
+
 }

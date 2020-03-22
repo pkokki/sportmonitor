@@ -8,8 +8,10 @@ import com.panos.sportmonitor.stats.EntityId;
 
 public class PlayerEntity extends BaseEntity {
     private String name, fullName;
-    private Long birthDate;
-    private EntityId nationalityId, secondNationalityId;
+    private Long birthDate, marketValue;
+    private Integer height, weight;
+    private String foot, birthPlace, twitter, facebook;
+    private EntityId nationalityId, secondNationalityId, birthCountryId;
     private EntityId positionId;
 
     public PlayerEntity(BaseEntity parent, long id) {
@@ -22,8 +24,18 @@ public class PlayerEntity extends BaseEntity {
             case "name": this.name = node.asText(); break;
             case "fullname": this.fullName = node.asText(); break;
             case "birthdate.uts": this.birthDate = node.asLong(); break;
+            case "marketvalue": this.marketValue = node.asLong(); break;
+            case "height": this.height = node.asInt(); break;
+            case "weight": this.weight = node.asInt(); break;
+            case "_foot": this.foot = node.asText(); break;
+            case "foot": break;
+            case "birthplace": this.birthPlace = node.asText(); break;
+            case "twitter": this.twitter = node.asText(); break;
+            case "facebook": this.facebook = node.asText(); break;
             case "primarypositiontype": if (!node.isNull()) return false; break;
-            case "membersince.uts": return getParent().setChildProperty(this, nodeName, nodeType, node);
+            case "membersince.uts":
+                getParent().setChildProperty(this, nodeName, nodeType, node);
+                break;
             case "jerseynumber":
             case "shirtnumber":
             case "birthdate._doc":
@@ -69,6 +81,9 @@ public class PlayerEntity extends BaseEntity {
                 break;
             case "position":
                 this.positionId = new EntityId(childEntity);
+                break;
+            case "birthcountry":
+                this.birthCountryId = new EntityId(childEntity);
                 break;
             default:
                 return super.handleChildEntity(entityName, childEntity);

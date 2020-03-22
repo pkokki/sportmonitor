@@ -216,6 +216,7 @@ public class UniqueTeamEntity extends BaseEntity {
         switch (entityName) {
             case "countrycode": this.countryCodeId = new EntityId(childEntity); return true;
             case "stadium": this.stadiumId = new EntityId(childEntity); return true;
+            case "realcategory": this.realCategoryId = new EntityId(childEntity); return true;
             default:
                 return super.handleChildEntity(entityName, childEntity);
         }

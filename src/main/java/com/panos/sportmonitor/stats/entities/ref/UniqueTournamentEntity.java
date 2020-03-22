@@ -9,6 +9,7 @@ public class UniqueTournamentEntity extends BaseEntity {
     private String name;
     private EntityId realCategoryId;
     private Boolean friendly;
+    private Integer levelOrder;
 
     public UniqueTournamentEntity(BaseEntity parent, long id) {
         super(parent, new EntityId(id, UniqueTournamentEntity.class));
@@ -20,7 +21,9 @@ public class UniqueTournamentEntity extends BaseEntity {
             case "name": this.name = node.asText(); break;
             case "_rcid": this.realCategoryId = new EntityId(node.asLong(), RealCategoryEntity.class); break;
             case "friendly": this.friendly = node.asBoolean(); break;
+            case "tournamentlevelorder": this.levelOrder = node.asInt(); break;
             case "_utid":
+            case "_sk":
             case "currentseason":
                 break;
             default:
@@ -35,6 +38,7 @@ public class UniqueTournamentEntity extends BaseEntity {
                 ", name='" + name + '\'' +
                 ", realCategory=" + realCategoryId +
                 ", friendly=" + friendly +
+                ", levelOrder=" + levelOrder +
                 '}';
     }
 }

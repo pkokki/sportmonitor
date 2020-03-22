@@ -29,6 +29,7 @@ public class BaseRootEntityType {
     public static final BaseRootEntityType StatsTeamNextX = new BaseRootEntityType(25, "StatsTeamNextX");
     public static final BaseRootEntityType StatsTeamOddsClient = new BaseRootEntityType(26, "StatsTeamOddsClient");
     public static final BaseRootEntityType StatsTeamVersus = new BaseRootEntityType(27, "StatsTeamVersus");
+    public static final BaseRootEntityType StatsTeamSquad = new BaseRootEntityType(28, "StatsTeamSquad");
 
     private final int id;
     private final String name;

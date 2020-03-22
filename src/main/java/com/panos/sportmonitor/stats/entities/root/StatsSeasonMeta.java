@@ -74,6 +74,9 @@ public class StatsSeasonMeta extends BaseRootEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
+            case "cupids[]":
+            case "brackets[]":
+                break;
             case "tournamentids[]": tournaments.add(new EntityId(node.asLong(), TournamentEntity.class)); break;
             case "tableids[]": tables.add(new EntityId(node.asLong(), LeagueTableEntity.class)); break;
             case "statscoverage.complexstat": this.statsCoverageComplexStat = node.asBoolean(); break;

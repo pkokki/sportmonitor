@@ -62,6 +62,7 @@ public class TournamentEntity extends BaseEntity {
 
             case "_tid":
             case "_utid":
+            case "_sk":
                 break;
             default:
                 return super.handleProperty(nodeName, nodeType, node);

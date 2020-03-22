@@ -18,6 +18,7 @@ public class RealCategoryEntity extends BaseEntity {
         switch (nodeName) {
             case "name": this.name = node.asText(); break;
             case "_rcid":
+            case "_sk":
                 break;
             default:
                 return super.handleProperty(nodeName, nodeType, node);
@@ -29,6 +30,8 @@ public class RealCategoryEntity extends BaseEntity {
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         if (entityName.equals("cc")) {
             this.countryId = new EntityId(childEntity);
+            return true;
+        } else if (entityName.equals("tournaments[]") || entityName.startsWith("uniquetournaments.")) {
             return true;
         }
         return super.handleChildEntity(entityName, childEntity);

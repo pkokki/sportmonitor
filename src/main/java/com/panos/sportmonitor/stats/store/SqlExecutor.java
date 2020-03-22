@@ -12,6 +12,7 @@ import scala.Tuple2;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,8 @@ public class SqlExecutor extends StatsStoreListener {
     }
 
     private final HashMap<Tuple2<String, EntityId>, SqlStatement> statements = new LinkedHashMap<>();
-    private boolean printSql, execSql;
+    private final List<SqlExecutorListener> listeners = new LinkedList<>();
+    private final boolean printSql, execSql;
     private long relationIndex = 0;
 
     public SqlExecutor(boolean execSql, boolean printSql) {
@@ -135,8 +137,8 @@ public class SqlExecutor extends StatsStoreListener {
             }
         }
         int successCounter = 0, successNoInfoCounter = 0, totalRowsAffected = 0, failCounter = 0;
-        for (int i = 0; i < results.length; i++) {
-            int value = results[i];
+        if (results.length == 0) failCounter = sqlCounter;
+        for (int value : results) {
             // A number greater than or equal to zero -- indicates that the command was processed successfully and is
             // an update count giving the number of rows in the database that were affected by the command's execution
             if (value >= 0) {
@@ -162,6 +164,11 @@ public class SqlExecutor extends StatsStoreListener {
         }
         StatsConsole.printlnState(String.format("SQL statements in batch: Total=%d, Success=%d, SuccessNoInfo=%d, Failed=%d, TotalRowsAffected=%d",
                 sqlCounter, successCounter, successNoInfoCounter, failCounter, totalRowsAffected));
+        for (SqlExecutorListener listener : listeners) listener.onSqlExecutorCompleted(sqlCounter, successCounter, failCounter);
+    }
+
+    public void addSqlExecutorListener(SqlExecutorListener listener) {
+        this.listeners.add(listener);
     }
 
     private static class SqlStatement {

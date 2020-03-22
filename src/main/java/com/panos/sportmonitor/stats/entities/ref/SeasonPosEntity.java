@@ -32,7 +32,7 @@ public class SeasonPosEntity extends BaseEntity {
             case "round": this.round = node.asInt(); break;
             case "position": this.position = node.asInt(); break;
             case "seasonid": this.seasonId = new EntityId(node.asLong(), SeasonEntity.class); break;
-            case "matchid": this.matchId = new EntityId(node.asLong(), MatchEntity.class); break;
+            case "matchid": if (node.asLong() != -1) this.matchId = new EntityId(node.asLong(), MatchEntity.class); break;
             case "moved": this.moved = node.asText(); break;
             default:
                 return super.handleProperty(nodeName, nodeType, node);
