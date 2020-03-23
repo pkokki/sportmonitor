@@ -77,8 +77,9 @@ public class StatsParser {
                                   final JsonNode currentNode, final BaseEntity parentEntity) {
         boolean r = parentEntity.setProperty(currentNodeName, currentNodeType, currentNode);
         if (!r) {
-            String message = String.format("%s [UNHANDLED PROPERTY]: %s --- %s --- %s",
+            String message = String.format("%s %s [UNHANDLED PROPERTY]: %s --- %s --- %s",
                     parentEntity.getClass().getSimpleName(),
+                    parentEntity.getId(),
                     currentNodeName,
                     currentNodeType,
                     currentNode.asText("<empty>"));
@@ -121,7 +122,7 @@ public class StatsParser {
             if (currentNode.has("_id")) {
                 long auxEntityId = getAuxEntityId(currentNodeName);
                 long childEntityId = currentNode.get("_id").asLong();
-                final BaseEntity childEntity = createEntity(parentEntity, docType, childEntityId, timeStamp);
+                final BaseEntity childEntity = createEntity(parentEntity, docType, childEntityId, timeStamp, currentNode);
                 if (!childEntity.handleAuxId(auxEntityId)) {
                     String message = String.format("%s [UNHANDLED AUX ID]: '%s' --- id=%s, aux=%s",
                             childEntity.getClass().getSimpleName(),
@@ -198,7 +199,7 @@ public class StatsParser {
         return entity;
     }
 
-    public BaseEntity createEntity(final BaseEntity parent, final String docType, final long id, final long timeStamp) {
+    public BaseEntity createEntity(final BaseEntity parent, final String docType, final long id, final long timeStamp, final JsonNode currentNode) {
         BaseEntity entity;
         switch (docType) {
             case "season": entity = new SeasonEntity(parent, id); break;
@@ -241,6 +242,12 @@ public class StatsParser {
             case "status": entity = new MatchStatusEntity(parent, id); break;
             case "event": entity = new MatchEventEntity(parent, id); break;
             case "match_situation_entry": entity = new MatchSituationEntryEntity(parent, id); break;
+            case "playerrole": entity = new UniqueTeamPlayerEntity(parent,
+                    currentNode.get("team").get("_id").asLong(),
+                    currentNode.get("_playerid").asLong(),
+                    currentNode.get("_type").asInt()
+                    );
+                break;
 
             case "match_details_entry": entity = new MatchDetailsEntryEntity(parent, id, timeStamp); break;
             case "odds": entity = new OddsEntity(parent, id, timeStamp); break;

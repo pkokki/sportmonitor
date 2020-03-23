@@ -53,7 +53,11 @@ public abstract class BaseEntity {
     }
 
     public boolean handleAuxId(long auxEntityId) {
-        return auxEntityId == 0 || Objects.equals(id.getId(), auxEntityId);
+        if (auxEntityId == 0 || Objects.equals(id.getId(), auxEntityId))
+            return true;
+        if (id instanceof CompositeId)
+            return ((CompositeId)id).getValues().contains(auxEntityId);
+        return false;
     }
 
     public JsonNode transformChildNode(final String currentNodeName, final int index, final JsonNode childNode) {

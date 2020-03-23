@@ -1,5 +1,8 @@
 package com.panos.sportmonitor.stats;
 
+import com.google.common.collect.Lists;
+
+import java.util.List;
 import java.util.Objects;
 
 public class EntityId {
@@ -26,14 +29,25 @@ public class EntityId {
         this.timeStamp = timeStamp;
         this.entityClass = entityClass;
     }
+    protected EntityId(Class<? extends BaseEntity> entityClass) {
+        this.id = 0;
+        this.timeStamp = 0;
+        this.entityClass = entityClass;
+    }
 
 
     public boolean isComposite() {
-        return timeStamp != Long.MAX_VALUE;
+        return timeStamp != Long.MAX_VALUE && timeStamp != 0;
+    }
+    public boolean isMultiple() {
+        return false;
+    }
+    public List<Object> getValues() {
+        return Lists.newArrayList(id);
     }
     public long getId() { return id; }
     public long getTimeStamp() {
-        if (timeStamp == Long.MAX_VALUE)
+        if (timeStamp == Long.MAX_VALUE || timeStamp == 0)
             throw new IllegalArgumentException("Invalid use of EntityId.getTimeStamp(). EntityId is not composite.");
         return timeStamp;
     }
@@ -44,7 +58,7 @@ public class EntityId {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || !(o instanceof EntityId)) return false;
         EntityId entityId = (EntityId) o;
         return id == entityId.id && timeStamp == entityId.timeStamp && entityClass.equals(entityId.entityClass);
     }

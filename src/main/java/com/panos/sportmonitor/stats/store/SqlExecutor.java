@@ -1,8 +1,6 @@
 package com.panos.sportmonitor.stats.store;
 
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.EntityId;
-import com.panos.sportmonitor.stats.StatsConsole;
+import com.panos.sportmonitor.stats.*;
 import com.panos.sportmonitor.stats.entities.ref.NullEntity;
 import com.panos.sportmonitor.stats.entities.root.NullRootEntity;
 import org.apache.commons.lang3.builder.Diff;
@@ -101,7 +99,12 @@ public class SqlExecutor extends StatsStoreListener {
     }
 
     private void addEntityId(SqlStatement statement, EntityId id, String prefix) {
-        statement.addField(prefix + SqlUtils.FIELD_ID, id.getId());
+        if (id.isMultiple()) {
+            for (EntityKey key : ((CompositeId)id).getKeys())
+                statement.addField(prefix + SqlUtils.transform(key.getName()), key.getValue());
+        } else {
+            statement.addField(prefix + SqlUtils.FIELD_ID, id.getId());
+        }
         if (id.isComposite())
             statement.addField(prefix + SqlUtils.FIELD_TIMESTAMP, id.getTimeStamp());
     }

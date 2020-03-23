@@ -1,8 +1,6 @@
 package com.panos.sportmonitor.stats.store;
 
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.EntityId;
-import com.panos.sportmonitor.stats.StatsConsole;
+import com.panos.sportmonitor.stats.*;
 import org.apache.commons.lang3.builder.Diff;
 import scala.Tuple3;
 
@@ -22,9 +20,15 @@ public class SqlTableCreator extends StatsStoreListener {
     public void onCreate(BaseEntity entity) {
         List<FieldInfo> sqlFields = getTableFields(getTableName(entity));
         if (sqlFields.isEmpty()) {
-            sqlFields.add(new FieldInfo(SqlUtils.FIELD_ID, "Long", 0, true));
-            if (entity.getId().isComposite())
-                sqlFields.add(new FieldInfo(SqlUtils.FIELD_TIMESTAMP, "Long", 0, true));
+            EntityId id = entity.getId();
+            if (id.isMultiple()) {
+                for (EntityKey key : ((CompositeId)id).getKeys())
+                    sqlFields.add(new FieldInfo(SqlUtils.transform(key.getName()), "Long", 0, true));
+            } else {
+                sqlFields.add(new FieldInfo(SqlUtils.FIELD_ID, "Long", 0, true));
+                if (entity.getId().isComposite())
+                    sqlFields.add(new FieldInfo(SqlUtils.FIELD_TIMESTAMP, "Long", 0, true));
+            }
         }
     }
 
@@ -84,7 +88,7 @@ public class SqlTableCreator extends StatsStoreListener {
         do {
             cycleProcessed = 0;
             for (TableInfo tableInfo : sqlData.keySet()) {
-                if (!processedTables.contains(tableInfo.name)
+                if (suppressFKs || !processedTables.contains(tableInfo.name)
                         && (tableInfo.foreignKeys.size() == 0 || tableInfo.foreignKeys.stream().allMatch(e -> e._2().equals(tableInfo.name) || processedTables.contains(e._2())))) {
                     createTable(sb, tableInfo, sqlData.get(tableInfo));
                     processedTables.add(tableInfo.name);
@@ -93,7 +97,6 @@ public class SqlTableCreator extends StatsStoreListener {
                     --remainingCount;
                 }
             }
-            System.out.println("Remaining=" + remainingCount + ", cycle processed=" + cycleProcessed);
         } while (remainingTables.size() > 0 && cycleProcessed > 0);
         if (remainingTables.size() > 0) {
             StringBuilder ex = new StringBuilder();
