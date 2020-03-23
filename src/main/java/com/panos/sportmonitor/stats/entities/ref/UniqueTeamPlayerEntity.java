@@ -13,12 +13,11 @@ public class UniqueTeamPlayerEntity extends BaseEntity {
     private String shirt;
 
     public UniqueTeamPlayerEntity(BaseEntity parent, long teamId, long playerId, long type) {
-        super(parent, new CompositeId(UniqueTeamPlayerEntity.class,
-                Lists.newArrayList(
+        super(parent, new CompositeId(Lists.newArrayList(
                         new EntityKey("teamId", teamId),
                         new EntityKey("playerId", playerId),
                         new EntityKey("type", type)
-                )));
+                ), UniqueTeamPlayerEntity.class));
     }
 
     @Override

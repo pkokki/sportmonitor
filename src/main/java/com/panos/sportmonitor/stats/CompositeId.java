@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class CompositeId extends EntityId {
     private final List<EntityKey> keys;
 
-    public CompositeId(Class<? extends BaseEntity> entityClass, List<EntityKey> keys) {
+    public CompositeId(List<EntityKey> keys, Class<? extends BaseEntity> entityClass) {
         super(entityClass);
         this.keys = keys;
     }
