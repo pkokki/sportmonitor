@@ -28,14 +28,13 @@ public class PlayerEntity extends BaseEntity {
             case "height": this.height = node.asInt(); break;
             case "weight": this.weight = node.asInt(); break;
             case "_foot": this.foot = node.asText(); break;
-            case "foot": break;
             case "birthplace": this.birthPlace = node.asText(); break;
             case "twitter": this.twitter = node.asText(); break;
             case "facebook": this.facebook = node.asText(); break;
             case "primarypositiontype": if (!node.isNull()) return false; break;
             case "membersince.uts":
-                getParent().setChildProperty(this, nodeName, nodeType, node);
-                break;
+                return getParent().setChildProperty(this, nodeName, nodeType, node);
+            case "foot":
             case "jerseynumber":
             case "shirtnumber":
             case "birthdate._doc":
@@ -93,12 +92,21 @@ public class PlayerEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        return "PlayerEntity{" + "id=" + getId() +
+        return "PlayerEntity{" +
+                "id=" + getId() +
                 ", name='" + name + '\'' +
-                ", fullname='" + fullName + '\'' +
-                ", birthdate=" + birthDate +
+                ", fullName='" + fullName + '\'' +
+                ", birthDate=" + birthDate +
+                ", marketValue=" + marketValue +
+                ", height=" + height +
+                ", weight=" + weight +
+                ", foot='" + foot + '\'' +
+                ", birthPlace='" + birthPlace + '\'' +
+                ", twitter='" + twitter + '\'' +
+                ", facebook='" + facebook + '\'' +
                 ", nationalityId=" + nationalityId +
                 ", secondNationalityId=" + secondNationalityId +
+                ", birthCountryId=" + birthCountryId +
                 ", positionId=" + positionId +
                 '}';
     }

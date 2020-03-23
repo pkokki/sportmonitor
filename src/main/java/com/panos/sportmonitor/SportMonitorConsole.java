@@ -17,13 +17,13 @@ public class SportMonitorConsole {
     public static void main(String[] args) throws IOException {
         StatsStore store = new StatsStore();
         store.addListener(new StoreCounterListener());
-        store.addListener(new SqlTableCreator(true));
-        store.addListener(new SqlExecutor(false,true));
+        //store.addListener(new SqlTableCreator(true));
+        store.addListener(new SqlExecutor(true,true));
         StatsParser parser = new StatsParser(store);
 
         File folder = new File("C:\\panos\\betting\\radar\\logs\\");
         String[] extensions = new String[] { "json" };
-        List<File> files = (List<File>) FileUtils.listFiles(folder, extensions, false).stream().sorted().collect(Collectors.toList());
+        List<File> files = FileUtils.listFiles(folder, extensions, false).stream().sorted().collect(Collectors.toList());
         System.out.println(String.format("Found %d files in folder %s", files.size(), folder.getAbsolutePath()));
         for (File file : files) {
             parser.parse(file);

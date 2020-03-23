@@ -4,16 +4,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.google.common.collect.Lists;
 import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.CompositeId;
+import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.EntityKey;
 
 public class UniqueTeamPlayerEntity extends BaseEntity {
-    private Long start, end;
+    private Long startTime, endTime;
     private Boolean active;
     private String shirt;
 
-    public UniqueTeamPlayerEntity(BaseEntity parent, long teamId, long playerId, long type) {
-        super(parent, new CompositeId(Lists.newArrayList(
+    public UniqueTeamPlayerEntity(BaseEntity parent, long teamId, long playerId, int type) {
+        super(parent, new EntityId(Lists.newArrayList(
                         new EntityKey("teamId", teamId),
                         new EntityKey("playerId", playerId),
                         new EntityKey("type", type)
@@ -29,8 +29,8 @@ public class UniqueTeamPlayerEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "start.uts": this.start = node.asLong(); break;
-            case "end.uts": this.end = node.asLong(); break;
+            case "start.uts": this.startTime = node.asLong(); break;
+            case "end.uts": this.endTime = node.asLong(); break;
             case "active":this.active = node.asBoolean(); break;
             case "shirt":this.shirt = node.asText(); break;
             case "_playerid":
@@ -61,8 +61,8 @@ public class UniqueTeamPlayerEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        return "UniqueTeamPlayerEntity{" + "start=" + start +
-                ", end=" + end +
+        return "UniqueTeamPlayerEntity{" + "start=" + startTime +
+                ", end=" + endTime +
                 ", active=" + active +
                 ", shirt='" + shirt + '\'' +
                 '}';

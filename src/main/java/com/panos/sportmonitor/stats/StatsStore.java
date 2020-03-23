@@ -86,10 +86,14 @@ public class StatsStore {
             return;
         final String entityFieldType = newValue.getClass().getSimpleName();
         switch (entityFieldType) {
+            case "int":
             case "Integer":
+            case "long":
             case "Long":
+            case "double":
             case "Double":
             case "Boolean":
+            case "boolean":
             case "String":
                 if (isUpdate) ReflectionUtils.setValue(entity, entityField, newValue);
                 listeners.forEach(o -> o.onPropertyChange(entity, entityFieldName, oldValue, newValue));
@@ -145,20 +149,16 @@ public class StatsStore {
             return false;
         if (oldValue instanceof EntityIdList)
             return !((EntityIdList)oldValue).isEmpty();
-        if (oldValue instanceof HashMap<?,?>)
-            return !((HashMap<?,?>)oldValue).isEmpty();
         return true;
     }
 
     private boolean isAcceptedDiff(String fieldName, Object oldValue, Object newValue) {
-        if (fieldName.equals("parent") || fieldName.equals("auxId") || fieldName.equals("childEntities") || fieldName.startsWith("__"))
+        if (fieldName.startsWith("__"))
             return false;
         if (newValue == null || Objects.equals(newValue, ""))
             return false;
         if (newValue instanceof EntityIdList)
             return !((EntityIdList)newValue).isEmpty() && !ListUtils.subtract((EntityIdList)newValue, (EntityIdList)oldValue).isEmpty();
-        if (newValue instanceof HashMap<?,?>)
-            return !((HashMap<?,?>)newValue).isEmpty();
         return true;
     }
 }

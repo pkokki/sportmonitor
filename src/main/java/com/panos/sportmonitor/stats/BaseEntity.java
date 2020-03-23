@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import org.apache.commons.math3.exception.OutOfRangeException;
 
 import java.util.List;
-import java.util.Objects;
 
 public abstract class BaseEntity {
     private final static List<String> __IGNORED = Lists.newArrayList("_doc", "_id", "_sid");
@@ -53,11 +52,7 @@ public abstract class BaseEntity {
     }
 
     public boolean handleAuxId(long auxEntityId) {
-        if (auxEntityId == 0 || Objects.equals(id.getId(), auxEntityId))
-            return true;
-        if (id instanceof CompositeId)
-            return ((CompositeId)id).getValues().contains(auxEntityId);
-        return false;
+        return auxEntityId == 0 || id.getKeys().stream().anyMatch(k -> k.getValue().equals(auxEntityId));
     }
 
     public JsonNode transformChildNode(final String currentNodeName, final int index, final JsonNode childNode) {

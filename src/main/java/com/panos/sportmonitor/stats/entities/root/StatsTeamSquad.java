@@ -46,9 +46,9 @@ public class StatsTeamSquad extends BaseRootEntity {
 
     @Override
     protected boolean handleChildProperty(BaseEntity childEntity, String nodeName, JsonNodeType nodeType, JsonNode node) {
-        if (nodeName.equals("membersince.uts"))
-            return true; //players.setProperty(childEntity, nodeName, nodeType, node);
-        else
+//        if (nodeName.equals("membersince.uts"))
+//            return true; //players.setProperty(childEntity, nodeName, nodeType, node);
+//        else
         return super.handleChildProperty(childEntity, nodeName, nodeType, node);
     }
 }

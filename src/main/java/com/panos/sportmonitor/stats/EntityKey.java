@@ -3,8 +3,8 @@ package com.panos.sportmonitor.stats;
 import java.util.Objects;
 
 public class EntityKey {
-    private final Object value;
     private final String name;
+    private final Object value;
 
     public EntityKey(String name, Object value) {
         this.name = name;
@@ -27,9 +27,8 @@ public class EntityKey {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EntityKey entityKey = (EntityKey) o;
-        return value.equals(entityKey.value) &&
-                name.equals(entityKey.name);
+        EntityKey other = (EntityKey) o;
+        return value.equals(other.value) && name.equals(other.name);
     }
 
     @Override

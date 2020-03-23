@@ -214,7 +214,9 @@ public class UniqueTeamEntity extends BaseEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "countrycode": this.countryCodeId = new EntityId(childEntity); return true;
+            case "countrycode":
+            case "cc":
+                this.countryCodeId = new EntityId(childEntity); return true;
             case "stadium": this.stadiumId = new EntityId(childEntity); return true;
             case "realcategory": this.realCategoryId = new EntityId(childEntity); return true;
             default:
