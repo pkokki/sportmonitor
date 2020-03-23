@@ -6,7 +6,6 @@ import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.StatsConsole;
 
-import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -16,7 +15,7 @@ public abstract class BaseEntityAssociation {
     private final HashMap<EntityId, Properties> children;
     private final HashMap<String, Class<?>> properties;
 
-    public BaseEntityAssociation(@NotNull BaseEntity master, @NotNull Class<? extends BaseEntity> childEntityClass) {
+    public BaseEntityAssociation(BaseEntity master, Class<? extends BaseEntity> childEntityClass) {
         this.master = master;
         this.childEntityClass = childEntityClass;
         this.children = new HashMap<>();

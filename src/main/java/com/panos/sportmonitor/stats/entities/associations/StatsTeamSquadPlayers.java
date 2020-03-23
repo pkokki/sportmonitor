@@ -5,10 +5,8 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.entities.PlayerEntity;
 
-import javax.validation.constraints.NotNull;
-
 public class StatsTeamSquadPlayers extends BaseEntityAssociation {
-    public StatsTeamSquadPlayers(@NotNull BaseEntity master) {
+    public StatsTeamSquadPlayers(BaseEntity master) {
         super(master, PlayerEntity.class);
     }
 

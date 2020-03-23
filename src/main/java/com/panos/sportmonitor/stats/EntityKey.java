@@ -1,14 +1,12 @@
 package com.panos.sportmonitor.stats;
 
-import org.codehaus.commons.nullanalysis.NotNull;
-
 import java.util.Objects;
 
 public class EntityKey {
     private final Object value;
     private final String name;
 
-    public EntityKey(@NotNull String name, @NotNull Object value) {
+    public EntityKey(String name, Object value) {
         this.name = name;
         this.value = value;
     }
