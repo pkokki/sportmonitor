@@ -10,6 +10,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SqlTableDiffer extends SqlStructureListener {
+    public SqlTableDiffer(boolean suppressFKs) {
+        super(suppressFKs);
+    }
+
     @Override
     protected void onComplete(List<TableInfo> tables) {
         for (TableInfo tableInfo : tables) {
@@ -58,7 +62,7 @@ public class SqlTableDiffer extends SqlStructureListener {
 
     private String createTable(TableInfo tableInfo) {
         StringBuilder sb = new StringBuilder();
-        appendTable(sb, tableInfo, false);
+        appendTable(sb, tableInfo);
         return sb.toString();
     }
 
@@ -89,7 +93,7 @@ public class SqlTableDiffer extends SqlStructureListener {
             }
             if (field.isPK && !tableMetadata.primaryKeys.contains(field.name)) {
                 // add PK
-                throw new IllegalStateException("Missing primary key: " + field.name);
+                throw new IllegalStateException(tableInfo.name + ": Missing primary key: " + field.name);
             }
         }
         return sb.toString();

@@ -1,6 +1,7 @@
 package com.panos.sportmonitor.stats;
 
 import com.google.common.collect.Lists;
+import org.apache.commons.lang.WordUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -58,6 +59,20 @@ public class EntityId {
     }
     public EntityId(Class<? extends BaseEntity> entityClass, EntityKey... ids) {
         this.keys = Collections.unmodifiableList(new LinkedList<>(Arrays.asList(ids)));
+        validateKeys(keys);
+        this.entityClass = entityClass;
+    }
+    public EntityId(Class<? extends BaseEntity> entityClass, EntityId... ids) {
+        List<EntityKey> newKeys = new LinkedList<>();
+        for (EntityId id : ids) {
+            String name = WordUtils.uncapitalize(id.getEntityClass().getSimpleName());
+            if (name.endsWith("Entity")) name = name.substring(0, name.length() - 6);
+            for (EntityKey key : id.getKeys()) {
+                String keyName = name + WordUtils.capitalize(key.getName());
+                newKeys.add(new EntityKey(keyName, key.getValue()));
+            }
+        }
+        this.keys = Collections.unmodifiableList(newKeys);
         validateKeys(keys);
         this.entityClass = entityClass;
     }

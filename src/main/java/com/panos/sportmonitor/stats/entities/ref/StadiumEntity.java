@@ -8,7 +8,6 @@ import com.panos.sportmonitor.stats.EntityId;
 
 public class StadiumEntity extends BaseEntity {
     private EntityId countryId;
-    private EntityIdList teamHomes = new EntityIdList();
     private String name;
     private String description;
     private String city;
@@ -29,15 +28,12 @@ public class StadiumEntity extends BaseEntity {
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
-        if (entityName.equals("cc")) {
+        if (entityName.equals("cc"))
             this.countryId = new EntityId(childEntity);
-        }
-        else if (entityName.equals("hometeams[]")) {
-            this.teamHomes.add(childEntity.getId());
-        }
-        else {
+        else if (entityName.equals("hometeams[]"))
+            this.getRoot().addChildEntity(new StadiumUniqueTeamEntity(this, this.getId(), childEntity.getId()));
+        else
             return super.handleChildEntity(entityName, childEntity);
-        }
         return true;
     }
 
@@ -66,7 +62,6 @@ public class StadiumEntity extends BaseEntity {
     @Override
     public String toString() {
         return "StadiumEntity{" + "id=" + getId() +
-                ", teamHomes=" + teamHomes +
                 ", countryId=" + countryId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

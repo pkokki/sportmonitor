@@ -174,7 +174,7 @@ public class StatsParser {
             case "match_timelinedelta":
                 entity = new MatchTimeline(timeStamp); break;
             case "match_detailsextended": entity = new MatchDetailsExtended(timeStamp); break;
-            case "match_info": entity = null; break;
+            case "match_info": entity = new MatchInfo(timeStamp); break;
             case "match_bookmakerodds": entity = null; break;
             case "stats_match_form": entity = null; break;
             case "match_funfacts": entity = new MatchFunFacts(timeStamp); break;

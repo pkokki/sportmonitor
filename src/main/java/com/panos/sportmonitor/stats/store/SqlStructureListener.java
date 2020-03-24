@@ -13,9 +13,11 @@ import java.util.stream.Collectors;
 
 public abstract class SqlStructureListener extends StatsStoreListener {
     private final Map<String, TableInfo> sqlData;
+    private final boolean suppressFKs;
 
-    public SqlStructureListener() {
+    public SqlStructureListener(boolean suppressFKs) {
         this.sqlData = new LinkedHashMap<>();
+        this.suppressFKs = suppressFKs;
     }
 
     @Override
@@ -110,7 +112,7 @@ public abstract class SqlStructureListener extends StatsStoreListener {
             for (String tableName : Lists.newArrayList(remainingTables)) {
                 TableInfo tableInfo = sqlData.get(tableName);
                 if (tableInfo.getForeignKeys().stream().map(Tuple3::_2).allMatch(
-                        name -> name.equals(tableName) || processedTables.contains(name)
+                        name -> name.equals(tableName) || processedTables.contains(name) || !remainingTables.contains(name)
                 )) {
                     tables.add(tableInfo);
                     processedTables.add(tableName);
@@ -131,12 +133,14 @@ public abstract class SqlStructureListener extends StatsStoreListener {
                     }
                 });
             }
-            StatsConsole.printlnWarn("Cycle or unknown FK in foreign keys!!" + ex.toString());
+            StatsConsole.printlnWarn("Cycle in foreign keys!!" + ex.toString());
         }
+        if (suppressFKs)
+            tables.addAll(remainingTables.stream().map(sqlData::get).collect(Collectors.toList()));
         return tables;
     }
 
-    protected void appendTable(StringBuilder sb, TableInfo tableInfo, boolean suppressFKs) {
+    protected void appendTable(StringBuilder sb, TableInfo tableInfo) {
         List<FieldInfo> fields = tableInfo.getFields();
         sb.append("DROP TABLE IF EXISTS ").append(tableInfo.name).append(";").append("\n");
         sb.append("CREATE TABLE ").append(tableInfo.name).append(" (").append("\n");
