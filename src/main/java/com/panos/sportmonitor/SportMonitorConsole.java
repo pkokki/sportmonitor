@@ -18,7 +18,7 @@ public class SportMonitorConsole {
         StatsStore store = new StatsStore();
         store.addListener(new StoreCounterListener());
         //store.addListener(new SqlTableCreator(true));
-        store.addListener(new SqlExecutor(true,true));
+        store.addListener(new SqlExecutor(true,false));
         StatsParser parser = new StatsParser(store);
 
         File folder = new File("C:\\panos\\betting\\radar\\logs\\");
