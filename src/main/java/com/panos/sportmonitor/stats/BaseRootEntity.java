@@ -22,6 +22,9 @@ public abstract class BaseRootEntity extends BaseTimeEntity {
         return __name;
     }
 
+    public void addChildEntity(BaseEntity entity) {
+        addChildEntity(2, entity);
+    }
     public void addChildEntity(int level, BaseEntity entity) {
         __childEntities.add(new Tuple2<>(level, entity));
         handleAsyncProperties(entity);
@@ -75,4 +78,7 @@ public abstract class BaseRootEntity extends BaseTimeEntity {
                 '}';
     }
 
+    public boolean isType(BaseRootEntityType type) {
+        return this.getName().equals(type.getName());
+    }
 }

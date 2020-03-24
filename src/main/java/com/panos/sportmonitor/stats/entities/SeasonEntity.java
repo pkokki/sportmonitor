@@ -30,6 +30,11 @@ public class SeasonEntity extends BaseEntity {
     }
 
     @Override
+    public boolean handleAuxId(long auxEntityId) {
+        return true;
+    }
+
+    @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
             case "uniquetournament": this.uniqueTournamentId = new EntityId(childEntity); break;

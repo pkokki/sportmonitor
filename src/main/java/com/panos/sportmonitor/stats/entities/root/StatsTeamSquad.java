@@ -44,12 +44,12 @@ public class StatsTeamSquad extends BaseRootEntity {
             return true;
         else if (entityName.equals("managers[]")) {
             this.__lastManager = new UniqueTeamManagerEntity(this, uniqueTeamId.getId(), childEntity.getId().getId());
-            this.getRoot().addChildEntity(1, __lastManager);
+            this.getRoot().addChildEntity(__lastManager);
             return true;
         }
         else if (entityName.startsWith("seasons.")) {
             UniqueTeamSeasonEntity uts = new UniqueTeamSeasonEntity(this, uniqueTeamId.getId(), childEntity.getId().getId());
-            this.getRoot().addChildEntity(1, uts);
+            this.getRoot().addChildEntity(uts);
             return true;
         }
         else if (entityName.startsWith("roles.")) {

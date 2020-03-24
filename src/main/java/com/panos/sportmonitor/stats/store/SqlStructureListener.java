@@ -131,7 +131,7 @@ public abstract class SqlStructureListener extends StatsStoreListener {
                     }
                 });
             }
-            StatsConsole.printlnError("Cycle or unknown FK in foreign keys!!" + ex.toString());
+            StatsConsole.printlnWarn("Cycle or unknown FK in foreign keys!!" + ex.toString());
         }
         return tables;
     }

@@ -7,6 +7,7 @@ import com.panos.sportmonitor.stats.entities.*;
 import com.panos.sportmonitor.stats.entities.ref.*;
 import com.panos.sportmonitor.stats.entities.root.*;
 import com.panos.sportmonitor.stats.entities.time.*;
+import org.apache.commons.lang.WordUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,19 +79,36 @@ public class StatsParser {
                                   final JsonNode currentNode, final BaseEntity parentEntity) {
         boolean r = parentEntity.setProperty(currentNodeName, currentNodeType, currentNode);
         if (!r) {
-            String message = String.format("%s %s [UNHANDLED PROPERTY]: %s --- %s --- %s",
+            String message = String.format("%s %s [UNHANDLED PROPERTY]: %s --- %s --- %s >> %s",
                     parentEntity.getClass().getSimpleName(),
                     parentEntity.getId(),
                     currentNodeName,
                     currentNodeType,
-                    currentNode.asText("<empty>"));
+                    currentNode.asText("<empty>"),
+                    String.format("case \"%s\": this.%s = node.%s(); break;", currentNodeName, getJavaName(currentNodeName), getJsonNodeFunc(currentNode, currentNodeType)));
             StatsConsole.printlnError(message);
             listeners.forEach(listener -> listener.onParserError(StatsParserListener.UNHANDLED_PROPERTY, message));
         }
     }
 
+    private String getJavaName(String name) {
+        return WordUtils.uncapitalize(
+                WordUtils.capitalize(name.replace(".", " ").replace("_", " "))
+                        .replace(" ", ""));
+    }
+    private String getJsonNodeFunc(JsonNode node, JsonNodeType nodeType) {
+        switch (nodeType) {
+            case NUMBER: return node.asLong() < 1000 ? "asInt" : "asLong";
+            case BOOLEAN: return "asBoolean";
+            case STRING: return "asText";
+            default: return "asXXX";
+        }
+    }
+
     private void traverseObject(final int level, final long timeStamp, final String currentNodeName, final JsonNode currentNode, final BaseEntity parentEntity) {
-        final BaseEntity childEntity = tryCreateChildEntity(timeStamp, currentNodeName, currentNode, parentEntity);
+        BaseEntity childEntity = tryCreateChildEntity(timeStamp, currentNodeName, currentNode, parentEntity);
+        if (childEntity == null)
+            childEntity = parentEntity.tryCreateChildEntity(timeStamp, currentNodeName, currentNode);
 
         if (childEntity != null) {
             parentEntity.getRoot().addChildEntity(level, childEntity);
@@ -187,6 +205,7 @@ public class StatsParser {
             case "stats_team_lastx": entity = new StatsTeamLastX(timeStamp); break;
             case "stats_team_nextx": entity = new StatsTeamNextX(timeStamp); break;
             case "stats_team_squad": entity = new StatsTeamSquad(timeStamp); break;
+            case "stats_teamplayer_facts": entity = new StatsTeamPlayerFacts(timeStamp); break;
             case "stats_team_versusrecent":
             case "stats_team_versus":
                 entity = new StatsTeamVersus(timeStamp); break;
@@ -252,7 +271,14 @@ public class StatsParser {
             case "odds": entity = new OddsEntity(parent, id, timeStamp); break;
             case "team_form_table": entity = new TeamFormTableEntity(parent, id, timeStamp); break;
             case "team_form_entry": entity = new TeamFormEntryEntity(parent, id, timeStamp); break;
-            case "toplistentry": entity = new TopListEntryEntity(parent, id, timeStamp); break;
+            case "toplistentry":
+                if (parent.getRoot().isType(BaseRootEntityType.StatsTeamPlayerFacts)) {
+                    long teamId = Long.parseLong(currentNode.get("teams").fields().next().getKey());
+                    entity = new UniqueTeamPlayerEntity(parent, teamId, id);
+                }
+                else
+                    entity = new TopListEntryEntity(parent, id, timeStamp);
+                break;
             case "team_goal_stats": entity = new TeamGoalStatsEntity(parent, id, timeStamp); break;
             case "unique_team_stats": entity = new UniqueTeamStatsEntity(parent, id, timeStamp); break;
             case "match_funfact": entity = new MatchFunFactEntity(parent, id, timeStamp); break;

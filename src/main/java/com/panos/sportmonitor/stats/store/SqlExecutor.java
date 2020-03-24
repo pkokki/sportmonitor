@@ -190,7 +190,7 @@ public class SqlExecutor extends StatsStoreListener {
                     .map(n -> n + "=" + prepareSql(fields.get(n)))
                     .collect(Collectors.toList());
             if (fieldValues.isEmpty())
-                return "";
+                return " ON CONFLICT DO NOTHING";
             return " ON CONFLICT (" +
                     primaryKeyNames +
                     ") DO UPDATE SET " +

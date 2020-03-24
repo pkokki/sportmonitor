@@ -88,4 +88,8 @@ public abstract class BaseEntity {
     protected void setAsyncProperty(String name, EntityId id, Consumer<BaseEntity> consumer) {
         this.getRoot().setAsyncProperty(name, id, consumer);
     }
+
+    public BaseEntity tryCreateChildEntity(long timeStamp, String nodeName, JsonNode node) {
+        return null;
+    }
 }
