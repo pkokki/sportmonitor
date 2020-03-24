@@ -12,7 +12,7 @@ public class PromotionEntity extends BaseEntity {
     private Integer position;
 
     public PromotionEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, PromotionEntity.class));
+        super(parent, new EntityId(PromotionEntity.class, id));
     }
 
     @Override

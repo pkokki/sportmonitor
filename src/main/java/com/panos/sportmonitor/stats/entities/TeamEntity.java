@@ -17,19 +17,19 @@ public class TeamEntity extends BaseEntity {
     private EntityId countryId;
 
     public TeamEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, TeamEntity.class));
+        super(parent, new EntityId(TeamEntity.class, id));
     }
 
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "uid": if (node.asLong() > 0) this.uid = new EntityId(node.asLong(), UniqueTeamEntity.class); break;
+            case "uid": if (node.asLong() > 0) this.uid = new EntityId(UniqueTeamEntity.class, node.asLong()); break;
             case "name": this.name = node.asText(); break;
             case "abbr": this.abbr = node.asText(); break;
             case "nickname": this.nickname = node.asText(); break;
             case "mediumname": this.mediumName = node.asText(); break;
             case "iscountry": this.isCountry = node.asBoolean(); break;
-            case "homerealcategoryid": this.homeRealCategoryId = new EntityId(node.asLong(), RealCategoryEntity.class); break;
+            case "homerealcategoryid": this.homeRealCategoryId = new EntityId(RealCategoryEntity.class, node.asLong()); break;
 
             case "haslogo":
             case "virtual":

@@ -10,7 +10,7 @@ public class MatchTypeEntity extends BaseEntity {
     private Long setTypeId;
 
     public MatchTypeEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, MatchTypeEntity.class));
+        super(parent, new EntityId(MatchTypeEntity.class, id));
     }
 
     @Override

@@ -26,7 +26,7 @@ public class TableRowEntity extends BaseEntity {
             pctAway, pctGoalsAway, pctGamePointsAway;
 
     public TableRowEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, TableRowEntity.class));
+        super(parent, new EntityId(TableRowEntity.class, id));
     }
 
     @Override

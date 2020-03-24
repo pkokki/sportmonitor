@@ -16,7 +16,7 @@ public class PlayerStatusEntity extends BaseEntity {
     private Integer statusMissing, statusDoubtful;
 
     public PlayerStatusEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, PlayerStatusEntity.class));
+        super(parent, new EntityId(PlayerStatusEntity.class, id));
     }
 
     @Override
@@ -32,7 +32,7 @@ public class PlayerStatusEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch(nodeName) {
-            case "_playerid": this.playerId = new EntityId(node.asLong(), PlayerEntity.class); break;
+            case "_playerid": this.playerId = new EntityId(PlayerEntity.class, node.asLong()); break;
             case "status._statusid": this.statusId = node.asInt(); break;
             case "status.name": this.statusName = node.asText(); break;
             case "status.comment": this.statusComment = node.asText(); break;

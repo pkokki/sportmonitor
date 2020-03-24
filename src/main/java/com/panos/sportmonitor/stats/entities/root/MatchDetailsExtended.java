@@ -18,7 +18,7 @@ public class MatchDetailsExtended extends BaseRootEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "_matchid": this.matchId = new EntityId(node.asLong(), MatchEntity.class); break;
+            case "_matchid": this.matchId = new EntityId(MatchEntity.class, node.asLong()); break;
             case "teams.home": this.teamHome = node.asText(); break;
             case "teams.away": this.teamAway = node.asText(); break;
 

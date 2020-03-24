@@ -208,7 +208,7 @@ public class UniqueTeamEntity extends BaseEntity {
 
 
     public UniqueTeamEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, UniqueTeamEntity.class));
+        super(parent, new EntityId(UniqueTeamEntity.class, id));
     }
 
     @Override
@@ -227,8 +227,8 @@ public class UniqueTeamEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "_rcid": this.realCategoryId = new EntityId(node.asLong(), RealCategoryEntity.class); break;
-            case "homerealcategoryid": this.homeRealCategoryId = new EntityId(node.asLong(), RealCategoryEntity.class); break;
+            case "_rcid": this.realCategoryId = new EntityId(RealCategoryEntity.class, node.asLong()); break;
+            case "homerealcategoryid": this.homeRealCategoryId = new EntityId(RealCategoryEntity.class, node.asLong()); break;
             case "teamtypeid": this.teamTypeId = node.asLong(); break;
             case "name": this.name = node.asText(); break;
             case "suffix": this.suffix = node.asText(); break;

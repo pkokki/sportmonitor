@@ -15,14 +15,14 @@ public class UniqueTeamFormEntity extends BaseEntity {
     private Double total3, total5, total7, total9;
 
     public UniqueTeamFormEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, UniqueTeamFormEntity.class));
+        super(parent, new EntityId(UniqueTeamFormEntity.class, id));
     }
 
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "uniqueteamid": this.uniqueTeamId = new EntityId(node.asLong(), UniqueTeamEntity.class); break;
-            case "matchid": this.matchId = new EntityId(node.asLong(), MatchEntity.class); break;
+            case "uniqueteamid": this.uniqueTeamId = new EntityId(UniqueTeamEntity.class, node.asLong()); break;
+            case "matchid": this.matchId = new EntityId(MatchEntity.class, node.asLong()); break;
             case "form.home.3": this.home3 = node.asDouble(); break;
             case "form.home.5": this.home5 = node.asDouble(); break;
             case "form.home.7": this.home7 = node.asDouble(); break;

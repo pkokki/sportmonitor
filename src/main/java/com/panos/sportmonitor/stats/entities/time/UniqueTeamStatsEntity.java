@@ -25,12 +25,12 @@ public class UniqueTeamStatsEntity extends BaseTimeEntity {
             yellowRedCardsMatches, shootingEfficiencyMatches;
 
     public UniqueTeamStatsEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(id, timeStamp, UniqueTeamStatsEntity.class));
+        super(parent, new EntityId(UniqueTeamStatsEntity.class, id, timeStamp));
     }
 
     @Override
     public boolean handleAuxId(long auxEntityId) {
-        this.uniqueTeamId = new EntityId(auxEntityId, UniqueTeamEntity.class);
+        this.uniqueTeamId = new EntityId(UniqueTeamEntity.class, auxEntityId);
         return true;
     }
 

@@ -13,7 +13,7 @@ public class CountryEntity extends BaseEntity {
     private Long population;
 
     public CountryEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, CountryEntity.class));
+        super(parent, new EntityId(CountryEntity.class, id));
     }
 
     @Override

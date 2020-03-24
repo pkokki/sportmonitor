@@ -15,7 +15,7 @@ public class PlayerEntity extends BaseEntity {
     private EntityId positionId;
 
     public PlayerEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, PlayerEntity.class));
+        super(parent, new EntityId(PlayerEntity.class, id));
     }
 
     @Override

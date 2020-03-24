@@ -44,6 +44,7 @@ public class StatsParser {
             if (baseRootEntity != null) {
                 StatsConsole.printlnInfo(String.format("Traversing root entity '%s'", baseRootEntity.getName()));
                 traverse(1, timeStamp, "", rootNode.get("data"), baseRootEntity);
+                baseRootEntity.endTraverse();
                 statsStore.submit(baseRootEntity);
             } else
                 StatsConsole.printlnWarn(String.format("StatsParser.parse [IGNORED ROOT TYPE]: %s", name));
@@ -244,8 +245,7 @@ public class StatsParser {
             case "match_situation_entry": entity = new MatchSituationEntryEntity(parent, id); break;
             case "playerrole": entity = new UniqueTeamPlayerEntity(parent,
                     currentNode.get("team").get("_id").asLong(),
-                    currentNode.get("_playerid").asLong(),
-                    currentNode.get("_type").asInt()
+                    currentNode.get("_playerid").asLong()
                     );
                 break;
 

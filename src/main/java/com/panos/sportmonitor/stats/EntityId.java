@@ -12,14 +12,14 @@ public class EntityId {
     private final List<EntityKey> keys;
     private final Class<? extends BaseEntity> entityClass;
 
-    public EntityId(long id, Class<? extends BaseEntity> entityClass) {
+    public EntityId(Class<? extends BaseEntity> entityClass, long id) {
         if (id <= 0)
             throw new IllegalArgumentException("Invalid id: " + id);
         this.keys = Collections.unmodifiableList(Lists.newArrayList(new EntityKey(KEY_ID, id)));
         this.entityClass = entityClass;
     }
 
-    public EntityId(long id, long timeStamp, Class<? extends BaseEntity> entityClass) {
+    public EntityId(Class<? extends BaseEntity> entityClass, long id, long timeStamp) {
         if (id <= 0)
             throw new IllegalArgumentException("Invalid id: " + id);
         if (timeStamp <= 0)
@@ -51,9 +51,14 @@ public class EntityId {
         this.keys = Collections.unmodifiableList(new LinkedList<>(entity.getId().getKeys()));
         this.entityClass = entity.getId().getEntityClass();
     }
-    public EntityId(List<EntityKey> keys, Class<? extends BaseEntity> entityClass) {
+    public EntityId(Class<? extends BaseEntity> entityClass, List<EntityKey> keys) {
         validateKeys(keys);
         this.keys = Collections.unmodifiableList(keys);
+        this.entityClass = entityClass;
+    }
+    public EntityId(Class<? extends BaseEntity> entityClass, EntityKey... ids) {
+        this.keys = Collections.unmodifiableList(new LinkedList<>(Arrays.asList(ids)));
+        validateKeys(keys);
         this.entityClass = entityClass;
     }
 

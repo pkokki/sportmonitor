@@ -29,12 +29,12 @@ public class OddsEntity extends BaseTimeEntity {
     private String extra, closingTime;
 
     public OddsEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(id, timeStamp, OddsEntity.class));
+        super(parent, new EntityId(OddsEntity.class, id, timeStamp));
     }
 
     @Override
     public boolean handleAuxId(long auxEntityId) {
-        this.matchId = new EntityId(auxEntityId, MatchEntity.class);
+        this.matchId = new EntityId(MatchEntity.class, auxEntityId);
         return true;
     }
 

@@ -7,7 +7,7 @@ public class TeamOverUnderEntity extends OverUnderEntryEntity {
     private EntityId teamId;
 
     public TeamOverUnderEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(id, timeStamp, TeamOverUnderEntity.class));
+        super(parent, new EntityId(TeamOverUnderEntity.class, id, timeStamp));
     }
 
     @Override

@@ -30,7 +30,7 @@ public class LeagueTableEntity extends BaseEntity {
 
 
     public LeagueTableEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, LeagueTableEntity.class));
+        super(parent, new EntityId(LeagueTableEntity.class, id));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class LeagueTableEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "seasonid": this.seasonId = new EntityId(node.asLong(), SeasonEntity.class); break;
+            case "seasonid": this.seasonId = new EntityId(SeasonEntity.class, node.asLong()); break;
             case "maxrounds": this.maxRounds = node.asInt(); break;
             case "currentround": this.currentRound = node.asInt(); break;
             case "presentationid": this.presentationId = node.asInt(); break;
@@ -63,8 +63,8 @@ public class LeagueTableEntity extends BaseEntity {
             case "seasontypeunique": this.seasonTypeUnique = node.asText(); break;
             case "start.uts": this.seasonStart = node.asLong(); break;
             case "end.uts": this.seasonEnd = node.asLong(); break;
-            case "matches[]": matches.add(new EntityId(node.asLong(), MatchSituationEntryEntity.class)); break;
-            case "tournamentid": new EntityId(node.asLong(), TournamentEntity.class); break;
+            case "matches[]": matches.add(new EntityId(MatchSituationEntryEntity.class, node.asLong())); break;
+            case "tournamentid": new EntityId(TournamentEntity.class, node.asLong()); break;
             case "roundbyround":
             case "start._doc":
             case "start.time":

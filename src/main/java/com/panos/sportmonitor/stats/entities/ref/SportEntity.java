@@ -9,7 +9,7 @@ public class SportEntity extends BaseEntity {
     private String name;
 
     public SportEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, SportEntity.class));
+        super(parent, new EntityId(SportEntity.class, id));
     }
 
     @Override

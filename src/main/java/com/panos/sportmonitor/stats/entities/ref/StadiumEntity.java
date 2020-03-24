@@ -24,7 +24,7 @@ public class StadiumEntity extends BaseEntity {
     private String phone;
 
     public StadiumEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, StadiumEntity.class));
+        super(parent, new EntityId(StadiumEntity.class, id));
     }
 
     @Override

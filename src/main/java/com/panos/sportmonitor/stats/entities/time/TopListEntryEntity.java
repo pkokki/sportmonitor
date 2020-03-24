@@ -28,7 +28,7 @@ public class TopListEntryEntity extends BaseTimeEntity {
     private Integer totalSecondHalfCards;
 
     public TopListEntryEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(id, timeStamp, TopListEntryEntity.class));
+        super(parent, new EntityId(TopListEntryEntity.class, id, timeStamp));
     }
 
     @Override
@@ -59,7 +59,7 @@ public class TopListEntryEntity extends BaseTimeEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "playerid": this.playerId = new EntityId(node.asLong(), PlayerEntity.class); break;
+            case "playerid": this.playerId = new EntityId(PlayerEntity.class, node.asLong()); break;
             case "total.goals": this.totalGoals = node.asInt(); break;
             case "total.assists": this.totalAssists = node.asInt(); break;
             case "total.matches": this.totalMatches = node.asInt(); break;

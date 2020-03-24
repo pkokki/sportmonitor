@@ -31,16 +31,16 @@ public class TournamentEntity extends BaseEntity {
     private EntityIdList matches = new EntityIdList();
 
     public TournamentEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, TournamentEntity.class));
+        super(parent, new EntityId(TournamentEntity.class, id));
     }
 
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "_rcid": this.realCategoryId = new EntityId(node.asLong(), RealCategoryEntity.class); break;
+            case "_rcid": this.realCategoryId = new EntityId(RealCategoryEntity.class, node.asLong()); break;
             case "_isk": this.isk = node.asLong(); break;
-            case "seasonid": this.seasonId = new EntityId(node.asLong(), SeasonEntity.class); break;
-            case "currentseason": this.currentSeasonId = new EntityId(node.asLong(), SeasonEntity.class); break;
+            case "seasonid": this.seasonId = new EntityId(SeasonEntity.class, node.asLong()); break;
+            case "currentseason": this.currentSeasonId = new EntityId(SeasonEntity.class, node.asLong()); break;
             case "seasontype": this.seasonType = node.asText(); break;
             case "seasontypename": this.seasonTypeName = node.asText(); break;
             case "seasontypeunique": this.seasonTypeUnique = node.asText(); break;
@@ -58,7 +58,7 @@ public class TournamentEntity extends BaseEntity {
             case "tournamentlevelname": this.tournamentLevelName = node.asText(); break;
             case "groupname": this.groupName = node.asText(); break;
             case "currentround": this.currentRound = node.asInt(); break;
-            case "matches[]": this.matches.add(new EntityId(node.asLong(), MatchEntity.class)); break;
+            case "matches[]": this.matches.add(new EntityId(MatchEntity.class, node.asLong())); break;
 
             case "_tid":
             case "_utid":

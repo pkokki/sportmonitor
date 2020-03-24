@@ -77,8 +77,8 @@ public class StatsSeasonMeta extends BaseRootEntity {
             case "cupids[]":
             case "brackets[]":
                 break;
-            case "tournamentids[]": tournaments.add(new EntityId(node.asLong(), TournamentEntity.class)); break;
-            case "tableids[]": tables.add(new EntityId(node.asLong(), LeagueTableEntity.class)); break;
+            case "tournamentids[]": tournaments.add(new EntityId(TournamentEntity.class, node.asLong())); break;
+            case "tableids[]": tables.add(new EntityId(LeagueTableEntity.class, node.asLong())); break;
             case "statscoverage.complexstat": this.statsCoverageComplexStat = node.asBoolean(); break;
             case "statscoverage.livetable": this.statsCoverageLiveTable = node.asBoolean(); break;
             case "statscoverage.halftimetable": this.statsCoverageHalftimeTable = node.asBoolean(); break;

@@ -17,7 +17,7 @@ public class StatsMatchSituation extends BaseRootEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "matchid": this.matchId = new EntityId(node.asLong(), MatchEntity.class); break;
+            case "matchid": this.matchId = new EntityId(MatchEntity.class, node.asLong()); break;
             default: return super.handleProperty(nodeName, nodeType, node);
         }
         return true;

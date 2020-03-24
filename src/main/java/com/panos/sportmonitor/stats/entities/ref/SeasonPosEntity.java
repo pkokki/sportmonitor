@@ -17,12 +17,12 @@ public class SeasonPosEntity extends BaseEntity {
     private String moved;
 
     public SeasonPosEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, SeasonPosEntity.class));
+        super(parent, new EntityId(SeasonPosEntity.class, id));
     }
 
     @Override
     public boolean handleAuxId(long auxEntityId) {
-        this.uniqueTeamId = new EntityId(auxEntityId, UniqueTeamEntity.class);
+        this.uniqueTeamId = new EntityId(UniqueTeamEntity.class, auxEntityId);
         return true;
     }
 
@@ -31,8 +31,8 @@ public class SeasonPosEntity extends BaseEntity {
         switch (nodeName) {
             case "round": this.round = node.asInt(); break;
             case "position": this.position = node.asInt(); break;
-            case "seasonid": this.seasonId = new EntityId(node.asLong(), SeasonEntity.class); break;
-            case "matchid": if (node.asLong() != -1) this.matchId = new EntityId(node.asLong(), MatchEntity.class); break;
+            case "seasonid": this.seasonId = new EntityId(SeasonEntity.class, node.asLong()); break;
+            case "matchid": if (node.asLong() != -1) this.matchId = new EntityId(MatchEntity.class, node.asLong()); break;
             case "moved": this.moved = node.asText(); break;
             default:
                 return super.handleProperty(nodeName, nodeType, node);

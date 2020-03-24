@@ -10,7 +10,7 @@ public class TieBreakRuleEntity extends BaseEntity {
     private String name;
 
     public TieBreakRuleEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, TieBreakRuleEntity.class));
+        super(parent, new EntityId(TieBreakRuleEntity.class, id));
     }
 
     @Override

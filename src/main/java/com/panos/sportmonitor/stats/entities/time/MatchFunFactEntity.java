@@ -11,7 +11,7 @@ public class MatchFunFactEntity extends BaseTimeEntity {
     private String sentence;
 
     public MatchFunFactEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(id, timeStamp, MatchFunFactEntity.class));
+        super(parent, new EntityId(MatchFunFactEntity.class, id, timeStamp));
     }
 
     @Override

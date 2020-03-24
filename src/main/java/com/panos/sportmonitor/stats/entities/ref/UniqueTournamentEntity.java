@@ -12,14 +12,14 @@ public class UniqueTournamentEntity extends BaseEntity {
     private Integer levelOrder;
 
     public UniqueTournamentEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, UniqueTournamentEntity.class));
+        super(parent, new EntityId(UniqueTournamentEntity.class, id));
     }
 
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
             case "name": this.name = node.asText(); break;
-            case "_rcid": this.realCategoryId = new EntityId(node.asLong(), RealCategoryEntity.class); break;
+            case "_rcid": this.realCategoryId = new EntityId(RealCategoryEntity.class, node.asLong()); break;
             case "friendly": this.friendly = node.asBoolean(); break;
             case "tournamentlevelorder": this.levelOrder = node.asInt(); break;
             case "_utid":

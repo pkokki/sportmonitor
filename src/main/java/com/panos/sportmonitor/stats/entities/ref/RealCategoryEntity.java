@@ -10,7 +10,7 @@ public class RealCategoryEntity extends BaseEntity {
     private EntityId countryId;
 
     public RealCategoryEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, RealCategoryEntity.class));
+        super(parent, new EntityId(RealCategoryEntity.class, id));
     }
 
     @Override

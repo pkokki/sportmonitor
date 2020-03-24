@@ -11,7 +11,7 @@ public class CupRoundEntity extends BaseEntity {
     private Integer statisticsSortOrder;
 
     public CupRoundEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, CupRoundEntity.class));
+        super(parent, new EntityId(CupRoundEntity.class, id));
     }
 
     @Override

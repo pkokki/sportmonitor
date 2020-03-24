@@ -9,7 +9,7 @@ public class MatchStatusEntity extends BaseEntity {
     private String name;
 
     public MatchStatusEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, MatchStatusEntity.class));
+        super(parent, new EntityId(MatchStatusEntity.class, id));
     }
 
     @Override

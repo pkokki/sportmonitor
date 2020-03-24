@@ -11,7 +11,7 @@ public class BookmakerEntity extends BaseEntity {
     private Boolean exchange;
 
     public BookmakerEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, BookmakerEntity.class));
+        super(parent, new EntityId(BookmakerEntity.class, id));
     }
 
     @Override

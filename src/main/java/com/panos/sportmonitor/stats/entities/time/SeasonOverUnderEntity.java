@@ -7,7 +7,7 @@ public class SeasonOverUnderEntity extends OverUnderEntryEntity {
     private EntityId seasonId;
 
     public SeasonOverUnderEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(id, timeStamp, SeasonOverUnderEntity.class));
+        super(parent, new EntityId(SeasonOverUnderEntity.class, id, timeStamp));
     }
 
     @Override

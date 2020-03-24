@@ -104,7 +104,7 @@ public class MatchEntity extends BaseEntity {
     private Integer cardsHomeYellow, cardsHomeRed, cardsAwayYellow, cardsAwayRed;
 
     public MatchEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, MatchEntity.class));
+        super(parent, new EntityId(MatchEntity.class, id));
     }
 
     @Override
@@ -160,10 +160,10 @@ public class MatchEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "_rcid": this.realCategoryId = new EntityId(node.asLong(), RealCategoryEntity.class); break;
-            case "_tid": this.tournamentId = new EntityId(node.asLong(), TournamentEntity.class); break;
-            case "_utid": this.uniqueTournamentId = new EntityId(node.asLong(), UniqueTournamentEntity.class); break;
-            case "_seasonid": this.seasonId = new EntityId(node.asLong(), SeasonEntity.class); break;
+            case "_rcid": this.realCategoryId = new EntityId(RealCategoryEntity.class, node.asLong()); break;
+            case "_tid": this.tournamentId = new EntityId(TournamentEntity.class, node.asLong()); break;
+            case "_utid": this.uniqueTournamentId = new EntityId(UniqueTournamentEntity.class, node.asLong()); break;
+            case "_seasonid": this.seasonId = new EntityId(SeasonEntity.class, node.asLong()); break;
             case "time.uts":
             case "_dt.uts":
                 this.time = node.asLong(); break;
@@ -177,20 +177,20 @@ public class MatchEntity extends BaseEntity {
             case "neutralground": this.neutralGround = node.asBoolean(); break;
             case "comment": this.comment = node.asText(); break;
             case "status": this.status = node.asText(); break;
-            case "nextmatchid": this.nextMatchiId = new EntityId(node.asLong(), MatchEntity.class); break;
+            case "nextmatchid": this.nextMatchiId = new EntityId(MatchEntity.class, node.asLong()); break;
             case "tobeannounced": this.toBeAnnounced = node.asBoolean(); break;
             case "postponed": this.postponed = node.asBoolean(); break;
             case "canceled": this.canceled = node.asBoolean(); break;
             case "inlivescore": this.inlivescore = node.asBoolean(); break;
             case "stadiumid":
             case "stadiumId":
-                this.stadiumId = node.asLong() > 0 ? new EntityId(node.asLong(), StadiumEntity.class) : null; break;
+                this.stadiumId = node.asLong() > 0 ? new EntityId(StadiumEntity.class, node.asLong()) : null; break;
             case "walkover": this.walkover = node.asBoolean(); break;
             case "retired": this.retired = node.asBoolean(); break;
             case "disqualified": this.disqualified = node.asBoolean(); break;
             case "dbfa": this.dbfa = node.asBoolean(); break;
-            case "history.previous": this.historyPreviousMatchId = node.isNull() ? null : new EntityId(node.asLong(), MatchEntity.class); break;
-            case "history.next": this.historyNextMatchId = node.isNull() ? null : new EntityId(node.asLong(), MatchEntity.class); break;
+            case "history.previous": this.historyPreviousMatchId = node.isNull() ? null : new EntityId(MatchEntity.class, node.asLong()); break;
+            case "history.next": this.historyNextMatchId = node.isNull() ? null : new EntityId(MatchEntity.class, node.asLong()); break;
             case "periods.p1.home": this.p1Home = node.asInt(); break;
             case "periods.p1.away": this.p1Away = node.asInt(); break;
             case "periods.ft.home": this.ftHome = node.asInt(); break;
@@ -210,7 +210,7 @@ public class MatchEntity extends BaseEntity {
             case "cards.away.red_count": this.cardsAwayRed = node.asInt(); break;
 
             case "odds.clientmatchid": this.oddsClientMatchId = node.asText(); break;
-            case "odds.bookmakerid": this.oddsBookmakerId = new EntityId(node.asLong(), BookmakerEntity.class); break;
+            case "odds.bookmakerid": this.oddsBookmakerId = new EntityId(BookmakerEntity.class, node.asLong()); break;
             case "odds.bookmakerbetid": this.oddsBookmakerBetId = node.asLong(); break;
             case "odds.oddstype": this.oddsType = node.asText(); break;
             case "odds.oddstypeshort": this.oddsTypeShort = node.asText(); break;
@@ -299,9 +299,9 @@ public class MatchEntity extends BaseEntity {
         Matcher matcher = regEx.matcher(nodeName);
         if (matcher.find()) {
             if (!node.isNull() && matcher.group(1).equals("teamhistory")) {
-                EntityId teamId = new EntityId(Long.parseLong(matcher.group(2)), UniqueTeamEntity.class);
+                EntityId teamId = new EntityId(UniqueTeamEntity.class, Long.parseLong(matcher.group(2)));
                 String prevNext = matcher.group(3);
-                EntityId matchId = new EntityId(node.asLong(), MatchEntity.class);
+                EntityId matchId = new EntityId(MatchEntity.class, node.asLong());
                 if (teamId.equals(this.teamHomeUid)) {
                     if (prevNext.equals("previous")) this.homeTeamHistoryPrevMatchId = matchId;
                     if (prevNext.equals("next")) this.homeTeamHistoryNextMatchId = matchId;

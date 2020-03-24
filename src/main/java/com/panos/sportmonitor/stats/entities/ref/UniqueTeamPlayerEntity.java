@@ -2,22 +2,26 @@ package com.panos.sportmonitor.stats.entities.ref;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.google.common.collect.Lists;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.EntityKey;
 
 public class UniqueTeamPlayerEntity extends BaseEntity {
-    private Long startTime, endTime;
+    private Long startTime;
+    private Long endTime;
+    private Integer type;
     private Boolean active;
     private String shirt;
 
-    public UniqueTeamPlayerEntity(BaseEntity parent, long teamId, long playerId, int type) {
-        super(parent, new EntityId(Lists.newArrayList(
-                        new EntityKey("teamId", teamId),
-                        new EntityKey("playerId", playerId),
-                        new EntityKey("type", type)
-                ), UniqueTeamPlayerEntity.class));
+    public static EntityId createId(long teamId, long playerId) {
+        return new EntityId(UniqueTeamPlayerEntity.class,
+                new EntityKey("teamId", teamId),
+                new EntityKey("playerId", playerId)
+        );
+    }
+
+    public UniqueTeamPlayerEntity(BaseEntity parent, long teamId, long playerId) {
+        super(parent, createId(teamId, playerId));
     }
 
     @Override
@@ -29,12 +33,12 @@ public class UniqueTeamPlayerEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "start.uts": this.startTime = node.asLong(); break;
+            case "start.uts": this.setStartTime(node.asLong()); break;
             case "end.uts": this.endTime = node.asLong(); break;
-            case "active":this.active = node.asBoolean(); break;
-            case "shirt":this.shirt = node.asText(); break;
+            case "active": this.active = node.asBoolean(); break;
+            case "shirt": this.shirt = node.asText(); break;
+            case "_type": this.type = node.asInt(); break;
             case "_playerid":
-            case "_type":
             case "name":
             case "start._doc":
             case "start.time":
@@ -61,10 +65,17 @@ public class UniqueTeamPlayerEntity extends BaseEntity {
 
     @Override
     public String toString() {
-        return "UniqueTeamPlayerEntity{" + "start=" + startTime +
+        return "UniqueTeamPlayerEntity{" +
+                "id=" + getId() +
+                ", type=" + type +
+                ", start=" + startTime +
                 ", end=" + endTime +
                 ", active=" + active +
                 ", shirt='" + shirt + '\'' +
                 '}';
+    }
+
+    public void setStartTime(Long startTime) {
+        this.startTime = startTime;
     }
 }

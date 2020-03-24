@@ -29,12 +29,12 @@ public class TeamPlayerTopListEntryEntity extends BaseTimeEntity {
     private Integer secondHalfCards;
 
     public TeamPlayerTopListEntryEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(id, timeStamp, TeamPlayerTopListEntryEntity.class));
+        super(parent, new EntityId(TeamPlayerTopListEntryEntity.class, id, timeStamp));
     }
 
     @Override
     public boolean handleAuxId(long auxEntityId) {
-        this.uniqueTeamId = new EntityId(auxEntityId, UniqueTeamEntity.class);
+        this.uniqueTeamId = new EntityId(UniqueTeamEntity.class, auxEntityId);
         return true;
     }
 

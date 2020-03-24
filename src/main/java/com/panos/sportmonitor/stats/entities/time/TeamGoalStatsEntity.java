@@ -13,7 +13,7 @@ public class TeamGoalStatsEntity extends BaseTimeEntity {
     private Integer firstGoal, lastGoal, penaltySuccessCount, penaltyFailCount;
 
     public TeamGoalStatsEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(id, timeStamp, TeamGoalStatsEntity.class));
+        super(parent, new EntityId(TeamGoalStatsEntity.class, id, timeStamp));
     }
 
     @Override

@@ -6,6 +6,8 @@ import com.google.common.collect.Lists;
 import org.apache.commons.math3.exception.OutOfRangeException;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public abstract class BaseEntity {
     private final static List<String> __IGNORED = Lists.newArrayList("_doc", "_id", "_sid");
@@ -83,4 +85,7 @@ public abstract class BaseEntity {
                 ", ......}";
     }
 
+    protected void setAsyncProperty(String name, EntityId id, Consumer<BaseEntity> consumer) {
+        this.getRoot().setAsyncProperty(name, id, consumer);
+    }
 }

@@ -9,7 +9,7 @@ public class TableRoundEntity extends BaseEntity {
     private String name;
 
     public TableRoundEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, TableRoundEntity.class));
+        super(parent, new EntityId(TableRoundEntity.class, id));
     }
 
     @Override

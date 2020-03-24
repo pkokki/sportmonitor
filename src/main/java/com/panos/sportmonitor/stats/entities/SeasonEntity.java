@@ -26,7 +26,7 @@ public class SeasonEntity extends BaseEntity {
     private EntityIdList tournaments = new EntityIdList();
 
     public SeasonEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, SeasonEntity.class));
+        super(parent, new EntityId(SeasonEntity.class, id));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class SeasonEntity extends BaseEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "_utid": this.uniqueTournamentId = new EntityId(node.asLong(), UniqueTournamentEntity.class); break;
+            case "_utid": this.uniqueTournamentId = new EntityId(UniqueTournamentEntity.class, node.asLong()); break;
             case "name": this.name = node.asText(); break;
             case "abbr": this.abbr = node.asText(); break;
             case "start.uts": this.startDate = node.asLong(); break;

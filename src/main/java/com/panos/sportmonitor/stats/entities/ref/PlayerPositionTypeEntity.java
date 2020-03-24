@@ -12,7 +12,7 @@ public class PlayerPositionTypeEntity extends BaseEntity {
     private String abbr;
 
     public PlayerPositionTypeEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, PlayerPositionTypeEntity.class));
+        super(parent, new EntityId(PlayerPositionTypeEntity.class, id));
     }
 
     @Override

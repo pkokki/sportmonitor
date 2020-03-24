@@ -19,7 +19,7 @@ public class MatchEventEntity extends BaseEntity {
     private EntityIdList assists = new EntityIdList();
 
     public MatchEventEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, MatchEventEntity.class));
+        super(parent, new EntityId(MatchEventEntity.class, id));
     }
 
     @Override
@@ -31,7 +31,7 @@ public class MatchEventEntity extends BaseEntity {
             case "uts": this.eventTime = node.asLong(); break;
             case "updated_uts": this.updatedTime = node.asLong(); break;
             case "type": this.type = node.asText(); break;
-            case "matchid": this.matchId = new EntityId(node.asLong(), MatchEntity.class); break;
+            case "matchid": this.matchId = new EntityId(MatchEntity.class, node.asLong()); break;
             case "disabled": this.disabled = node.asBoolean(); break;
             case "time": this.minute = node.asInt(); break;
             case "seconds": this.seconds = node.asInt(); break;

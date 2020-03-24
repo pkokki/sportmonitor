@@ -68,7 +68,7 @@ public class SqlExecutor extends StatsStoreListener {
         InsertStatement insertStm = new InsertStatement(relTableName);
         insertStm.addEntityId(entity.getId(), SqlUtils.FIELD_REL_SOURCE_PREFIX, entityFieldName);
         insertStm.addEntityId(id, SqlUtils.FIELD_REL_TARGET_PREFIX, entityFieldName);
-        statements.put(new EntityId(++relationIndex, NullEntity.class), insertStm);
+        statements.put(new EntityId(NullEntity.class, ++relationIndex), insertStm);
     }
 
     public void submitChanges() {

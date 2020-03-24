@@ -17,7 +17,7 @@ public class TeamFormEntryEntity extends BaseTimeEntity {
     private EntityId matchId;
 
     public TeamFormEntryEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(id, timeStamp, TeamFormEntryEntity.class));
+        super(parent, new EntityId(TeamFormEntryEntity.class, id, timeStamp));
     }
 
     @Override
@@ -29,7 +29,7 @@ public class TeamFormEntryEntity extends BaseTimeEntity {
             case "value": this.value = node.asText(); break;
             case "homematch": this.homeMatch = node.asBoolean(); break;
             case "neutralground": this.neutralGround = node.asBoolean(); break;
-            case "matchid": this.matchId = new EntityId(node.asLong(), MatchEntity.class); break;
+            case "matchid": this.matchId = new EntityId(MatchEntity.class, node.asLong()); break;
             default: return super.handleProperty(nodeName, nodeType, node);
         }
         return true;

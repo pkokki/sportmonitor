@@ -11,7 +11,7 @@ public class MatchSituationEntryEntity extends BaseEntity {
     private Integer awayAttack, awayDangerous, awaySafe,awayAttackCount, awayDangerousCount, awaySafeCount;
 
     public MatchSituationEntryEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(id, MatchSituationEntryEntity.class));
+        super(parent, new EntityId(MatchSituationEntryEntity.class, id));
     }
 
     @Override
