@@ -7,6 +7,8 @@ import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.EntityKey;
 
 public class UniqueTeamPlayerEntity extends BaseEntity {
+    private final long __teamId;
+    private final long __playerId;
     private Long startTime;
     private Long endTime;
     private Integer type;
@@ -22,6 +24,20 @@ public class UniqueTeamPlayerEntity extends BaseEntity {
 
     public UniqueTeamPlayerEntity(BaseEntity parent, long teamId, long playerId) {
         super(parent, createId(teamId, playerId));
+        this.__teamId = teamId;
+        this.__playerId = playerId;
+    }
+
+    public long getTeamId() {
+        return __teamId;
+    }
+
+    public long getPlayerId() {
+        return __playerId;
+    }
+
+    public void setStartTime(Long startTime) {
+        this.startTime = startTime;
     }
 
     @Override
@@ -75,7 +91,4 @@ public class UniqueTeamPlayerEntity extends BaseEntity {
                 '}';
     }
 
-    public void setStartTime(Long startTime) {
-        this.startTime = startTime;
-    }
 }

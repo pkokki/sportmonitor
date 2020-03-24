@@ -185,14 +185,16 @@ public class SqlExecutor extends StatsStoreListener {
 
         private String getOnConflictDoUpdateClause() {
             String primaryKeyNames = String.join(", ", keys);
-            String fieldValues = fields.keySet().stream()
+            List<String> fieldValues = fields.keySet().stream()
                     .filter(n -> !keys.contains(n))
                     .map(n -> n + "=" + prepareSql(fields.get(n)))
-                    .collect(Collectors.joining(", "));
+                    .collect(Collectors.toList());
+            if (fieldValues.isEmpty())
+                return "";
             return " ON CONFLICT (" +
                     primaryKeyNames +
                     ") DO UPDATE SET " +
-                    fieldValues;
+                    String.join(", ", fieldValues);
         }
     }
 

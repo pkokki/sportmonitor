@@ -102,7 +102,7 @@ public abstract class SqlStructureListener extends StatsStoreListener {
 
     private List<TableInfo> orderTables() {
         List<TableInfo> tables = new LinkedList<>();
-        List<String> remainingTables = sqlData.keySet().stream().filter(e -> !e.equals("null_root") && !e.equals("null")).collect(Collectors.toList());
+        List<String> remainingTables = sqlData.keySet().stream().filter(e -> !e.startsWith("null")).collect(Collectors.toList());
         List<String> processedTables = new ArrayList<>();
         int cycleProcessed;
         do {

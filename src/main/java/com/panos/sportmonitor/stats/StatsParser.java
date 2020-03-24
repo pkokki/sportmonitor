@@ -90,18 +90,7 @@ public class StatsParser {
     }
 
     private void traverseObject(final int level, final long timeStamp, final String currentNodeName, final JsonNode currentNode, final BaseEntity parentEntity) {
-
         final BaseEntity childEntity = tryCreateChildEntity(timeStamp, currentNodeName, currentNode, parentEntity);
-
-        for (Iterator<Map.Entry<String, JsonNode>> it = currentNode.fields(); it.hasNext(); ) {
-            Map.Entry<String, JsonNode> childEntry = it.next();
-            String childName = childEntry.getKey();
-            JsonNode childNode = childEntry.getValue();
-            traverse(level + 1, timeStamp,
-                    childEntity != null ? childName : (currentNodeName.length() > 0 ? currentNodeName + "." : "") + childName,
-                    childNode,
-                    childEntity != null ? childEntity : parentEntity);
-        }
 
         if (childEntity != null) {
             parentEntity.getRoot().addChildEntity(level, childEntity);
@@ -114,6 +103,16 @@ public class StatsParser {
                 StatsConsole.printlnError(message);
                 listeners.forEach(listener -> listener.onParserError(StatsParserListener.UNHANDLED_CHILD_ENTITY, message));
             }
+        }
+
+        for (Iterator<Map.Entry<String, JsonNode>> it = currentNode.fields(); it.hasNext(); ) {
+            Map.Entry<String, JsonNode> childEntry = it.next();
+            String childName = childEntry.getKey();
+            JsonNode childNode = childEntry.getValue();
+            traverse(level + 1, timeStamp,
+                    childEntity != null ? childName : (currentNodeName.length() > 0 ? currentNodeName + "." : "") + childName,
+                    childNode,
+                    childEntity != null ? childEntity : parentEntity);
         }
     }
 
@@ -151,7 +150,7 @@ public class StatsParser {
     public BaseRootEntity createRootEntity(final String name, final long timeStamp) {
         BaseRootEntity entity;
         switch (name) {
-            case "config_tree": entity = new NullRootEntity(timeStamp); break;
+            case "config_tree": entity = new NullQuietRootEntity(timeStamp); break;
             case "config_sports": entity = null; break;
             case "match_timeline":
             case "match_timelinedelta":
