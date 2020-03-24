@@ -1,9 +1,21 @@
 package com.panos.sportmonitor.stats.store;
 
+import org.postgresql.ds.PGPoolingDataSource;
+
 public final class SqlUtils {
     static final String FIELD_REL_SOURCE_PREFIX = "src_";
     static final String FIELD_REL_TARGET_PREFIX = "dst_";
     static final String RELATION_SEPARATOR = "__";
+    static final PGPoolingDataSource DATA_SOURCE = new PGPoolingDataSource();
+
+    static {
+        DATA_SOURCE.setDataSourceName("livestats");
+        DATA_SOURCE.setServerName("localhost:5432");
+        DATA_SOURCE.setDatabaseName("livestats");
+        DATA_SOURCE.setUser("postgres");
+        DATA_SOURCE.setPassword("password");
+        DATA_SOURCE.setMaxConnections(20);
+    }
 
     public static String transformTableName(String str) {
         return transform(str.replace("Entity", ""));

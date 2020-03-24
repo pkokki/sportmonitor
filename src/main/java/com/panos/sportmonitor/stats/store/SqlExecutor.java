@@ -4,23 +4,12 @@ import com.panos.sportmonitor.stats.*;
 import com.panos.sportmonitor.stats.entities.ref.NullEntity;
 import com.panos.sportmonitor.stats.entities.root.NullRootEntity;
 import org.apache.commons.lang3.builder.Diff;
-import org.postgresql.ds.PGPoolingDataSource;
 
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class SqlExecutor extends StatsStoreListener {
-    private static final PGPoolingDataSource source = new PGPoolingDataSource();
-
-    static {
-        source.setDataSourceName("livestats");
-        source.setServerName("localhost:5432");
-        source.setDatabaseName("livestats");
-        source.setUser("postgres");
-        source.setPassword("password");
-        source.setMaxConnections(20);
-    }
 
     private final HashMap<EntityId, SqlStatement> statements = new LinkedHashMap<>();
     private final List<SqlExecutorListener> listeners = new LinkedList<>();
@@ -30,10 +19,6 @@ public class SqlExecutor extends StatsStoreListener {
     public SqlExecutor(boolean execSql, boolean printSql) {
         this.execSql = execSql;
         this.printSql = printSql;
-    }
-
-    private Connection getConnection() throws SQLException {
-        return source.getConnection();
     }
 
     @Override
@@ -90,7 +75,7 @@ public class SqlExecutor extends StatsStoreListener {
         int sqlCounter = 0;
         int[] results = new int[0];
         try (
-                Connection connection = getConnection();
+                Connection connection = SqlUtils.DATA_SOURCE.getConnection();
                 Statement statement = connection.createStatement()
         ) {
             for (SqlStatement sqlStm : statements.values()) {
