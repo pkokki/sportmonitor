@@ -2,13 +2,12 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.*;
 import com.panos.sportmonitor.stats.entities.MatchEntity;
+import com.panos.sportmonitor.stats.entities.ref.MatchSituationEntryEntity;
 
 public class StatsMatchSituation extends BaseRootEntity {
     private EntityId matchId;
-    private EntityIdList entries = new EntityIdList();
 
     public StatsMatchSituation(long timeStamp) {
         super(BaseRootEntityType.StatsMatchSituation, timeStamp);
@@ -16,39 +15,34 @@ public class StatsMatchSituation extends BaseRootEntity {
 
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
-        switch (nodeName) {
-            case "matchid": this.matchId = new EntityId(MatchEntity.class, node.asLong()); break;
-            default: return super.handleProperty(nodeName, nodeType, node);
+        if ("matchid".equals(nodeName)) {
+            this.matchId = new EntityId(MatchEntity.class, node.asLong());
+            return true;
+        } else {
+            return super.handleProperty(nodeName, nodeType, node);
         }
-        return true;
     }
 
     @Override
-    public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
-        if (currentNodeName.equals("data[]")) {
-            ObjectNode objNode = (ObjectNode)childNode;
-            objNode.put("_doc", "match_situation_entry");
-            objNode.put("_id", this.getRoot().getNext());
+    public BaseEntity tryCreateChildEntity(long timeStamp, String nodeName, JsonNode node) {
+        if (nodeName.equals("data[]")) {
+            return new MatchSituationEntryEntity(this, this.matchId, node.get("time").asInt(), node.get("injurytime").asInt());
         }
-        return super.transformChildNode(currentNodeName, index, childNode);
+        return super.tryCreateChildEntity(timeStamp, nodeName, node);
     }
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
-        switch (entityName) {
-            case "data[]": this.entries.add(childEntity.getId()); break;
-            default: return super.handleChildEntity(entityName, childEntity);
-        }
-        return true;
+        if ("data[]".equals(entityName))
+            return true;
+        else
+            return super.handleChildEntity(entityName, childEntity);
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("StatsMatchSituation{");
-        sb.append("name='").append(getName()).append('\'');
-        sb.append(", matchId=").append(matchId);
-        sb.append(", entries=").append(entries);
-        sb.append('}');
-        return sb.toString();
+        return "StatsMatchSituation{" + "name='" + getName() + '\'' +
+                ", matchId=" + matchId +
+                '}';
     }
 }

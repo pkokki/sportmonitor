@@ -4,21 +4,29 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityKey;
+
+import java.util.LinkedList;
 
 public class MatchSituationEntryEntity extends BaseEntity {
-    private Integer time, injuryTime, safe, safeCount;
+    private Integer safe, safeCount;
     private Integer homeAttack, homeDangerous, homeSafe,homeAttackCount, homeDangerousCount, homeSafeCount;
     private Integer awayAttack, awayDangerous, awaySafe,awayAttackCount, awayDangerousCount, awaySafeCount;
 
-    public MatchSituationEntryEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(MatchSituationEntryEntity.class, id));
+    public MatchSituationEntryEntity(BaseEntity parent, EntityId matchId, int time, int injuryTime) {
+        super(parent, createId(matchId, time, injuryTime));
+    }
+
+    private static EntityId createId(EntityId matchId, int time, int injuryTime) {
+        LinkedList<EntityKey> keys = new LinkedList<>(matchId.getKeys());
+        keys.add(new EntityKey("time", time));
+        keys.add(new EntityKey("injuryTime", injuryTime));
+        return new EntityId(MatchSituationEntryEntity.class, keys);
     }
 
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "time": this.time = node.asInt(); break;
-            case "injurytime": this.injuryTime = node.asInt(); break;
             case "safe": this.safe = node.asInt(); break;
             case "safecount": this.safeCount = node.asInt(); break;
             case "home.attack": this.homeAttack = node.asInt(); break;
@@ -33,6 +41,9 @@ public class MatchSituationEntryEntity extends BaseEntity {
             case "away.attackcount": this.awayAttackCount = node.asInt(); break;
             case "away.dangerouscount": this.awayDangerousCount = node.asInt(); break;
             case "away.safecount": this.awaySafeCount = node.asInt(); break;
+            case "time":
+            case "injurytime":
+                break;
             default: return super.handleProperty(nodeName, nodeType, node);
         }
         return true;
@@ -41,8 +52,6 @@ public class MatchSituationEntryEntity extends BaseEntity {
     @Override
     public String toString() {
         return "MatchSituationEntryEntity{" + "id=" + getId() +
-                ", time=" + time +
-                ", injuryTime=" + injuryTime +
                 ", safe=" + safe +
                 ", safeCount=" + safeCount +
                 ", homeAttack=" + homeAttack +

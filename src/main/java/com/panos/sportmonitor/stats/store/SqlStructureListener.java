@@ -247,10 +247,10 @@ public abstract class SqlStructureListener extends StatsStoreListener {
             sb.append(getSqlType());
             if (isPK) {
                 sb.append(" NOT NULL");
-                if (type.equals("String"))
-                    sb.append(" CONSTRAINT not_empty_").append(name).append(" CHECK (char_length(").append(name).append(") > 0)");
-                else
-                    sb.append(" CONSTRAINT positive_").append(name).append(" CHECK (").append(name).append(" > 0)");
+//                if (type.equals("String"))
+//                    sb.append(" CONSTRAINT not_empty_").append(name).append(" CHECK (char_length(").append(name).append(") > 0)");
+//                else
+//                    sb.append(" CONSTRAINT positive_").append(name).append(" CHECK (").append(name).append(" > 0)");
             }
             return sb.toString();
         }

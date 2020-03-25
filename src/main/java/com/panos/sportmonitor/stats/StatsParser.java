@@ -263,7 +263,7 @@ public class StatsParser {
             case "playerstatus": entity = new PlayerStatusEntity(parent, id); break;
             case "status": entity = new MatchStatusEntity(parent, id); break;
             case "event": entity = new MatchEventEntity(parent, id); break;
-            case "match_situation_entry": entity = new MatchSituationEntryEntity(parent, id); break;
+            case "match_situation_entry": entity = /*new MatchSituationEntryEntity(parent, id)*/null; break;
             case "playerrole": entity = new UniqueTeamPlayerEntity(parent,
                     currentNode.get("team").get("_id").asLong(),
                     currentNode.get("_playerid").asLong()
