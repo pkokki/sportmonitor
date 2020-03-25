@@ -3,19 +3,19 @@ package com.panos.sportmonitor.stats.entities.root;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseRootEntity;
-import com.panos.sportmonitor.stats.BaseRootEntityType;
-import com.panos.sportmonitor.stats.EntityIdList;
+import com.panos.sportmonitor.stats.*;
+import com.panos.sportmonitor.stats.entities.MatchEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MatchFunFacts extends BaseRootEntity {
-    private EntityIdList facts = new EntityIdList();
+    private final EntityId matchId;
 
-    public MatchFunFacts(long timeStamp) {
+    public MatchFunFacts(long timeStamp, long matchId) {
+
         super(BaseRootEntityType.MatchFunFacts, timeStamp);
+        this.matchId = MatchEntity.createId(matchId);
     }
 
     @Override
@@ -29,6 +29,7 @@ public class MatchFunFacts extends BaseRootEntity {
         if (currentNodeName.equals("facts")) {
             ObjectNode objNode = (ObjectNode)childNode;
             objNode.put("_doc", "match_funfact");
+            objNode.put("matchId", matchId.getId());
         }
         return super.transformChildNode(currentNodeName, index, childNode);
     }
@@ -36,18 +37,14 @@ public class MatchFunFacts extends BaseRootEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         if (entityName.equals("facts[]"))
-            this.facts.add(childEntity.getId());
-        else
-            return super.handleChildEntity(entityName, childEntity);
-        return true;
+            return true;
+        return super.handleChildEntity(entityName, childEntity);
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("MatchFunFacts{");
-        sb.append("name=").append(getName());
-        sb.append(", facts=").append(facts);
-        sb.append('}');
-        return sb.toString();
+        return "MatchFunFacts{" + "name=" + getName() +
+                ", matchId=" + matchId +
+                '}';
     }
 }

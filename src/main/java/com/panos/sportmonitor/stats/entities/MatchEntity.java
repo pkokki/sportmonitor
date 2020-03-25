@@ -107,6 +107,10 @@ public class MatchEntity extends BaseEntity {
         super(parent, new EntityId(MatchEntity.class, id));
     }
 
+    public static EntityId createId(long id) {
+        return new EntityId(MatchEntity.class, id);
+    }
+
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {

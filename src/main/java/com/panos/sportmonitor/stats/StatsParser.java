@@ -41,7 +41,7 @@ public class StatsParser {
         if (rootNode.has("_dob")) {
             final long timeStamp = rootNode.get("_dob").asLong();
             final String name = rootNode.get("event").asText();
-            final BaseRootEntity baseRootEntity = createRootEntity(name, timeStamp);
+            final BaseRootEntity baseRootEntity = createRootEntity(name, timeStamp, rootNode.get("data"));
             if (baseRootEntity != null) {
                 StatsConsole.printlnInfo(String.format("Traversing root entity '%s'", baseRootEntity.getName()));
                 traverse(1, timeStamp, "", rootNode.get("data"), baseRootEntity);
@@ -165,7 +165,7 @@ public class StatsParser {
         return 0;
     }
 
-    public BaseRootEntity createRootEntity(final String name, final long timeStamp) {
+    public BaseRootEntity createRootEntity(final String name, final long timeStamp, final JsonNode currentNode) {
         BaseRootEntity entity;
         switch (name) {
             case "config_tree": entity = new NullQuietRootEntity(timeStamp); break;
@@ -177,7 +177,8 @@ public class StatsParser {
             case "match_info": entity = new MatchInfo(timeStamp); break;
             case "match_bookmakerodds": entity = null; break;
             case "stats_match_form": entity = null; break;
-            case "match_funfacts": entity = new MatchFunFacts(timeStamp); break;
+            case "match_funfacts":
+                entity = new MatchFunFacts(timeStamp, currentNode.get("_id").asLong()); break;
             case "stats_match_get": entity = new StatsMatchGet(timeStamp); break;
             case "stats_match_situation": entity = new StatsMatchSituation(timeStamp); break;
 
@@ -281,7 +282,7 @@ public class StatsParser {
                 break;
             case "team_goal_stats": entity = new TeamGoalStatsEntity(parent, id, timeStamp); break;
             case "unique_team_stats": entity = new UniqueTeamStatsEntity(parent, id, timeStamp); break;
-            case "match_funfact": entity = new MatchFunFactEntity(parent, id, timeStamp); break;
+            case "match_funfact": entity = new MatchFunFactEntity(parent, id); break;
             case "season_over_under": entity = new SeasonOverUnderEntity(parent, id, timeStamp); break;
             case "team_over_under": entity = new TeamOverUnderEntity(parent, id, timeStamp); break;
             case "team_player_top_list_entry": entity = new TeamPlayerTopListEntryEntity(parent, id, timeStamp); break;
