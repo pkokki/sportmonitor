@@ -9,7 +9,9 @@ import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.entities.ref.UniqueTournamentEntity;
 
 public class SeasonEntity extends BaseEntity {
+    private EntityId realCategoryId;
     private EntityId uniqueTournamentId;
+
     private String name;
     private String abbr;
     private Long startDate;
@@ -18,12 +20,8 @@ public class SeasonEntity extends BaseEntity {
     private Boolean friendly;
     private String year;
     private Boolean coverageLineups;
-    private EntityIdList tables = new EntityIdList();
-    private EntityId realCategoryId;
     private EntityIdList iseOdds = new EntityIdList();
     private EntityIdList odds = new EntityIdList();
-    private EntityIdList matches = new EntityIdList();
-    private EntityIdList tournaments = new EntityIdList();
 
     public SeasonEntity(BaseEntity parent, long id) {
         super(parent, createId(id));
@@ -43,17 +41,17 @@ public class SeasonEntity extends BaseEntity {
         switch (entityName) {
             case "uniquetournament": this.uniqueTournamentId = new EntityId(childEntity); break;
             case "realcategory": this.realCategoryId = new EntityId(childEntity); break;
-            case "tables[]": this.tables.add(childEntity.getId()); break;
-            case "matches[]": this.matches.add(childEntity.getId()); break;
+            case "tables[]":
+            case "matches[]":break;
             default:
                 if (entityName.startsWith("iseodds."))
                     this.iseOdds.add(childEntity.getId());
                 else if (entityName.startsWith("odds."))
                     this.odds.add(childEntity.getId());
                 else if (entityName.startsWith("tournaments."))
-                    this.tournaments.add(childEntity.getId());
+                    break;
                 else if (entityName.startsWith("tables."))
-                    this.tables.add(childEntity.getId());
+                    break;
                 else return super.handleChildEntity(entityName, childEntity);
         }
         return true;
@@ -113,12 +111,9 @@ public class SeasonEntity extends BaseEntity {
                 ", friendly=" + friendly +
                 ", year='" + year + '\'' +
                 ", coverageLineups=" + coverageLineups +
-                ", tables=" + tables +
                 ", realCategoryId=" + realCategoryId +
                 ", iseOdds=" + iseOdds +
                 ", odds=" + odds +
-                ", matches=" + matches +
-                ", tournaments=" + tournaments +
                 '}';
     }
 }

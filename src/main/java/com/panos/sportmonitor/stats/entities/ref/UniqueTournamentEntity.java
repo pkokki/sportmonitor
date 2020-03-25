@@ -6,8 +6,8 @@ import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
 
 public class UniqueTournamentEntity extends BaseEntity {
-    private String name;
     private EntityId realCategoryId;
+    private String name;
     private Boolean friendly;
     private Integer levelOrder;
 

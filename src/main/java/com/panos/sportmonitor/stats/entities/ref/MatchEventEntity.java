@@ -10,6 +10,7 @@ import com.panos.sportmonitor.stats.entities.MatchEntity;
 public class MatchEventEntity extends BaseEntity {
     private EntityId matchId;
     private EntityId playerId, scorerId, playerOutId, playerInId, statusId, assistId;
+
     private Integer typeId, minute, seconds;
     private String type, name, goalType;
     private Long eventTime, updatedTime;

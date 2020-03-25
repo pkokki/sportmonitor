@@ -7,6 +7,11 @@ import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.entities.ref.RealCategoryEntity;
 
 public class UniqueTeamEntity extends BaseEntity {
+    private EntityId realCategoryId;
+    private EntityId countryCodeId;
+    private EntityId homeRealCategoryId;
+    private EntityId stadiumId;
+
     private String name;
     private String suffix;
     private String abbr;
@@ -16,11 +21,7 @@ public class UniqueTeamEntity extends BaseEntity {
     private String founded;
     private String website;
     private String sex;
-    private EntityId realCategoryId;
     private Long teamTypeId;
-    private EntityId countryCodeId;
-    private EntityId stadiumId;
-    private EntityId homeRealCategoryId;
 
     private Integer statsMatches;
     private Integer statsHomeMatches;

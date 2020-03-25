@@ -15,25 +15,9 @@ public class MatchEntity extends BaseEntity {
     private EntityId realCategoryId;
     private EntityId tournamentId;
     private EntityId uniqueTournamentId;
-    private Long time;
-    private String week;
-    private Integer round;
-    private Integer resultHome, resultAway;
-    private String resultPeriod;
-    private String resultWinner, resultBettingWinner;
     private EntityId seasonId;
     private EntityId teamHomeId, teamAwayId;
     private EntityId teamHomeUid, teamAwayUid;
-    private Boolean neutralGround;
-    private String comment;
-    private Boolean toBeAnnounced;
-    private Boolean postponed;
-    private Boolean canceled;
-    private Boolean inlivescore;
-    private Boolean walkover;
-    private Boolean retired;
-    private Boolean disqualified;
-    private Boolean dbfa;
     private EntityId managerHomeId;
     private EntityId managerAwayId;
     private EntityId roundNameId;
@@ -44,12 +28,31 @@ public class MatchEntity extends BaseEntity {
     private EntityId homeTeamHistoryNextMatchId;
     private EntityId awayTeamHistoryPrevMatchId;
     private EntityId awayTeamHistoryNextMatchId;
+    private EntityId oddsBookmakerId;
+    private EntityId nextMatchId;
+    private EntityId matchStatusId;
+
+    private Long time;
+    private String week;
+    private Integer round;
+    private Integer resultHome, resultAway;
+    private String resultPeriod;
+    private String resultWinner, resultBettingWinner;
+    private Boolean neutralGround;
+    private String comment;
+    private Boolean toBeAnnounced;
+    private Boolean postponed;
+    private Boolean canceled;
+    private Boolean inlivescore;
+    private Boolean walkover;
+    private Boolean retired;
+    private Boolean disqualified;
+    private Boolean dbfa;
     private Integer p1Home, p1Away, ftHome, ftAway, otHome, otAway, apHome, apAway;
     private Integer cupRoundMatchNumber;
     private Integer cupRoundNumberOfMatches;
     private Integer matchDifficultyRatingHome, matchDifficultyRatingAway;
     private String oddsClientMatchId;
-    private EntityId oddsBookmakerId;
     private Long oddsBookmakerBetId;
     private String oddsType;
     private String oddsTypeShort;
@@ -61,7 +64,6 @@ public class MatchEntity extends BaseEntity {
     private Boolean oddsBetstop;
     private Long oddsUpdated;
     private String status;
-    private EntityId nextMatchiId;
     private  Integer  coverageLineup ;
     private  Integer  coverageFormations ;
     private  Long  coverageLiveTable ;
@@ -97,7 +99,6 @@ public class MatchEntity extends BaseEntity {
     private  Integer  pitchCondition ;
     private  Integer  windAdvantage ;
     private String  matchStatus ;
-    private EntityId matchStatusId;
     private  Boolean  cancelled ;
     private Integer cardsHomeYellow, cardsHomeRed, cardsAwayYellow, cardsAwayRed;
     private EntityIdList teamForms = new EntityIdList();
@@ -180,7 +181,7 @@ public class MatchEntity extends BaseEntity {
             case "neutralground": this.neutralGround = node.asBoolean(); break;
             case "comment": this.comment = node.asText(); break;
             case "status": this.status = node.asText(); break;
-            case "nextmatchid": this.nextMatchiId = new EntityId(MatchEntity.class, node.asLong()); break;
+            case "nextmatchid": this.nextMatchId = new EntityId(MatchEntity.class, node.asLong()); break;
             case "tobeannounced": this.toBeAnnounced = node.asBoolean(); break;
             case "postponed": this.postponed = node.asBoolean(); break;
             case "canceled": this.canceled = node.asBoolean(); break;
@@ -383,7 +384,7 @@ public class MatchEntity extends BaseEntity {
                 ", oddsBetstop=" + oddsBetstop +
                 ", oddsUpdated=" + oddsUpdated +
                 ", status='" + status + '\'' +
-                ", nextMatchiId=" + nextMatchiId +
+                ", nextMatchiId=" + nextMatchId +
                 ", teamForms=" + teamForms +
                 ", coverageLineup=" + coverageLineup +
                 ", coverageFormations=" + coverageFormations +

@@ -7,12 +7,13 @@ import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
 
 public class PlayerEntity extends BaseEntity {
+    private EntityId nationalityId, secondNationalityId, birthCountryId;
+    private EntityId positionId;
+
     private String name, fullName;
     private Long birthDate, marketValue;
     private Integer height, weight;
     private String foot, birthPlace, twitter, facebook;
-    private EntityId nationalityId, secondNationalityId, birthCountryId;
-    private EntityId positionId;
 
     public PlayerEntity(BaseEntity parent, long id) {
         super(parent, new EntityId(PlayerEntity.class, id));

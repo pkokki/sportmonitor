@@ -3,7 +3,6 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.EntityIdList;
 import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.entities.SeasonEntity;
 
@@ -12,6 +11,7 @@ public class LeagueTableEntity extends BaseEntity {
     private EntityId tournamentId;
     private EntityId realCategoryId;
     private EntityId rulesId;
+
     private Integer maxRounds;
     private Integer currentRound;
     private Integer presentationId;
@@ -23,10 +23,6 @@ public class LeagueTableEntity extends BaseEntity {
     private String seasonTypeUnique;
     private Long seasonStart;
     private Long seasonEnd;
-    private EntityIdList matches = new EntityIdList();
-    private EntityIdList tableTypes = new EntityIdList();
-    private EntityIdList matchTypes = new EntityIdList();
-    private EntityIdList tableRows = new EntityIdList();
 
 
     public LeagueTableEntity(BaseEntity parent, long id) {
@@ -36,9 +32,10 @@ public class LeagueTableEntity extends BaseEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "tabletype[]": this.tableTypes.add(childEntity.getId()); return true;
-            case "matchtype[]": this.matchTypes.add(childEntity.getId()); return true;
-            case "tablerows[]": this.tableRows.add(childEntity.getId()); return true;
+            case "tabletype[]":
+            case "matchtype[]":
+            case "tablerows[]":
+                return true;
             case "tournament": this.tournamentId = new EntityId(childEntity); return true;
             case "realcategory": this.realCategoryId = new EntityId(childEntity); return true;
             case "rules": this.rulesId = new EntityId(childEntity); return true;
@@ -63,7 +60,7 @@ public class LeagueTableEntity extends BaseEntity {
             case "seasontypeunique": this.seasonTypeUnique = node.asText(); break;
             case "start.uts": this.seasonStart = node.asLong(); break;
             case "end.uts": this.seasonEnd = node.asLong(); break;
-            case "matches[]": matches.add(new EntityId(MatchSituationEntryEntity.class, node.asLong())); break;
+            case "matches[]": /*matches.add(new EntityId(MatchSituationEntryEntity.class, node.asLong()));*/ break;
             case "tournamentid": new EntityId(TournamentEntity.class, node.asLong()); break;
             case "roundbyround":
             case "start._doc":
@@ -106,10 +103,6 @@ public class LeagueTableEntity extends BaseEntity {
                 ", seasonTypeUnique='" + seasonTypeUnique + '\'' +
                 ", seasonStart=" + seasonStart +
                 ", seasonEnd=" + seasonEnd +
-                ", matches=" + matches +
-                ", tableTypes=" + tableTypes +
-                ", matchTypes=" + matchTypes +
-                ", tableRows=" + tableRows +
                 '}';
     }
 }

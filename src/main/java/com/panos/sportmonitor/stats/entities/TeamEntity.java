@@ -8,13 +8,14 @@ import com.panos.sportmonitor.stats.entities.ref.RealCategoryEntity;
 
 public class TeamEntity extends BaseEntity {
     private EntityId uid;
+    private EntityId homeRealCategoryId;
+    private EntityId countryId;
+
     private String name;
     private String abbr;
     private String nickname;
     private String mediumName;
     private Boolean isCountry;
-    private EntityId homeRealCategoryId;
-    private EntityId countryId;
 
     public TeamEntity(BaseEntity parent, long id) {
         super(parent, new EntityId(TeamEntity.class, id));

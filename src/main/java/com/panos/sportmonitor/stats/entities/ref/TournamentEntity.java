@@ -3,15 +3,14 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.EntityIdList;
 import com.panos.sportmonitor.stats.EntityId;
-import com.panos.sportmonitor.stats.entities.MatchEntity;
 import com.panos.sportmonitor.stats.entities.SeasonEntity;
 
 public class TournamentEntity extends BaseEntity {
     private EntityId realCategoryId;
     private EntityId seasonId;
     private EntityId currentSeasonId;
+
     private Long isk;
     private String seasonType;
     private String seasonTypeName;
@@ -28,7 +27,6 @@ public class TournamentEntity extends BaseEntity {
     private String cupRosterId;
     private Integer currentRound;
     private String groupName;
-    private EntityIdList matches = new EntityIdList();
 
     public TournamentEntity(BaseEntity parent, long id) {
         super(parent, new EntityId(TournamentEntity.class, id));
@@ -58,7 +56,7 @@ public class TournamentEntity extends BaseEntity {
             case "tournamentlevelname": this.tournamentLevelName = node.asText(); break;
             case "groupname": this.groupName = node.asText(); break;
             case "currentround": this.currentRound = node.asInt(); break;
-            case "matches[]": this.matches.add(new EntityId(MatchEntity.class, node.asLong())); break;
+            case "matches[]": /*this.matches.add(new EntityId(MatchEntity.class, node.asLong()));*/ break;
 
             case "_tid":
             case "_utid":
@@ -92,7 +90,6 @@ public class TournamentEntity extends BaseEntity {
                 ", cuprRosterId='" + cupRosterId + '\'' +
                 ", currentRound=" + currentRound +
                 ", groupName='" + groupName + '\'' +
-                ", matches=" + matches +
                 '}';
     }
 }
