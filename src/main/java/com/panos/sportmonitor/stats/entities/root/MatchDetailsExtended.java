@@ -2,14 +2,12 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.*;
 import com.panos.sportmonitor.stats.entities.MatchEntity;
+import com.panos.sportmonitor.stats.entities.ref.MatchDetailsEntryEntity;
 
 public class MatchDetailsExtended extends BaseRootEntity {
     private EntityId matchId;
-    private String teamHome, teamAway;
-    private EntityIdList entries = new EntityIdList();
 
     public MatchDetailsExtended(long timeStamp) {
         super(BaseRootEntityType.MatchDetailsExtended, timeStamp);
@@ -19,14 +17,13 @@ public class MatchDetailsExtended extends BaseRootEntity {
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
             case "_matchid": this.matchId = new EntityId(MatchEntity.class, node.asLong()); break;
-            case "teams.home": this.teamHome = node.asText(); break;
-            case "teams.away": this.teamAway = node.asText(); break;
 
+            case "teams.home":
+            case "teams.away":
             case "index[]":
                 break;
             default:
                 if (nodeName.startsWith("types.")) {
-                    //this.types.put(nodeName.substring(6), node.asText());
                     return true;
                 }
                 else
@@ -36,20 +33,17 @@ public class MatchDetailsExtended extends BaseRootEntity {
     }
 
     @Override
-    public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
-        if (currentNodeName.startsWith("values.")) {
-            ObjectNode objNode = (ObjectNode)childNode;
-            objNode.put("_doc", "match_details_entry");
-            objNode.put("_id", this.getRoot().getNext());
-            objNode.put("code", currentNodeName.substring(7));
+    public BaseEntity tryCreateChildEntity(long timeStamp, String nodeName, JsonNode node) {
+        if (nodeName.startsWith("values.")) {
+            String typeId = nodeName.substring(7);
+            return new MatchDetailsEntryEntity(this, this.matchId, timeStamp, typeId);
         }
-        return super.transformChildNode(currentNodeName, index, childNode);
+        return super.tryCreateChildEntity(timeStamp, nodeName, node);
     }
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         if (entityName.startsWith("values.")) {
-            this.entries.add(childEntity.getId());
             return true;
         }
         return super.handleChildEntity(entityName, childEntity);
@@ -57,13 +51,8 @@ public class MatchDetailsExtended extends BaseRootEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("MatchDetailsExtended{");
-        sb.append("name='").append(getName()).append('\'');
-        sb.append(", matchId=").append(matchId);
-        sb.append(", teamHome='").append(teamHome).append('\'');
-        sb.append(", teamAway='").append(teamAway).append('\'');
-        sb.append(", entries=").append(entries);
-        sb.append('}');
-        return sb.toString();
+        return "MatchDetailsExtended{" + "name='" + getName() + '\'' +
+                ", matchId=" + matchId +
+                '}';
     }
 }

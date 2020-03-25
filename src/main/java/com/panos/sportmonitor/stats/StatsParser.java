@@ -270,7 +270,7 @@ public class StatsParser {
                     );
                 break;
 
-            case "match_details_entry": entity = new MatchDetailsEntryEntity(parent, id, timeStamp); break;
+            case "match_details_entry": entity = /*new MatchDetailsEntryEntity(parent, id, timeStamp)*/null; break;
             case "odds": entity = new OddsEntity(parent, id, timeStamp); break;
             case "team_form_table": entity = /*new TeamFormTableEntity(parent, id, timeStamp)*/null; break;
             case "team_form_entry": entity = /*new TeamFormEntryEntity(parent, id, timeStamp)*/null; break;

@@ -1,19 +1,27 @@
-package com.panos.sportmonitor.stats.entities.time;
+package com.panos.sportmonitor.stats.entities.ref;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseTimeEntity;
 import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityKey;
 
-public class MatchDetailsEntryEntity extends BaseTimeEntity {
-    private String code;
+import java.util.LinkedList;
+
+public class MatchDetailsEntryEntity extends BaseEntity {
     private String name;
     private Integer valueHome, valueHomeP1, valueHomeP2;
     private Integer valueAway, valueAwayP1, valueAwayP2;
 
-    public MatchDetailsEntryEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(MatchDetailsEntryEntity.class, id, timeStamp));
+    public MatchDetailsEntryEntity(BaseEntity parent, EntityId matchId, long timeStamp, String typeId) {
+        super(parent, createId(matchId, timeStamp, typeId));
+    }
+
+    private static EntityId createId(EntityId matchId, long timeStamp, String typeId) {
+        LinkedList<EntityKey> keys = new LinkedList<>(matchId.getKeys());
+        keys.add(new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp));
+        keys.add(new EntityKey("typeId", typeId));
+        return new EntityId(MatchDetailsEntryEntity.class, keys);
     }
 
     @Override
@@ -24,7 +32,6 @@ public class MatchDetailsEntryEntity extends BaseTimeEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "code": this.code = node.asText(); break;
             case "name": this.name = node.asText(); break;
             case "value.home":
                 if (node.isNumber())
@@ -56,7 +63,6 @@ public class MatchDetailsEntryEntity extends BaseTimeEntity {
     @Override
     public String toString() {
         return "MatchDetailsEntryEntity{" + "id=" + getId() +
-                ", code='" + code + '\'' +
                 ", name='" + name + '\'' +
                 ", valueHome=" + valueHome +
                 ", valueHomeP1=" + valueHomeP1 +

@@ -36,31 +36,16 @@ public class EntityId {
         this.keys = Collections.unmodifiableList(allKeys);
         this.entityClass = entityClass;
     }
-//    public EntityId(List<EntityKey> keys, long timeStamp, Class<? extends BaseEntity> entityClass){
-//        if (timeStamp <= 0)
-//            throw new IllegalArgumentException("Invalid timestamp: " + timeStamp);
-//        if (timeStamp != Long.MAX_VALUE && !BaseTimeEntity.class.isAssignableFrom(entityClass))
-//            throw new IllegalArgumentException("Invalid EntityId timestamp: " + timeStamp + ". Entity class is " + entityClass.getSimpleName());
-//        if (timeStamp == Long.MAX_VALUE && BaseTimeEntity.class.isAssignableFrom(entityClass))
-//            throw new IllegalArgumentException("EntityId timestamp not defined. Entity class is " + entityClass.getSimpleName());
-//        validateKeys(keys);
-//        List<EntityKey> allKeys = new LinkedList<>(keys);
-//        allKeys.add(new EntityKey(KEY_TIMESTAMP, timeStamp));
-//        this.keys = Collections.unmodifiableList(allKeys);
-//        this.entityClass = entityClass;
-//    }
     public EntityId(BaseEntity entity) {
         this.keys = Collections.unmodifiableList(new LinkedList<>(entity.getId().getKeys()));
         this.entityClass = entity.getId().getEntityClass();
     }
     public EntityId(Class<? extends BaseEntity> entityClass, List<EntityKey> keys) {
-        validateKeys(keys);
         this.keys = Collections.unmodifiableList(keys);
         this.entityClass = entityClass;
     }
     public EntityId(Class<? extends BaseEntity> entityClass, EntityKey... ids) {
         this.keys = Collections.unmodifiableList(new LinkedList<>(Arrays.asList(ids)));
-        validateKeys(keys);
         this.entityClass = entityClass;
     }
     public EntityId(Class<? extends BaseEntity> entityClass, EntityId... ids) {
@@ -68,7 +53,6 @@ public class EntityId {
         for (EntityId id : ids)
             newKeys.addAll(split(id));
         this.keys = Collections.unmodifiableList(newKeys);
-        validateKeys(keys);
         this.entityClass = entityClass;
     }
 
@@ -79,7 +63,6 @@ public class EntityId {
         for (EntityKey entityKey : entityKeys)
             newKeys.add(entityKey);
         this.keys = Collections.unmodifiableList(newKeys);
-        validateKeys(keys);
         this.entityClass = entityClass;
     }
 
@@ -92,11 +75,6 @@ public class EntityId {
             newKeys.add(new EntityKey(keyName, key.getValue()));
         }
         return newKeys;
-    }
-
-    private void validateKeys(List<EntityKey> keys) {
-        if (keys.stream().anyMatch(e -> e.getName().equals(KEY_ID) || e.getName().equals(KEY_TIMESTAMP)))
-            throw new IllegalArgumentException("Invalid use of id or timestamp in Entity id");
     }
 
     public List<EntityKey> getKeys() {
