@@ -9,14 +9,13 @@ import com.panos.sportmonitor.stats.entities.MatchEntity;
 
 public class MatchEventEntity extends BaseEntity {
     private EntityId matchId;
-    private EntityId playerId, scorerId, playerOutId, playerInId, statusId;
+    private EntityId playerId, scorerId, playerOutId, playerInId, statusId, assistId;
     private Integer typeId, minute, seconds;
     private String type, name, goalType;
     private Long eventTime, updatedTime;
     private Boolean disabled, header, ownGoal, penalty;
     private Integer minutes, injuryTime, period, periodScoreHome, periodScoreAway, resultHome, resultAway;
     private String resultWinner, team, card, periodName;
-    private EntityIdList assists = new EntityIdList();
 
     public MatchEventEntity(BaseEntity parent, long id) {
         super(parent, new EntityId(MatchEventEntity.class, id));
@@ -86,7 +85,7 @@ public class MatchEventEntity extends BaseEntity {
             case "matchStatus":
                 this.statusId =new EntityId(childEntity); break;
             case "scorer": this.scorerId = new EntityId(childEntity); break;
-            case "assists[]": this.assists.add(childEntity.getId()); break;
+            case "assists[]": this.assistId = new EntityId(childEntity); break;
             case "playerout": this.playerOutId = new EntityId(childEntity); break;
             case "playerin": this.playerInId = new EntityId(childEntity); break;
             default: return super.handleChildEntity(entityName, childEntity);
@@ -126,7 +125,7 @@ public class MatchEventEntity extends BaseEntity {
                 ", playerOutId=" + playerOutId +
                 ", playerInId=" + playerInId +
                 ", statusId=" + statusId +
-                ", assists=" + assists +
+                ", assists=" + assistId +
                 '}';
     }
 }
