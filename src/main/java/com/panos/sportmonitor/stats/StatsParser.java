@@ -282,7 +282,7 @@ public class StatsParser {
                 else
                     entity = new TopListEntryEntity(parent, id, timeStamp);
                 break;
-            case "team_goal_stats": entity = new TeamGoalStatsEntity(parent, id, timeStamp); break;
+            case "team_goal_stats": entity = null;/*new TeamGoalStatsEntity(parent, id, timeStamp);*/ break;
             case "unique_team_stats": entity = new UniqueTeamStatsEntity(parent, id, timeStamp); break;
             case "match_funfact": entity = new MatchFunFactEntity(parent, id); break;
             case "season_over_under": entity = new SeasonOverUnderEntity(parent, id, timeStamp); break;

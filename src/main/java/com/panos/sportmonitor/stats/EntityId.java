@@ -1,7 +1,6 @@
 package com.panos.sportmonitor.stats;
 
 import com.google.common.collect.Lists;
-import com.panos.sportmonitor.stats.entities.ref.TeamFormTableEntity;
 import org.apache.commons.lang.WordUtils;
 
 import java.util.*;
@@ -26,10 +25,6 @@ public class EntityId {
             throw new IllegalArgumentException("Invalid id: " + id);
         if (timeStamp <= 0)
             throw new IllegalArgumentException("Invalid timestamp: " + timeStamp);
-        if (timeStamp != Long.MAX_VALUE && !BaseTimeEntity.class.isAssignableFrom(entityClass))
-            throw new IllegalArgumentException("Invalid EntityId timestamp: " + timeStamp + ". Entity class is " + entityClass.getSimpleName());
-        if (timeStamp == Long.MAX_VALUE && BaseTimeEntity.class.isAssignableFrom(entityClass))
-            throw new IllegalArgumentException("EntityId timestamp not defined. Entity class is " + entityClass.getSimpleName());
         List<EntityKey> allKeys = new LinkedList<>();
         allKeys.add(new EntityKey(KEY_ID, id));
         allKeys.add(new EntityKey(KEY_TIMESTAMP, timeStamp));
@@ -60,8 +55,7 @@ public class EntityId {
         List<EntityKey> newKeys = new LinkedList<>();
         for (EntityId entityId : entityIds)
             newKeys.addAll(split(entityId));
-        for (EntityKey entityKey : entityKeys)
-            newKeys.add(entityKey);
+        newKeys.addAll(Arrays.asList(entityKeys));
         this.keys = Collections.unmodifiableList(newKeys);
         this.entityClass = entityClass;
     }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
 import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityKey;
 import com.panos.sportmonitor.stats.entities.UniqueTeamEntity;
 
 public class UniqueTeamStatsEntity extends BaseTimeEntity {
@@ -24,8 +25,14 @@ public class UniqueTeamStatsEntity extends BaseTimeEntity {
             goalsByHeadMatches, attendanceMatches, yellowCardsMatches, redCardsMatches, goalsScoredMatches, goalsConcededMatches,
             yellowRedCardsMatches, shootingEfficiencyMatches;
 
-    public UniqueTeamStatsEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(UniqueTeamStatsEntity.class, id, timeStamp));
+    public UniqueTeamStatsEntity(BaseEntity parent, long uniqueTeamId, long timeStamp) {
+        super(parent, createId(uniqueTeamId, timeStamp));
+    }
+
+    private static EntityId createId(long uniqueTeamId, long timeStamp) {
+        return new EntityId(UniqueTeamStatsEntity.class,
+                new EntityKey("uniqueTeamId", uniqueTeamId),
+                new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp));
     }
 
     @Override

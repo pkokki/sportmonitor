@@ -1,29 +1,33 @@
-package com.panos.sportmonitor.stats.entities.time;
+package com.panos.sportmonitor.stats.entities.ref;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseTimeEntity;
 import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityKey;
 
-public class TeamGoalStatsEntity extends BaseTimeEntity {
-    private EntityId teamId;
+public class UniqueTeamGoalStatsEntity extends BaseEntity {
     private Integer matches, scoredSum, scored0015, scored1630, scored3145, scored4660, scored6175, scored7690;
     private Integer concededSum, conceded0015, conceded1630, conceded3145, conceded4660, conceded6175, conceded7690;
     private Integer firstGoal, lastGoal, penaltySuccessCount, penaltyFailCount;
 
-    public TeamGoalStatsEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(TeamGoalStatsEntity.class, id, timeStamp));
+    public UniqueTeamGoalStatsEntity(BaseEntity parent, long uniqueTeamId, long timeStamp) {
+        super(parent, createId(uniqueTeamId, timeStamp));
+    }
+
+    private static EntityId createId(long uniqueTeamId, long timeStamp) {
+        return new EntityId(UniqueTeamGoalStatsEntity.class,
+                new EntityKey("uniqueTeamId", uniqueTeamId),
+                new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp));
     }
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         if ("team".equals(entityName)) {
-            this.teamId = new EntityId(childEntity);
+            return true;
         } else {
             return super.handleChildEntity(entityName, childEntity);
         }
-        return true;
     }
 
     @Override
@@ -56,7 +60,6 @@ public class TeamGoalStatsEntity extends BaseTimeEntity {
     @Override
     public String toString() {
         return "TeamGoalStatsEntity{" + "id=" + getId() +
-                ", teamId=" + teamId +
                 ", matches=" + matches +
                 ", scoredSum=" + scoredSum +
                 ", scored0015=" + scored0015 +
