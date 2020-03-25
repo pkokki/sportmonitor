@@ -3,23 +3,22 @@ package com.panos.sportmonitor.stats;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.google.common.collect.Lists;
-import org.apache.commons.lang.WordUtils;
 import org.apache.commons.math3.exception.OutOfRangeException;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public abstract class BaseEntity {
     private final static List<String> __IGNORED = Lists.newArrayList("_doc", "_id", "_sid");
     private final EntityId id;
+    private final EntityId sourceId;
     private final BaseEntity __parent;
     private int __next;
 
     public BaseEntity(BaseEntity parent, EntityId id) {
         this.__parent = parent;
         this.id = id;
+        this.sourceId = parent != null ? parent.getRoot().getId() : null;
     }
 
     public final boolean setProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
@@ -84,6 +83,7 @@ public abstract class BaseEntity {
     public String toString() {
         return this.getClass().getSimpleName() + '{' +
                 "id=" + getId() +
+                ", sourceId=" + sourceId +
                 ", ......}";
     }
 
@@ -93,5 +93,9 @@ public abstract class BaseEntity {
 
     public BaseEntity tryCreateChildEntity(long timeStamp, String nodeName, JsonNode node) {
         return null;
+    }
+
+    public String getName() {
+        return this.getClass().getSimpleName() + '{' + getId() + "}";
     }
 }

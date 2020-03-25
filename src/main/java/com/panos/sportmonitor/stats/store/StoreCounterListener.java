@@ -5,21 +5,18 @@ import com.panos.sportmonitor.stats.EntityKey;
 import com.panos.sportmonitor.stats.StatsConsole;
 import org.apache.commons.lang3.builder.Diff;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class StoreCounterListener extends StatsStoreListener {
     private final StoreCounters counters = new StoreCounters();
-    private final Set<String> entityTypes = new LinkedHashSet<>();
+    private final HashMap<String, Integer> entityTypes = new LinkedHashMap<>();
 
     @Override
     public void onSubmit(BaseEntity entity) {
         ++counters.submitted;
-        entityTypes.add(String.format("%s%s",
-                entity.getClass().getSimpleName(),
-                entity.getId().getKeys().stream().map(EntityKey::getName).collect(Collectors.toList())));
+        String key = entity.getClass().getSimpleName() + entity.getId().getKeys().stream().map(EntityKey::getName).collect(Collectors.toList());
+        entityTypes.merge(key, 1, Integer::sum);
     }
 
     @Override

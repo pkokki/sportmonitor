@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class EntityId {
     public static final String KEY_ID = "id";
-    public static final String KEY_TIMESTAMP = "timeStamp";
+    public static final String KEY_TIMESTAMP = "ts";
 
     private final List<EntityKey> keys;
     private final Class<? extends BaseEntity> entityClass;

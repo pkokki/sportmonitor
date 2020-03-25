@@ -1,10 +1,7 @@
 package com.panos.sportmonitor.stats.store;
 
 import com.google.common.collect.Lists;
-import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.EntityId;
-import com.panos.sportmonitor.stats.EntityKey;
-import com.panos.sportmonitor.stats.StatsConsole;
+import com.panos.sportmonitor.stats.*;
 import org.apache.commons.lang3.builder.Diff;
 import scala.Tuple3;
 
@@ -31,6 +28,9 @@ public abstract class SqlStructureListener extends StatsStoreListener {
 
     @Override
     public final void onPropertyChange(BaseEntity entity, String entityFieldName, Object oldValue, Object newValue) {
+        if (entity instanceof BaseRootEntity) {
+            throw new IllegalStateException(String.format("%s has invalid ROOT property %s", entity.getName(), entityFieldName));
+        }
         createOrUpdateFieldInfo(entity, entityFieldName, newValue, false);
     }
 
@@ -41,29 +41,30 @@ public abstract class SqlStructureListener extends StatsStoreListener {
 
     @Override
     public final void onRelationAdded(BaseEntity entity, String entityFieldName, EntityId targetId) {
-        String relTableName = SqlUtils.transformTableName(String.format("%s%s%s", entity.getClass().getSimpleName(), SqlUtils.RELATION_SEPARATOR, entityFieldName));
-        TableInfo relTableInfo = sqlData.computeIfAbsent(relTableName, TableInfo::new);
-        if (relTableInfo.getFields().isEmpty()) {
-            List<String> sqlFieldNames = new ArrayList<>();
-            for (EntityKey key : entity.getId().getKeys()) {
-                String sqlFieldName = SqlUtils.FIELD_REL_SOURCE_PREFIX + SqlUtils.resolveSqlFieldName(entityFieldName, key.getName());
-                sqlFieldNames.add(sqlFieldName);
-                createOrUpdateSingleFieldInfo(relTableInfo.getFields(), sqlFieldName, key.getValue(), true);
-            }
-            relTableInfo.addForeignKey(sqlFieldNames, entity.getId());
-
-            sqlFieldNames = new ArrayList<>();
-            for (EntityKey key : targetId.getKeys()) {
-                String sqlFieldName = SqlUtils.FIELD_REL_TARGET_PREFIX + SqlUtils.resolveSqlFieldName(entityFieldName, key.getName());
-                sqlFieldNames.add(sqlFieldName);
-                createOrUpdateSingleFieldInfo(relTableInfo.getFields(), sqlFieldName, key.getValue(), true);
-            }
-            relTableInfo.addForeignKey(sqlFieldNames, targetId);
-        }
+        throw new IllegalStateException(String.format("%s has onRelationAdded: %s --> %s", entity.getName(), entityFieldName, targetId));
+//        String relTableName = SqlUtils.transformTableName(String.format("%s%s%s", entity.getClass().getSimpleName(), SqlUtils.RELATION_SEPARATOR, entityFieldName));
+//        TableInfo relTableInfo = sqlData.computeIfAbsent(relTableName, TableInfo::new);
+//        if (relTableInfo.getFields().isEmpty()) {
+//            List<String> sqlFieldNames = new ArrayList<>();
+//            for (EntityKey key : entity.getId().getKeys()) {
+//                String sqlFieldName = SqlUtils.FIELD_REL_SOURCE_PREFIX + SqlUtils.resolveSqlFieldName(entityFieldName, key.getName());
+//                sqlFieldNames.add(sqlFieldName);
+//                createOrUpdateSingleFieldInfo(relTableInfo.getFields(), sqlFieldName, key.getValue(), true);
+//            }
+//            relTableInfo.addForeignKey(sqlFieldNames, entity.getId());
+//
+//            sqlFieldNames = new ArrayList<>();
+//            for (EntityKey key : targetId.getKeys()) {
+//                String sqlFieldName = SqlUtils.FIELD_REL_TARGET_PREFIX + SqlUtils.resolveSqlFieldName(entityFieldName, key.getName());
+//                sqlFieldNames.add(sqlFieldName);
+//                createOrUpdateSingleFieldInfo(relTableInfo.getFields(), sqlFieldName, key.getValue(), true);
+//            }
+//            relTableInfo.addForeignKey(sqlFieldNames, targetId);
+//        }
     }
 
     private void createOrUpdateFieldInfo(BaseEntity entity, String entityFieldName, Object value, boolean isPK) {
-        String tableName = SqlUtils.transformTableName(entity.getClass().getSimpleName());
+        String tableName = SqlUtils.transformTableName(entity);
         TableInfo tableInfo = sqlData.computeIfAbsent(tableName, TableInfo::new);
 
         if (value instanceof EntityId) {
@@ -112,7 +113,7 @@ public abstract class SqlStructureListener extends StatsStoreListener {
             for (String tableName : Lists.newArrayList(remainingTables)) {
                 TableInfo tableInfo = sqlData.get(tableName);
                 if (tableInfo.getForeignKeys().stream().map(Tuple3::_2).allMatch(
-                        name -> name.equals(tableName) || processedTables.contains(name) || !remainingTables.contains(name)
+                        name -> name.equals(tableName) || name.equals(SqlUtils.ROOT_ENTRIES_TABLE) || processedTables.contains(name) || !remainingTables.contains(name)
                 )) {
                     tables.add(tableInfo);
                     processedTables.add(tableName);
@@ -173,7 +174,7 @@ public abstract class SqlStructureListener extends StatsStoreListener {
             String sourceExpression = String.join(", ", sourceFieldNames);
             if (foreignKeys.stream().anyMatch(t -> t._1().equals(sourceExpression)))
                 return;
-            String targetTableName = SqlUtils.transformTableName(targetId.getEntityClass().getSimpleName());
+            String targetTableName = SqlUtils.transformTableName(targetId);
             List<String> targetFields = targetId.getKeys().stream().map(k -> SqlUtils.transform(k.getName())).collect(Collectors.toList());
             Tuple3<String, String, String> entry = new Tuple3<>(sourceExpression, targetTableName, String.join(", ", targetFields));
             foreignKeys.add(entry);

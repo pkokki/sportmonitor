@@ -1,8 +1,12 @@
 package com.panos.sportmonitor.stats.store;
 
+import com.panos.sportmonitor.stats.BaseEntity;
+import com.panos.sportmonitor.stats.BaseRootEntity;
+import com.panos.sportmonitor.stats.EntityId;
 import org.postgresql.ds.PGPoolingDataSource;
 
 public final class SqlUtils {
+    static final String ROOT_ENTRIES_TABLE = "entries";
     static final String FIELD_REL_SOURCE_PREFIX = "src_";
     static final String FIELD_REL_TARGET_PREFIX = "dst_";
     static final String RELATION_SEPARATOR = "__";
@@ -17,9 +21,20 @@ public final class SqlUtils {
         DATA_SOURCE.setMaxConnections(20);
     }
 
-    public static String transformTableName(String str) {
-        return transform(str.replace("Entity", ""));
+    public static String transformTableName(BaseEntity entity) {
+        return transformTableName(entity.getClass());
     }
+
+    public static String transformTableName(EntityId entityId) {
+        return transformTableName(entityId.getEntityClass());
+    }
+
+    private static String transformTableName(Class<?> entityClass) {
+        if (BaseRootEntity.class.isAssignableFrom(entityClass))
+            return ROOT_ENTRIES_TABLE;
+        return transform(entityClass.getSimpleName().replace("Entity", ""));
+    }
+
     public static String transform(String str) {
         return str.replaceAll("(\\w)([A-Z])", "$1_$2").toLowerCase();
     }
@@ -31,4 +46,5 @@ public final class SqlUtils {
             entityFieldName = entityFieldName.substring(0, entityFieldName.length() - 2);
         return SqlUtils.transform(entityFieldName + "_" + keyName);
     }
+
 }

@@ -13,7 +13,7 @@ public abstract class BaseRootEntity extends BaseTimeEntity {
     private final HashMap<EntityId, List<Tuple2<String, Consumer<BaseEntity>>>> __consumers = new HashMap<>();
 
     public BaseRootEntity(BaseRootEntityType type, long timeStamp) {
-        super(null, new EntityId(BaseRootEntity.class, (timeStamp << 2) + type.getId(), timeStamp));
+        super(null, new EntityId(BaseRootEntity.class, type.getId(), timeStamp));
         this.__name = type.getName();
         this.addChildEntity(1, this);
     }

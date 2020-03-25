@@ -5,7 +5,6 @@ import com.panos.sportmonitor.stats.*;
 
 public class MatchTimeline extends BaseRootEntity {
     private EntityId matchId;
-    private EntityIdList events = new EntityIdList();
 
     public MatchTimeline(long timeStamp) {
         super(BaseRootEntityType.MatchTimeline, timeStamp);
@@ -17,7 +16,6 @@ public class MatchTimeline extends BaseRootEntity {
             this.matchId = new EntityId(childEntity);
             return true;
         } else if (entityName.equals("events[]")) {
-            this.events.add(childEntity.getId());
             return true;
         }
         return super.handleChildEntity(entityName, childEntity);
@@ -28,7 +26,6 @@ public class MatchTimeline extends BaseRootEntity {
         final StringBuilder sb = new StringBuilder("MatchTimeline{");
         sb.append("name='").append(getName()).append('\'');
         sb.append(", matchId=").append(matchId);
-        sb.append(", events=").append(events);
         sb.append('}');
         return sb.toString();
     }

@@ -28,7 +28,7 @@ public class SqlExecutor extends StatsStoreListener {
         SqlStatement stm = statements.get(entity.getId());
         if (stm != null)
             throw new IllegalArgumentException();
-        stm = new InsertStatement(SqlUtils.transformTableName(entity.getClass().getSimpleName()));
+        stm = new InsertStatement(SqlUtils.transformTableName(entity));
         stm.addEntityId(entity.getId(), "", "id");
         statements.put(entity.getId(), stm);
     }
@@ -36,7 +36,7 @@ public class SqlExecutor extends StatsStoreListener {
     @Override
     public void onUpdate(BaseEntity existing, BaseEntity submitted, List<Diff<?>> changes) {
         if (!statements.containsKey(existing.getId())) {
-            SqlStatement stm = new UpdateStatement(SqlUtils.transformTableName(existing.getClass().getSimpleName()), existing.getId());
+            SqlStatement stm = new UpdateStatement(SqlUtils.transformTableName(existing), existing.getId());
             statements.put(existing.getId(), stm);
             stm.addEntityId(existing.getId(), "", "id");
         }
@@ -63,7 +63,7 @@ public class SqlExecutor extends StatsStoreListener {
 
     @Override
     public void onRelationAdded(BaseEntity entity, String entityFieldName, EntityId id) {
-        String masterTableName = SqlUtils.transformTableName(entity.getClass().getSimpleName());
+        String masterTableName = SqlUtils.transformTableName(entity);
         String relTableName = String.format("%s%s%s", masterTableName, SqlUtils.RELATION_SEPARATOR, SqlUtils.transform(entityFieldName));
         InsertStatement insertStm = new InsertStatement(relTableName);
         insertStm.addEntityId(entity.getId(), SqlUtils.FIELD_REL_SOURCE_PREFIX, entityFieldName);
