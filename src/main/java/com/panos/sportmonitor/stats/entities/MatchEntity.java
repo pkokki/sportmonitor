@@ -34,7 +34,6 @@ public class MatchEntity extends BaseEntity {
     private Boolean retired;
     private Boolean disqualified;
     private Boolean dbfa;
-    private EntityIdList referees = new EntityIdList();
     private EntityId managerHomeId;
     private EntityId managerAwayId;
     private EntityId roundNameId;
@@ -63,7 +62,6 @@ public class MatchEntity extends BaseEntity {
     private Long oddsUpdated;
     private String status;
     private EntityId nextMatchiId;
-    private EntityIdList teamForms = new EntityIdList();
     private  Integer  coverageLineup ;
     private  Integer  coverageFormations ;
     private  Long  coverageLiveTable ;
@@ -102,6 +100,7 @@ public class MatchEntity extends BaseEntity {
     private EntityId matchStatusId;
     private  Boolean  cancelled ;
     private Integer cardsHomeYellow, cardsHomeRed, cardsAwayYellow, cardsAwayRed;
+    private EntityIdList teamForms = new EntityIdList();
 
     public MatchEntity(BaseEntity parent, long id) {
         super(parent, new EntityId(MatchEntity.class, id));
@@ -123,7 +122,7 @@ public class MatchEntity extends BaseEntity {
                 this.teamAwayUid = ((TeamEntity) childEntity).getUid();
                 break;
             case "referee[]":
-                this.referees.add(childEntity.getId());
+                this.getRoot().addChildEntity(new MatchRefereeEntity(this, this.getId(), childEntity.getId()));
                 break;
             case "manager.home":
                 this.managerHomeId = new EntityId(childEntity);
@@ -349,7 +348,6 @@ public class MatchEntity extends BaseEntity {
                 ", retired=" + retired +
                 ", disqualified=" + disqualified +
                 ", dbfa=" + dbfa +
-                ", referees=" + referees +
                 ", managerHomeId=" + managerHomeId +
                 ", managerAwayId=" + managerAwayId +
                 ", roundNameId=" + roundNameId +
