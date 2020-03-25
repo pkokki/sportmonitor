@@ -4,24 +4,27 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.*;
+import com.panos.sportmonitor.stats.entities.SeasonEntity;
+import com.panos.sportmonitor.stats.entities.UniqueTeamEntity;
+import com.panos.sportmonitor.stats.entities.ref.TeamFormTableEntity;
+import com.panos.sportmonitor.stats.entities.ref.UniqueTeamSeasonPlayerEntity;
 
 public class StatsFormTable extends BaseRootEntity {
-    private EntityId seasonId;
-    private EntityIdList teamFormTables = new EntityIdList();
-    private Integer winPoints, lossPoints, currentRound;
-    private EntityIdList matchTypes = new EntityIdList();
-    private EntityIdList tableTypes = new EntityIdList();
+    private final EntityId seasonId;
+    private Integer __currentRound;
 
-    public StatsFormTable(long timeStamp) {
+    public StatsFormTable(long timeStamp, long seasonId) {
         super(BaseRootEntityType.StatsFormTable, timeStamp);
+        this.seasonId = SeasonEntity.createId(seasonId);
     }
 
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch(nodeName) {
-            case "winpoints": this.winPoints = node.asInt(); break;
-            case "losspoints": this.lossPoints = node.asInt(); break;
-            case "currentround": this.currentRound = node.asInt(); break;
+            case "currentround": this.__currentRound = node.asInt(); break;
+            case "winpoints":
+            case "losspoints":
+                break;
             default:
                 return super.handleProperty(nodeName, nodeType, node);
         }
@@ -31,10 +34,11 @@ public class StatsFormTable extends BaseRootEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch(entityName) {
-            case "matchtype[]": this.matchTypes.add(childEntity.getId()); break;
-            case "tabletype[]": this.tableTypes.add(childEntity.getId()); break;
-            case "season": this.seasonId = new EntityId(childEntity); break;
-            case "teams[]": this.teamFormTables.add(childEntity.getId()); break;
+            case "matchtype[]":
+            case "tabletype[]":
+            case "teams[]":
+            case "season":
+                break;
             default:
                 return super.handleChildEntity(entityName, childEntity);
         }
@@ -42,28 +46,18 @@ public class StatsFormTable extends BaseRootEntity {
     }
 
     @Override
-    public JsonNode transformChildNode(final String currentNodeName, final int index, final JsonNode childNode) {
-        if (currentNodeName.equals("teams")) {
-            ObjectNode objNode = (ObjectNode)childNode;
-            objNode.remove("team");
-            objNode.put("_doc", "team_form_table");
-            objNode.put("_id", this.getRoot().getNext());
+    public BaseEntity tryCreateChildEntity(long timeStamp, String nodeName, JsonNode node) {
+        if (nodeName.equals("teams[]")) {
+            return new TeamFormTableEntity(this, seasonId,
+                    UniqueTeamEntity.createId(node.get("team").get("uid").asLong()), __currentRound);
         }
-        return super.transformChildNode(currentNodeName, index, childNode);
+        return super.tryCreateChildEntity(timeStamp, nodeName, node);
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("StatsFormTable{");
-        sb.append("name='").append(getName()).append("'");
-        sb.append(", seasonId=").append(seasonId);
-        sb.append(", teamFormTables=").append(teamFormTables);
-        sb.append(", winPoints=").append(winPoints);
-        sb.append(", lossPoints=").append(lossPoints);
-        sb.append(", currentRound=").append(currentRound);
-        sb.append(", matchTypes=").append(matchTypes);
-        sb.append(", tableTypes=").append(tableTypes);
-        sb.append('}');
-        return sb.toString();
+        return "StatsFormTable{" + "name='" + getName() + "'" +
+                ", seasonId=" + seasonId +
+                '}';
     }
 }

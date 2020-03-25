@@ -1,6 +1,7 @@
 package com.panos.sportmonitor.stats;
 
 import com.google.common.collect.Lists;
+import com.panos.sportmonitor.stats.entities.ref.TeamFormTableEntity;
 import org.apache.commons.lang.WordUtils;
 
 import java.util.*;
@@ -64,17 +65,33 @@ public class EntityId {
     }
     public EntityId(Class<? extends BaseEntity> entityClass, EntityId... ids) {
         List<EntityKey> newKeys = new LinkedList<>();
-        for (EntityId id : ids) {
-            String name = WordUtils.uncapitalize(id.getEntityClass().getSimpleName());
-            if (name.endsWith("Entity")) name = name.substring(0, name.length() - 6);
-            for (EntityKey key : id.getKeys()) {
-                String keyName = name + WordUtils.capitalize(key.getName());
-                newKeys.add(new EntityKey(keyName, key.getValue()));
-            }
-        }
+        for (EntityId id : ids)
+            newKeys.addAll(split(id));
         this.keys = Collections.unmodifiableList(newKeys);
         validateKeys(keys);
         this.entityClass = entityClass;
+    }
+
+    public EntityId(Class<? extends BaseEntity> entityClass, EntityId[] entityIds, EntityKey[] entityKeys) {
+        List<EntityKey> newKeys = new LinkedList<>();
+        for (EntityId entityId : entityIds)
+            newKeys.addAll(split(entityId));
+        for (EntityKey entityKey : entityKeys)
+            newKeys.add(entityKey);
+        this.keys = Collections.unmodifiableList(newKeys);
+        validateKeys(keys);
+        this.entityClass = entityClass;
+    }
+
+    private static List<EntityKey> split(EntityId id) {
+        List<EntityKey> newKeys = new LinkedList<>();
+        String name = WordUtils.uncapitalize(id.getEntityClass().getSimpleName());
+        if (name.endsWith("Entity")) name = name.substring(0, name.length() - 6);
+        for (EntityKey key : id.getKeys()) {
+            String keyName = name + WordUtils.capitalize(key.getName());
+            newKeys.add(new EntityKey(keyName, key.getValue()));
+        }
+        return newKeys;
     }
 
     private void validateKeys(List<EntityKey> keys) {

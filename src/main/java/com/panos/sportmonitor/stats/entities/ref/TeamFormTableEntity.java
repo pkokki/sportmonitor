@@ -1,11 +1,13 @@
-package com.panos.sportmonitor.stats.entities.time;
+package com.panos.sportmonitor.stats.entities.ref;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.*;
 
-public class TeamFormTableEntity extends BaseTimeEntity {
+import java.util.HashMap;
+
+public class TeamFormTableEntity extends BaseEntity {
     private Integer positionTotal, positionHome, positionAway, playedTotal, playedTotalHome, playedTotalAway, playedHome, playedAway;
     private Integer winTotal, winTotalHome, winTotalAway, winHome, winAway;
     private Integer drawTotal, drawTotalHome, drawTotalAway, drawHome, drawAway;
@@ -17,10 +19,16 @@ public class TeamFormTableEntity extends BaseTimeEntity {
     private EntityId nextOpponentTeamId;
     private Long nextOpponentTime;
     private Integer nextOpponentMatchDifficultyRatingHome, nextOpponentMatchDifficultyRatingAway;
-    private EntityIdList formEntries = new EntityIdList();
 
-    public TeamFormTableEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(TeamFormTableEntity.class, id, timeStamp));
+    public TeamFormTableEntity(BaseEntity parent, EntityId seasonId, EntityId uniqueTeamId, int round) {
+        super(parent, createId(seasonId, uniqueTeamId, round));
+    }
+
+    public static EntityId createId(EntityId seasonId, EntityId uniqueTeamId, int round) {
+        return new EntityId(TeamFormTableEntity.class,
+                new EntityId[] { seasonId, uniqueTeamId },
+                new EntityKey[] { new EntityKey("round", round) }
+        );
     }
 
     @Override
@@ -28,23 +36,21 @@ public class TeamFormTableEntity extends BaseTimeEntity {
         if (entityName.equals("nextopponent.team")) {
             this.nextOpponentTeamId = new EntityId(childEntity);
             return true;
-        } else if (entityName.startsWith("form.")) {
-            this.formEntries.add(childEntity.getId());
+        } else if (entityName.startsWith("form.") || entityName.equals("team")) {
             return true;
         }
         return super.handleChildEntity(entityName, childEntity);
     }
 
+    private final HashMap<String, Integer> __indexes = new HashMap<>();
     @Override
-    public JsonNode transformChildNode(final String currentNodeName, final int index, final JsonNode childNode) {
-        if (currentNodeName.equals("form.total") || currentNodeName.equals("form.home") || currentNodeName.equals("form.away")) {
-            ObjectNode objNode = (ObjectNode)childNode;
-            objNode.put("_id", this.getRoot().getNext());
-            objNode.put("_doc", "team_form_entry");
-            objNode.put("_index", index);
-            objNode.put("group", currentNodeName.substring(5));
+    public BaseEntity tryCreateChildEntity(long timeStamp, String nodeName, JsonNode node) {
+        if (nodeName.equals("form.total[]") || nodeName.equals("form.home[]") || nodeName.equals("form.away[]")) {
+            String name = nodeName.substring(nodeName.lastIndexOf('.') + 1).replace("[]", "");
+            int index = __indexes.merge(name, 1, Integer::sum);
+            return new TeamFormEntryEntity(this, name, index);
         }
-        return super.transformChildNode(currentNodeName, index, childNode);
+        return super.tryCreateChildEntity(timeStamp, nodeName, node);
     }
 
     @Override
@@ -159,7 +165,6 @@ public class TeamFormTableEntity extends BaseTimeEntity {
                 ", nextOpponentTime=" + nextOpponentTime +
                 ", nextOpponentMatchDifficultyRatingHome=" + nextOpponentMatchDifficultyRatingHome +
                 ", nextOpponentMatchDifficultyRatingAway=" + nextOpponentMatchDifficultyRatingAway +
-                ", formEntries=" + formEntries +
                 '}';
     }
 }

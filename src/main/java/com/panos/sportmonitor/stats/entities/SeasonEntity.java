@@ -26,7 +26,11 @@ public class SeasonEntity extends BaseEntity {
     private EntityIdList tournaments = new EntityIdList();
 
     public SeasonEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(SeasonEntity.class, id));
+        super(parent, createId(id));
+    }
+
+    public static EntityId createId(long id) {
+        return new EntityId(SeasonEntity.class, id);
     }
 
     @Override

@@ -182,7 +182,9 @@ public class StatsParser {
             case "stats_match_get": entity = new StatsMatchGet(timeStamp); break;
             case "stats_match_situation": entity = new StatsMatchSituation(timeStamp); break;
 
-            case "stats_formtable": entity = new StatsFormTable(timeStamp); break;
+            case "stats_formtable":
+                entity = new StatsFormTable(timeStamp, currentNode.get("season").get("_id").asLong());
+                break;
             case "stats_season_meta": entity = new StatsSeasonMeta(timeStamp); break;
             case "stats_season_teams2": entity = new StatsSeasonTeams2(timeStamp); break;
             case "stats_season_lastx": entity = new StatsSeasonLastX(timeStamp); break;
@@ -270,8 +272,8 @@ public class StatsParser {
 
             case "match_details_entry": entity = new MatchDetailsEntryEntity(parent, id, timeStamp); break;
             case "odds": entity = new OddsEntity(parent, id, timeStamp); break;
-            case "team_form_table": entity = new TeamFormTableEntity(parent, id, timeStamp); break;
-            case "team_form_entry": entity = new TeamFormEntryEntity(parent, id, timeStamp); break;
+            case "team_form_table": entity = /*new TeamFormTableEntity(parent, id, timeStamp)*/null; break;
+            case "team_form_entry": entity = /*new TeamFormEntryEntity(parent, id, timeStamp)*/null; break;
             case "toplistentry":
                 if (parent.getRoot().isType(BaseRootEntityType.StatsTeamPlayerFacts)) {
                     long teamId = Long.parseLong(currentNode.get("teams").fields().next().getKey());

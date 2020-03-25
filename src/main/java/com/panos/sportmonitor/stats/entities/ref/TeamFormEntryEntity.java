@@ -1,13 +1,16 @@
-package com.panos.sportmonitor.stats.entities.time;
+package com.panos.sportmonitor.stats.entities.ref;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
 import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityKey;
 import com.panos.sportmonitor.stats.entities.MatchEntity;
 
-public class TeamFormEntryEntity extends BaseTimeEntity {
+import java.util.LinkedList;
+
+public class TeamFormEntryEntity extends BaseEntity {
     private Integer _index;
     private String group_name;
     private String typeId;
@@ -16,8 +19,15 @@ public class TeamFormEntryEntity extends BaseTimeEntity {
     private Boolean neutralGround;
     private EntityId matchId;
 
-    public TeamFormEntryEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(TeamFormEntryEntity.class, id, timeStamp));
+    public TeamFormEntryEntity(BaseEntity parent, String name, int index) {
+        super(parent, createId(parent.getId(), name, index));
+    }
+
+    public static EntityId createId(EntityId masterId, String name, int index) {
+        LinkedList<EntityKey> keys = new LinkedList<>(masterId.getKeys());
+        keys.add(new EntityKey("name", name));
+        keys.add(new EntityKey("index", index));
+        return new EntityId(TeamFormTableEntity.class, keys);
     }
 
     @Override

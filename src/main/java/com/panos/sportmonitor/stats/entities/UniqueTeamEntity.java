@@ -208,7 +208,11 @@ public class UniqueTeamEntity extends BaseEntity {
 
 
     public UniqueTeamEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(UniqueTeamEntity.class, id));
+        super(parent, createId(id));
+    }
+
+    public static EntityId createId(long id) {
+        return new EntityId(UniqueTeamEntity.class, id);
     }
 
     @Override
