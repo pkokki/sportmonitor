@@ -72,10 +72,10 @@ public class StatsStore {
             final Object oldValue = change.getLeft();
             final Object newValue = change.getRight();
             try {
-                final Field entityField = existing.getClass().getDeclaredField(change.getFieldName());
+                final Field entityField = ReflectionUtils.getField(existing.getClass(), change.getFieldName());
                 onUpsert(true, existing, entityField, oldValue, newValue);
             } catch (NoSuchFieldException e) {
-                StatsConsole.printlnError(String.format("EntityMap.onUpdate %s: error applying changes %s -> %s", existing.getClass().getSimpleName(), change.getFieldName(), e));
+                StatsConsole.printlnError(String.format("StatsStore.onUpdate %s: error applying changes %s -> %s", existing.getClass().getSimpleName(), change.getFieldName(), e));
             }
         }
     }
@@ -115,7 +115,7 @@ public class StatsStore {
                 });
                 break;
             default:
-                StatsConsole.printlnWarn(String.format("EntityMap.onUpsert %s: cannot apply changes to field '%s' of type '%s': %s", entity.getClass().getSimpleName(), entityFieldName, entityFieldType, newValue));
+                StatsConsole.printlnWarn(String.format("StatsStore.onUpsert %s: cannot apply changes to field '%s' of type '%s': %s", entity.getClass().getSimpleName(), entityFieldName, entityFieldType, newValue));
         }
     }
 
@@ -126,11 +126,11 @@ public class StatsStore {
                     .build();
             for (Diff<?> diff : result.getDiffs()) {
                 if (isAcceptedDiff(diff.getFieldName(), diff.getLeft(), diff.getRight())) {
-                    if (isImportantDiff(diff.getLeft()))
-                        StatsConsole.printlnState(String.format("important diff: %s %s -> %s",
-                                existingEntity.getClass().getSimpleName(),
-                                diff.getLeft().getClass().getSimpleName(),
-                                diff.toString().substring(0, Math.min(200, diff.toString().length()))));
+//                    if (isImportantDiff(diff.getLeft()))
+//                        StatsConsole.printlnState(String.format("important diff: %s %s -> %s",
+//                                existingEntity.getClass().getSimpleName(),
+//                                diff.getLeft().getClass().getSimpleName(),
+//                                diff.toString().substring(0, Math.min(200, diff.toString().length()))));
                     changes.add(diff);
                 }
             }

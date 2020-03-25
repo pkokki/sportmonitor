@@ -8,6 +8,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ReflectionUtils {
+    public static Field getField(final Class<?> type, final String name) throws NoSuchFieldException {
+        if (type.getSuperclass() == null)
+            return type.getDeclaredField(name);
+        try {
+            return type.getDeclaredField(name);
+        } catch (NoSuchFieldException e) {
+            return getField(type.getSuperclass(), name);
+        }
+    }
     public static List<Field> getAllFields(final List<Field> fields, final Class<?> type) {
         if (type.getSuperclass() != null) {
             getAllFields(fields, type.getSuperclass());
