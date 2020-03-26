@@ -4,7 +4,7 @@ import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.EntityKey;
 
-public class SeasonOverUnderEntity extends OverUnderEntryEntity {
+public class SeasonOverUnderEntity extends AbstractOverUnderEntity {
     private EntityId seasonId;
 
     public SeasonOverUnderEntity(BaseEntity parent, EntityId seasonId, long timeStamp) {

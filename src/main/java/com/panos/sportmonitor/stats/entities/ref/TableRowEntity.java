@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityKey;
 
 public class TableRowEntity extends BaseEntity {
     private EntityId promotionId;
@@ -25,8 +26,10 @@ public class TableRowEntity extends BaseEntity {
             pctHome, pctGoalsHome, pctGamePointsHome,
             pctAway, pctGoalsAway, pctGamePointsAway;
 
-    public TableRowEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(TableRowEntity.class, id));
+    public TableRowEntity(BaseEntity parent, EntityId tableId, long rowId, long timeStamp) {
+        super(parent, new EntityId(TableRowEntity.class,
+                new EntityId[] { tableId },
+                new EntityKey[] { new EntityKey("rowId", rowId), new EntityKey("timeStamp", timeStamp) }));
     }
 
     @Override
@@ -43,8 +46,7 @@ public class TableRowEntity extends BaseEntity {
     public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
         if (currentNodeName.equals("promotion")) {
             ObjectNode objNode = (ObjectNode)childNode;
-            objNode.put("code", childNode.get("_id").asInt());
-            objNode.put("_id", this.getRoot().getNext());
+            objNode.remove("position");
         }
         return super.transformChildNode(currentNodeName, index, childNode);
     }

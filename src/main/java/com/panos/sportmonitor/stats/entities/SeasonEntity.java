@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.entities.ref.UniqueTournamentEntity;
-import com.panos.sportmonitor.stats.entities.time.OddsEntity;
+import com.panos.sportmonitor.stats.entities.ref.OddsEntity;
 
 import java.util.Iterator;
 import java.util.Map;

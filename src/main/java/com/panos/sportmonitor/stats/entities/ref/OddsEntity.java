@@ -1,14 +1,12 @@
-package com.panos.sportmonitor.stats.entities.time;
+package com.panos.sportmonitor.stats.entities.ref;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseTimeEntity;
 import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.EntityKey;
-import com.panos.sportmonitor.stats.entities.MatchEntity;
 
-public class OddsEntity extends BaseTimeEntity {
+public class OddsEntity extends BaseEntity {
     private EntityId bookmakerId;
     private Double homeOdds;
     private Long homeTbId;

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
 
-public abstract class OverUnderEntryEntity extends BaseEntity {
+public abstract class AbstractOverUnderEntity extends BaseEntity {
     private Integer matches;
     private Double goalsscoredFtAverage;
     private Integer goalsscoredFtTotal;
@@ -80,7 +80,7 @@ public abstract class OverUnderEntryEntity extends BaseEntity {
     private Integer p255Over;
     private Integer p255Under;
 
-    public OverUnderEntryEntity(BaseEntity parent, EntityId id) {
+    public AbstractOverUnderEntity(BaseEntity parent, EntityId id) {
         super(parent, id);
     }
 

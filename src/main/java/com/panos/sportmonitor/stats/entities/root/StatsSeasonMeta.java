@@ -29,6 +29,7 @@ public class StatsSeasonMeta extends BaseRootEntity {
     @Override
     public String toString() {
         return "StatsSeasonMeta{" + "name='" + getName() + '\'' +
+                "seasonId=" + seasonId +
                 '}';
     }
 }

@@ -141,7 +141,7 @@ public class StatsParser {
                 long auxEntityId = getAuxEntityId(currentNodeName);
                 long childEntityId = currentNode.get("_id").asLong();
                 final BaseEntity childEntity = createEntity(parentEntity, docType, childEntityId, timeStamp, currentNode);
-                if (!childEntity.handleAuxId(auxEntityId)) {
+                if (childEntity != null && !childEntity.handleAuxId(auxEntityId)) {
                     String message = String.format("%s [UNHANDLED AUX ID]: '%s' --- id=%s, aux=%s",
                             childEntity.getClass().getSimpleName(),
                             currentNodeName,
@@ -260,7 +260,11 @@ public class StatsParser {
             case "statistics_leaguetable":
                 entity = new LeagueTableEntity(parent, id); break;
             case "tiebreakrule": entity = new TieBreakRuleEntity(parent, id); break;
-            case "tablerow": entity = new TableRowEntity(parent, id); break;
+            case "tablerow": entity = null; break;
+//            case "tablerow":
+//                System.out.println(currentNode.findParent("tables"));
+//                entity = new TableRowEntity(parent, tableId, id, timeStamp);
+//                break;
             case "promotion": entity = new PromotionEntity(parent, id); break;
             case "matchtype": entity = new MatchTypeEntity(parent, id); break;
             case "tabletype": entity = new TableTypeEntity(parent, id); break;

@@ -45,6 +45,13 @@ public class LeagueTableEntity extends BaseEntity {
     }
 
     @Override
+    public BaseEntity tryCreateChildEntity(long timeStamp, String nodeName, JsonNode node) {
+        if (nodeName.equals("tablerows[]"))
+            return new TableRowEntity(this, this.getId(), node.get("_id").asLong(), timeStamp);
+        return super.tryCreateChildEntity(timeStamp, nodeName, node);
+    }
+
+    @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
             case "seasonid": this.seasonId = new EntityId(SeasonEntity.class, node.asLong()); break;

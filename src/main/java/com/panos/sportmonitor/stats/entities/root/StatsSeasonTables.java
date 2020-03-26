@@ -20,10 +20,8 @@ public class StatsSeasonTables extends BaseRootEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("StatsSeasonTables{");
-        sb.append("name='").append(getName()).append('\'');
-        sb.append(", seasonId=").append(seasonId);
-        sb.append('}');
-        return sb.toString();
+        return "StatsSeasonTables{" + "name='" + getName() + '\'' +
+                ", seasonId=" + seasonId +
+                '}';
     }
 }
