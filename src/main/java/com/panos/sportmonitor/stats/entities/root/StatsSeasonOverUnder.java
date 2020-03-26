@@ -2,13 +2,12 @@ package com.panos.sportmonitor.stats.entities.root;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.*;
+import com.panos.sportmonitor.stats.entities.ref.SeasonOverUnderEntity;
+import com.panos.sportmonitor.stats.entities.ref.TeamOverUnderEntity;
 
 public class StatsSeasonOverUnder extends BaseRootEntity {
     private EntityId seasonId;
-    private EntityId leagueTotalsId;
-    private EntityIdList statsTeamOverUnders = new EntityIdList();
 
     public StatsSeasonOverUnder(long timeStamp) {
         super(BaseRootEntityType.StatsSeasonOverUnder, timeStamp);
@@ -18,10 +17,9 @@ public class StatsSeasonOverUnder extends BaseRootEntity {
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
             case "season": this.seasonId = new EntityId(childEntity); return true;
-            case "league.totals": this.leagueTotalsId = new EntityId(childEntity); return true;
+            case "league.totals": return true;
             default:
                 if (entityName.startsWith("stats.")) {
-                    statsTeamOverUnders.add(childEntity.getId());
                     return true;
                 }
                 return super.handleChildEntity(entityName, childEntity);
@@ -29,17 +27,14 @@ public class StatsSeasonOverUnder extends BaseRootEntity {
     }
 
     @Override
-    public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
-        if (currentNodeName.equals("league.totals")) {
-            ObjectNode objNode = (ObjectNode)childNode;
-            objNode.put("_doc", "season_over_under");
-            objNode.put("_id", this.getRoot().getNext());
-        } else if (currentNodeName.startsWith("stats.")) {
-            ObjectNode objNode = (ObjectNode)childNode;
-            objNode.put("_doc", "team_over_under");
-            objNode.put("_id", this.getRoot().getNext());
+    public BaseEntity tryCreateChildEntity(long timeStamp, String nodeName, JsonNode node) {
+        if (nodeName.equals("league.totals")) {
+            return new SeasonOverUnderEntity(this, seasonId, timeStamp);
+        } else if (nodeName.startsWith("stats.")) {
+            long teamId = Long.parseLong(nodeName.substring(nodeName.lastIndexOf('.') + 1).replace("[]", ""));
+            return new TeamOverUnderEntity(this, teamId, timeStamp);
         }
-        return super.transformChildNode(currentNodeName, index, childNode);
+        return super.tryCreateChildEntity(timeStamp, nodeName, node);
     }
 
     @Override
@@ -53,8 +48,6 @@ public class StatsSeasonOverUnder extends BaseRootEntity {
         final StringBuilder sb = new StringBuilder("StatsSeasonOverUnder{");
         sb.append("name='").append(getName()).append('\'');
         sb.append(", seasonId=").append(seasonId);
-        sb.append(", leagueTotalsId=").append(leagueTotalsId);
-        sb.append(", statsTeamOverUnders=").append(statsTeamOverUnders);
         sb.append('}');
         return sb.toString();
     }

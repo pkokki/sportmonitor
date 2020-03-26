@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.BaseTimeEntity;
 import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityKey;
 import com.panos.sportmonitor.stats.entities.MatchEntity;
 
 public class OddsEntity extends BaseTimeEntity {
     private EntityId bookmakerId;
-    private EntityId matchId;
     private Double homeOdds;
     private Long homeTbId;
     private Integer homeOddsFieldId;
@@ -28,13 +28,16 @@ public class OddsEntity extends BaseTimeEntity {
     private String key;
     private String extra, closingTime;
 
-    public OddsEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(OddsEntity.class, id, timeStamp));
+    public OddsEntity(BaseEntity parent, long matchId, long timeStamp, int ise) {
+        super(parent, new EntityId(OddsEntity.class,
+                new EntityKey("matchId", matchId),
+                new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp),
+                new EntityKey("ise", ise)
+                ));
     }
 
     @Override
     public boolean handleAuxId(long auxEntityId) {
-        this.matchId = new EntityId(MatchEntity.class, auxEntityId);
         return true;
     }
 
@@ -84,7 +87,6 @@ public class OddsEntity extends BaseTimeEntity {
     @Override
     public String toString() {
         return "OddsEntity{" + "id=" + getId() +
-                ", matchId=" + matchId +
                 ", bookmakerId=" + bookmakerId +
                 ", homeOdds=" + homeOdds +
                 ", drawOdds=" + drawOdds +

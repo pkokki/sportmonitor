@@ -1,13 +1,14 @@
-package com.panos.sportmonitor.stats.entities.time;
+package com.panos.sportmonitor.stats.entities.ref;
 
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityKey;
 
 public class TeamOverUnderEntity extends OverUnderEntryEntity {
     private EntityId teamId;
 
-    public TeamOverUnderEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(TeamOverUnderEntity.class, id, timeStamp));
+    public TeamOverUnderEntity(BaseEntity parent, long teamId, long timeStamp) {
+        super(parent, new EntityId(TeamOverUnderEntity.class, new EntityKey("teamId", teamId), new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp)));
     }
 
     @Override
@@ -21,7 +22,6 @@ public class TeamOverUnderEntity extends OverUnderEntryEntity {
 
     @Override
     public boolean handleAuxId(long auxEntityId) {
-        //this.teamId = auxEntityId;
         return true;
     }
 

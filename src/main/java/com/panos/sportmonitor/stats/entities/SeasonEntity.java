@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.EntityIdList;
 import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.entities.ref.UniqueTournamentEntity;
+import com.panos.sportmonitor.stats.entities.time.OddsEntity;
+
+import java.util.Iterator;
+import java.util.Map;
 
 public class SeasonEntity extends BaseEntity {
     private EntityId realCategoryId;
@@ -20,8 +23,6 @@ public class SeasonEntity extends BaseEntity {
     private Boolean friendly;
     private String year;
     private Boolean coverageLineups;
-    private EntityIdList iseOdds = new EntityIdList();
-    private EntityIdList odds = new EntityIdList();
 
     public SeasonEntity(BaseEntity parent, long id) {
         super(parent, createId(id));
@@ -45,9 +46,9 @@ public class SeasonEntity extends BaseEntity {
             case "matches[]":break;
             default:
                 if (entityName.startsWith("iseodds."))
-                    this.iseOdds.add(childEntity.getId());
+                    break;
                 else if (entityName.startsWith("odds."))
-                    this.odds.add(childEntity.getId());
+                    break;
                 else if (entityName.startsWith("tournaments."))
                     break;
                 else if (entityName.startsWith("tables."))
@@ -58,12 +59,22 @@ public class SeasonEntity extends BaseEntity {
     }
 
     @Override
-    public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
-        if (currentNodeName.startsWith("odds.") && !currentNodeName.endsWith("[]")) {
-            ObjectNode objNode = (ObjectNode)childNode;
-            objNode.put("_id", this.getRoot().getNext());
+    public BaseEntity tryCreateChildEntity(long timeStamp, String nodeName, JsonNode node) {
+        if (nodeName.equals("iseodds")) {
+            for (Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); ) {
+                ObjectNode child = (ObjectNode)it.next().getValue();
+                child.remove("_doc");
+            }
         }
-        return super.transformChildNode(currentNodeName, index, childNode);
+        else if (nodeName.startsWith("odds.") && nodeName.endsWith("[]")) {
+            long matchId = Long.parseLong(nodeName.substring(nodeName.lastIndexOf('.') + 1).replace("[]", ""));
+            return new OddsEntity(this, matchId, timeStamp, 1);
+        }
+        else if (nodeName.startsWith("iseodds.")) {
+            long matchId = Long.parseLong(nodeName.substring(nodeName.lastIndexOf('.') + 1));
+            return new OddsEntity(this, matchId, timeStamp, 0);
+        }
+        return super.tryCreateChildEntity(timeStamp, nodeName, node);
     }
 
     @Override
@@ -112,8 +123,6 @@ public class SeasonEntity extends BaseEntity {
                 ", year='" + year + '\'' +
                 ", coverageLineups=" + coverageLineups +
                 ", realCategoryId=" + realCategoryId +
-                ", iseOdds=" + iseOdds +
-                ", odds=" + odds +
                 '}';
     }
 }

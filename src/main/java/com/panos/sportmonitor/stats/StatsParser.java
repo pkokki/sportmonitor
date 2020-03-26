@@ -197,7 +197,9 @@ public class StatsParser {
             case "stats_season_topgoals": entity = new StatsSeasonTopGoals(timeStamp); break;
             case "stats_season_topassists": entity = new StatsSeasonTopAssists(timeStamp); break;
             case "stats_season_topcards": entity = new StatsSeasonTopCards(timeStamp); break;
-            case "stats_season_injuries": entity = new StatsSeasonInjuries(timeStamp); break;
+            case "stats_season_injuries":
+                entity = new StatsSeasonInjuries(Long.parseLong(queryUrl.split("/")[1]), timeStamp);
+                break;
             case "stats_season_leaguesummary":
                 entity = new StatsSeasonLeagueSummary(Long.parseLong(queryUrl.split("/")[1]), timeStamp);
                 break;
@@ -275,7 +277,7 @@ public class StatsParser {
                 break;
 
             case "match_details_entry": entity = /*new MatchDetailsEntryEntity(parent, id, timeStamp)*/null; break;
-            case "odds": entity = new OddsEntity(parent, id, timeStamp); break;
+            //case "odds": entity = new OddsEntity(parent, id, timeStamp); break;
             case "team_form_table": entity = /*new TeamFormTableEntity(parent, id, timeStamp)*/null; break;
             case "team_form_entry": entity = /*new TeamFormEntryEntity(parent, id, timeStamp)*/null; break;
             case "toplistentry":
@@ -289,8 +291,8 @@ public class StatsParser {
             case "team_goal_stats": entity = null;/*new TeamGoalStatsEntity(parent, id, timeStamp);*/ break;
             case "unique_team_stats": entity = new UniqueTeamStatsEntity(parent, id, timeStamp); break;
             case "match_funfact": entity = new MatchFunFactEntity(parent, id); break;
-            case "season_over_under": entity = new SeasonOverUnderEntity(parent, id, timeStamp); break;
-            case "team_over_under": entity = new TeamOverUnderEntity(parent, id, timeStamp); break;
+            //case "season_over_under": entity = new SeasonOverUnderEntity(parent, id, timeStamp); break;
+            //case "team_over_under": entity = new TeamOverUnderEntity(parent, id, timeStamp); break;
             case "team_player_top_list_entry": entity = new TeamPlayerTopListEntryEntity(parent, id, timeStamp); break;
 
             default:

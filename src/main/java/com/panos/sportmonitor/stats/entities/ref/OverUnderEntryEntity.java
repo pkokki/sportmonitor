@@ -1,12 +1,11 @@
-package com.panos.sportmonitor.stats.entities.time;
+package com.panos.sportmonitor.stats.entities.ref;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseTimeEntity;
 import com.panos.sportmonitor.stats.EntityId;
 
-public abstract class OverUnderEntryEntity extends BaseTimeEntity {
+public abstract class OverUnderEntryEntity extends BaseEntity {
     private Integer matches;
     private Double goalsscoredFtAverage;
     private Integer goalsscoredFtTotal;
