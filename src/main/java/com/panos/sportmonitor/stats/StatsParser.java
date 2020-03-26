@@ -41,7 +41,7 @@ public class StatsParser {
         if (rootNode.has("_dob")) {
             final long timeStamp = rootNode.get("_dob").asLong();
             final String name = rootNode.get("event").asText();
-            final BaseRootEntity baseRootEntity = createRootEntity(name, timeStamp, rootNode.get("data"));
+            final BaseRootEntity baseRootEntity = createRootEntity(name, timeStamp, rootNode.get("data"), rootNode.get("radarUrl").asText(""));
             if (baseRootEntity != null) {
                 StatsConsole.printlnInfo(String.format("Traversing root entity '%s'", baseRootEntity.getName()));
                 traverse(1, timeStamp, "", rootNode.get("data"), baseRootEntity);
@@ -165,7 +165,7 @@ public class StatsParser {
         return 0;
     }
 
-    public BaseRootEntity createRootEntity(final String name, final long timeStamp, final JsonNode currentNode) {
+    public BaseRootEntity createRootEntity(final String name, final long timeStamp, final JsonNode currentNode, final String queryUrl) {
         BaseRootEntity entity;
         switch (name) {
             case "config_tree": entity = new NullQuietRootEntity(timeStamp); break;
@@ -185,7 +185,9 @@ public class StatsParser {
             case "stats_formtable":
                 entity = new StatsFormTable(timeStamp, currentNode.get("season").get("_id").asLong());
                 break;
-            case "stats_season_meta": entity = new StatsSeasonMeta(timeStamp); break;
+            case "stats_season_meta":
+                entity = new StatsSeasonMeta(Long.parseLong(queryUrl.split("/")[1]), timeStamp);
+                break;
             case "stats_season_teams2": entity = new StatsSeasonTeams2(timeStamp); break;
             case "stats_season_lastx": entity = new StatsSeasonLastX(timeStamp); break;
             case "stats_season_nextx": entity = new StatsSeasonNextX(timeStamp); break;
@@ -196,7 +198,9 @@ public class StatsParser {
             case "stats_season_topassists": entity = new StatsSeasonTopAssists(timeStamp); break;
             case "stats_season_topcards": entity = new StatsSeasonTopCards(timeStamp); break;
             case "stats_season_injuries": entity = new StatsSeasonInjuries(timeStamp); break;
-            case "stats_season_leaguesummary": entity = new StatsSeasonLeagueSummary(timeStamp); break;
+            case "stats_season_leaguesummary":
+                entity = new StatsSeasonLeagueSummary(Long.parseLong(queryUrl.split("/")[1]), timeStamp);
+                break;
             case "stats_season_goals": entity = new StatsSeasonGoals(timeStamp); break;
             case "stats_season_uniqueteamstats": entity = new StatsSeasonUniqueTeamStats(timeStamp); break;
             case "stats_season_odds": entity = new StatsSeasonOdds(timeStamp); break;
