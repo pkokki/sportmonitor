@@ -1,9 +1,8 @@
 package com.panos.sportmonitor.stats.entities.root;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.*;
-import com.panos.sportmonitor.stats.entities.time.UniqueTeamStatsEntity;
+import com.panos.sportmonitor.stats.entities.ref.UniqueTeamStatsEntity;
 
 public class StatsSeasonUniqueTeamStats extends BaseRootEntity {
     private EntityId seasonId;

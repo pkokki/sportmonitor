@@ -1,14 +1,13 @@
-package com.panos.sportmonitor.stats.entities.time;
+package com.panos.sportmonitor.stats.entities.ref;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.BaseTimeEntity;
 import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.EntityKey;
 import com.panos.sportmonitor.stats.entities.UniqueTeamEntity;
 
-public class UniqueTeamStatsEntity extends BaseTimeEntity {
+public class UniqueTeamStatsEntity extends BaseEntity {
     private EntityId uniqueTeamId;
     private Integer goalAttempts, shotsOnGoal, shotsOffGoal, cornerKicks, ballPossession, shotsBlocked,
             cardsGiven, freekicks, offside, shotsOnPost, shotsOnBar, goalsByFoot,

@@ -1,10 +1,8 @@
-package com.panos.sportmonitor.stats.entities.time;
+package com.panos.sportmonitor.stats.entities.ref;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.*;
-import com.panos.sportmonitor.stats.entities.PlayerEntity;
 
 public class TopListEntryEntity extends BaseEntity {
     private Integer totalGoals, totalAssists;
@@ -45,17 +43,6 @@ public class TopListEntryEntity extends BaseEntity {
             return super.handleChildEntity(entityName, childEntity);
         }
     }
-
-//    @Override
-//    public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
-//        if (currentNodeName.startsWith("teams.")) {
-//            ObjectNode objNode = (ObjectNode)childNode;
-//            objNode.put("_doc", "team_player_top_list_entry");
-//            objNode.put("_id", this.getRoot().getNext());
-//            objNode.put("playerid", playerId.getId());
-//        }
-//        return super.transformChildNode(currentNodeName, index, childNode);
-//    }
 
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {

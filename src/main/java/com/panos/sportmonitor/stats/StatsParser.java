@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.entities.*;
 import com.panos.sportmonitor.stats.entities.ref.*;
 import com.panos.sportmonitor.stats.entities.root.*;
-import com.panos.sportmonitor.stats.entities.time.*;
 import org.apache.commons.lang.WordUtils;
 
 import java.io.File;

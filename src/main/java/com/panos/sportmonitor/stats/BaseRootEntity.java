@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public abstract class BaseRootEntity extends BaseTimeEntity {
+public abstract class BaseRootEntity extends BaseEntity {
     private final BaseRootEntityType __type;
     private final List<Tuple2<Integer, BaseEntity>> __childEntities = new ArrayList<>();
     private final HashMap<EntityId, List<Tuple2<String, Consumer<BaseEntity>>>> __consumers = new HashMap<>();
