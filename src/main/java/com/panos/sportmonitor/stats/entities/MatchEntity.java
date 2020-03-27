@@ -101,7 +101,6 @@ public class MatchEntity extends BaseEntity {
     private String  matchStatus ;
     private  Boolean  cancelled ;
     private Integer cardsHomeYellow, cardsHomeRed, cardsAwayYellow, cardsAwayRed;
-    private EntityIdList teamForms = new EntityIdList();
 
     public MatchEntity(BaseEntity parent, long id) {
         super(parent, new EntityId(MatchEntity.class, id));
@@ -138,7 +137,6 @@ public class MatchEntity extends BaseEntity {
                 //this.tournamentId = childEntity.getId();
                 break;
             case "form[]":
-                this.teamForms.add(childEntity.getId());
                 break;
             case "stadium":
                 this.stadiumId = new EntityId(childEntity);
@@ -153,12 +151,10 @@ public class MatchEntity extends BaseEntity {
     }
 
     @Override
-    public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
-        if (currentNodeName.equals("form[]")) {
-            ObjectNode objNode = (ObjectNode)childNode;
-            objNode.put("_id", this.getRoot().getNext());
-        }
-        return super.transformChildNode(currentNodeName, index, childNode);
+    public BaseEntity tryCreateChildEntity(long timeStamp, String nodeName, JsonNode node) {
+        if (nodeName.equals("form[]"))
+            return new UniqueTeamFormEntity(this, this.getId(), node.get("uniqueteamid").asLong(), timeStamp);
+        return super.tryCreateChildEntity(timeStamp, nodeName, node);
     }
 
     @Override
@@ -385,7 +381,6 @@ public class MatchEntity extends BaseEntity {
                 ", oddsUpdated=" + oddsUpdated +
                 ", status='" + status + '\'' +
                 ", nextMatchiId=" + nextMatchId +
-                ", teamForms=" + teamForms +
                 ", coverageLineup=" + coverageLineup +
                 ", coverageFormations=" + coverageFormations +
                 ", coverageLiveTable=" + coverageLiveTable +

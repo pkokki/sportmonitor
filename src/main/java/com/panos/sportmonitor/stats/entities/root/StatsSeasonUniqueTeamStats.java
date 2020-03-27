@@ -3,10 +3,10 @@ package com.panos.sportmonitor.stats.entities.root;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.*;
+import com.panos.sportmonitor.stats.entities.time.UniqueTeamStatsEntity;
 
 public class StatsSeasonUniqueTeamStats extends BaseRootEntity {
     private EntityId seasonId;
-    private EntityIdList uniqueTeamStats = new EntityIdList();
 
     public StatsSeasonUniqueTeamStats(long timeStamp) {
         super(BaseRootEntityType.StatsSeasonUniqueTeamStats, timeStamp);
@@ -18,7 +18,6 @@ public class StatsSeasonUniqueTeamStats extends BaseRootEntity {
             case "season": this.seasonId = new EntityId(childEntity); break;
             default:
                 if (entityName.startsWith("stats.uniqueteams.")) {
-                    this.uniqueTeamStats.add(childEntity.getId());
                     break;
                 }
                 return super.handleChildEntity(entityName, childEntity);
@@ -27,13 +26,10 @@ public class StatsSeasonUniqueTeamStats extends BaseRootEntity {
     }
 
     @Override
-    public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
-        if (currentNodeName.startsWith("stats.uniqueteams.")) {
-            ObjectNode objNode = (ObjectNode)childNode;
-            objNode.put("_doc", "unique_team_stats");
-            objNode.put("_id", this.getRoot().getNext());
-        }
-        return super.transformChildNode(currentNodeName, index, childNode);
+    public BaseEntity tryCreateChildEntity(long timeStamp, String nodeName, JsonNode node) {
+        if (nodeName.startsWith("stats.uniqueteams."))
+            return new UniqueTeamStatsEntity(this, seasonId, node.get("uniqueteam").get("_id").asLong(), timeStamp);
+        return super.tryCreateChildEntity(timeStamp, nodeName, node);
     }
 
     @Override
@@ -41,7 +37,6 @@ public class StatsSeasonUniqueTeamStats extends BaseRootEntity {
         final StringBuilder sb = new StringBuilder("StatsSeasonUniqueTeamStats{");
         sb.append("name=").append(getName());
         sb.append(", seasonId=").append(seasonId);
-        sb.append(", uniqueTeamStats=").append(uniqueTeamStats);
         sb.append('}');
         return sb.toString();
     }

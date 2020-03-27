@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityKey;
 import com.panos.sportmonitor.stats.entities.MatchEntity;
 import com.panos.sportmonitor.stats.entities.SeasonEntity;
 import com.panos.sportmonitor.stats.entities.UniqueTeamEntity;
@@ -11,13 +12,17 @@ import com.panos.sportmonitor.stats.entities.UniqueTeamEntity;
 public class SeasonPosEntity extends BaseEntity {
     private EntityId uniqueTeamId;
     private EntityId seasonId;
-    private EntityId matchId;
     private Integer round;
+
+    private EntityId matchId;
     private Integer position;
     private String moved;
 
-    public SeasonPosEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(SeasonPosEntity.class, id));
+    public SeasonPosEntity(BaseEntity parent, EntityId seasonId, long uniqueTeamId, int round) {
+        super(parent, new EntityId(SeasonPosEntity.class,
+                new EntityId[] { seasonId },
+                new EntityKey[] { new EntityKey("uniqueTeamId", uniqueTeamId), new EntityKey("round", round) }
+                ));
     }
 
     @Override

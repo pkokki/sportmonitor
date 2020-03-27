@@ -11,6 +11,10 @@ public class EntityKey {
         this.value = value;
     }
 
+    public static EntityKey Timestamp(long timeStamp) {
+        return new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp);
+    }
+
     public Object getValue() {
         return value;
     }

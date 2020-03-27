@@ -1,5 +1,7 @@
 package com.panos.sportmonitor.stats;
 
+import java.util.Objects;
+
 public class BaseRootEntityType {
     public static final BaseRootEntityType NullRoot = new BaseRootEntityType(0, "null");
     public static final BaseRootEntityType MatchDetailsExtended = new BaseRootEntityType(1, "MatchDetailsExtended");
@@ -46,5 +48,18 @@ public class BaseRootEntityType {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BaseRootEntityType that = (BaseRootEntityType) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

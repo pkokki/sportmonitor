@@ -25,14 +25,14 @@ public class UniqueTeamStatsEntity extends BaseTimeEntity {
             goalsByHeadMatches, attendanceMatches, yellowCardsMatches, redCardsMatches, goalsScoredMatches, goalsConcededMatches,
             yellowRedCardsMatches, shootingEfficiencyMatches;
 
-    public UniqueTeamStatsEntity(BaseEntity parent, long uniqueTeamId, long timeStamp) {
-        super(parent, createId(uniqueTeamId, timeStamp));
+    public UniqueTeamStatsEntity(BaseEntity parent, EntityId seasonId, long uniqueTeamId, long timeStamp) {
+        super(parent, createId(seasonId, uniqueTeamId, timeStamp));
     }
 
-    private static EntityId createId(long uniqueTeamId, long timeStamp) {
+    private static EntityId createId(EntityId seasonId, long uniqueTeamId, long timeStamp) {
         return new EntityId(UniqueTeamStatsEntity.class,
-                new EntityKey("uniqueTeamId", uniqueTeamId),
-                new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp));
+                new EntityId[] { seasonId },
+                new EntityKey[] { new EntityKey("teamId", uniqueTeamId), new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp) });
     }
 
     @Override

@@ -41,7 +41,7 @@ public class StatsParser {
         if (rootNode.has("_dob")) {
             final long timeStamp = rootNode.get("_dob").asLong();
             final String name = rootNode.get("event").asText();
-            final BaseRootEntity baseRootEntity = createRootEntity(name, timeStamp, rootNode.get("data"), rootNode.get("radarUrl").asText(""));
+            final BaseRootEntity baseRootEntity = createRootEntity(name, timeStamp, rootNode.get("data"), rootNode.path("radarUrl").asText(""));
             if (baseRootEntity != null) {
                 StatsConsole.printlnInfo(String.format("Traversing root entity '%s'", baseRootEntity.getName()));
                 traverse(1, timeStamp, "", rootNode.get("data"), baseRootEntity);
@@ -255,7 +255,7 @@ public class StatsParser {
             case "tableround": entity = new TableRoundEntity(parent, id); break;
             case "cupround": entity = new CupRoundEntity(parent, id); break;
             case "bookmaker": entity = new BookmakerEntity(parent, id); break;
-            case "uniqueteamform": entity = new UniqueTeamFormEntity(parent, id); break;
+            case "uniqueteamform": entity = null; /*new UniqueTeamFormEntity(parent, id);*/ break;
             case "statistics_table":
             case "statistics_leaguetable":
                 entity = new LeagueTableEntity(parent, id); break;
@@ -268,7 +268,7 @@ public class StatsParser {
             case "promotion": entity = new PromotionEntity(parent, id); break;
             case "matchtype": entity = new MatchTypeEntity(parent, id); break;
             case "tabletype": entity = new TableTypeEntity(parent, id); break;
-            case "seasonpos": entity = new SeasonPosEntity(parent, id); break;
+            case "seasonpos": entity = null;/*new SeasonPosEntity(parent, id);*/ break;
             case "player_position_type": entity = new PlayerPositionTypeEntity(parent, id); break;
             case "playerstatus": entity = new PlayerStatusEntity(parent, id); break;
             case "status": entity = new MatchStatusEntity(parent, id); break;
@@ -285,15 +285,20 @@ public class StatsParser {
             case "team_form_table": entity = /*new TeamFormTableEntity(parent, id, timeStamp)*/null; break;
             case "team_form_entry": entity = /*new TeamFormEntryEntity(parent, id, timeStamp)*/null; break;
             case "toplistentry":
-                if (parent.getRoot().isType(BaseRootEntityType.StatsTeamPlayerFacts)) {
+                BaseRootEntityType rootType = parent.getRoot().getType();
+                if (rootType.equals(BaseRootEntityType.StatsTeamPlayerFacts)) {
                     long teamId = Long.parseLong(currentNode.get("teams").fields().next().getKey());
                     entity = new UniqueTeamPlayerEntity(parent, teamId, id);
                 }
-                else
-                    entity = new TopListEntryEntity(parent, id, timeStamp);
+                else if (rootType.equals(BaseRootEntityType.StatsSeasonTopAssists) || rootType.equals(BaseRootEntityType.StatsSeasonTopCards) || rootType.equals(BaseRootEntityType.StatsSeasonTopGoals)) {
+                    long teamId = Long.parseLong(currentNode.get("teams").fields().next().getKey());
+                    long playerId = currentNode.get("playerid").asLong();
+                    entity = new TopListEntryEntity(parent, teamId, playerId, rootType.getId(), timeStamp);
+                }
+                else entity = null;
                 break;
             case "team_goal_stats": entity = null;/*new TeamGoalStatsEntity(parent, id, timeStamp);*/ break;
-            case "unique_team_stats": entity = new UniqueTeamStatsEntity(parent, id, timeStamp); break;
+            case "unique_team_stats": entity = null /*new UniqueTeamStatsEntity(parent, id, timeStamp)*/; break;
             case "match_funfact": entity = new MatchFunFactEntity(parent, id); break;
             //case "season_over_under": entity = new SeasonOverUnderEntity(parent, id, timeStamp); break;
             //case "team_over_under": entity = new TeamOverUnderEntity(parent, id, timeStamp); break;

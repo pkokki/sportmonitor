@@ -8,7 +8,7 @@ import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.EntityKey;
 
 public class TableRowEntity extends BaseEntity {
-    private EntityId promotionId;
+    private EntityId positionTypeId;
     private EntityId teamId;
     private Integer changeTotal, changeHome, changeAway, drawTotal, drawHome, drawAway, goalDiffTotal, goalDiffHome, goalDiffAway;
     private Integer goalsAgainstTotal, goalsAgainstHome, goalsAgainstAway, goalsForTotal, goalsForHome, goalsForAway;
@@ -35,7 +35,7 @@ public class TableRowEntity extends BaseEntity {
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
-            case "promotion": this.promotionId = new EntityId(childEntity); return true;
+            case "promotion": this.positionTypeId = new EntityId(childEntity); return true;
             case "team": this.teamId = new EntityId(childEntity); return true;
             default:
                 return super.handleChildEntity(entityName, childEntity);
@@ -140,7 +140,7 @@ public class TableRowEntity extends BaseEntity {
     @Override
     public String toString() {
         return "TableRowEntity{" + "id=" + getId() +
-                ", promotionId=" + promotionId +
+                ", positionTypeId=" + positionTypeId +
                 ", teamId=" + teamId +
                 ", changeTotal=" + changeTotal +
                 ", changeHome=" + changeHome +

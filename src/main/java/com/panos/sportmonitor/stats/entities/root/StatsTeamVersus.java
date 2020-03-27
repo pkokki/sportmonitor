@@ -5,12 +5,6 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.*;
 
 public class StatsTeamVersus extends BaseRootEntity {
-    private EntityIdList matches = new EntityIdList();
-    private EntityIdList tournaments = new EntityIdList();
-    private EntityIdList uniqueTeams = new EntityIdList();
-    private EntityIdList realCategories = new EntityIdList();
-    private EntityId nextMatchId;
-    private Long liveMatchId;
 
     public StatsTeamVersus(long timeStamp) {
         super(BaseRootEntityType.StatsTeamVersus, timeStamp);
@@ -20,20 +14,16 @@ public class StatsTeamVersus extends BaseRootEntity {
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
             case "matches[]":
-                this.matches.add(childEntity.getId());
                 return true;
             case "next":
-                this.nextMatchId = new EntityId(childEntity);
+                //this.nextMatchId = new EntityId(childEntity);
                 return true;
             default:
                 if (entityName.startsWith("tournaments.")) {
-                    this.tournaments.add(childEntity.getId());
                     return true;
                 } else if (entityName.startsWith("realcategories.")) {
-                    this.realCategories.add(childEntity.getId());
                     return true;
                 } else if (entityName.startsWith("teams.")) {
-                    this.uniqueTeams.add(childEntity.getId());
                     return true;
                 }
                 else if (entityName.startsWith("currentmanagers.")) {
@@ -48,7 +38,7 @@ public class StatsTeamVersus extends BaseRootEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "livematchid": this.liveMatchId = node.asLong(); break;
+            case "livematchid": break;
             default:
                 if (nodeName.startsWith("jersey.")) return true;
                 return super.handleProperty(nodeName, nodeType, node);
@@ -69,12 +59,6 @@ public class StatsTeamVersus extends BaseRootEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("StatsTeamVersus{");
         sb.append("name='").append(getName()).append('\'');
-        sb.append(", matches=").append(matches);
-        sb.append(", tournamentIds=").append(tournaments);
-        sb.append(", uniqueTeamIds=").append(uniqueTeams);
-        sb.append(", realCategoryIds=").append(realCategories);
-        sb.append(", nextMatchId=").append(nextMatchId);
-        sb.append(", liveMatchId=").append(liveMatchId);
         sb.append('}');
         return sb.toString();
     }

@@ -4,8 +4,6 @@ import com.panos.sportmonitor.stats.*;
 
 public abstract class AbstractStatsSeasonTop extends BaseRootEntity {
     protected EntityId seasonId;
-    protected EntityIdList players = new EntityIdList();
-    protected EntityIdList uniqueTeams = new EntityIdList();
 
     public AbstractStatsSeasonTop(BaseRootEntityType type, long timeStamp) {
         super(type, timeStamp);
@@ -15,10 +13,10 @@ public abstract class AbstractStatsSeasonTop extends BaseRootEntity {
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         switch (entityName) {
             case "season": this.seasonId = new EntityId(childEntity); break;
-            case "players[]": this.players.add(childEntity.getId()); break;
+            case "players[]": break;
             default:
                 if (entityName.startsWith("teams."))
-                    this.uniqueTeams.add(childEntity.getId());
+                    return true;
                 else
                     return super.handleChildEntity(entityName, childEntity);
         }

@@ -12,9 +12,6 @@ import com.panos.sportmonitor.stats.entities.ref.UniqueTeamSeasonEntity;
 
 public class StatsTeamSquad extends BaseRootEntity {
     private EntityId uniqueTeamId;
-    private Integer numberOfPlayers;
-    private Double averageSquadAge;
-    private UniqueTeamManagerEntity __lastManager;
 
     public StatsTeamSquad(long timeStamp) {
         super(BaseRootEntityType.StatsTeamSquad, timeStamp);
@@ -23,9 +20,9 @@ public class StatsTeamSquad extends BaseRootEntity {
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         if (nodeName.equals("squadinfo.numberofplayers"))
-            this.numberOfPlayers = node.asInt();
+            return true;
         else if (nodeName.equals("squadinfo.averagesquadage"))
-            this.averageSquadAge = node.asDouble();
+            return true;
         else if (nodeName.startsWith("squadinfo.averagestartingxiage.")) {
             long seasonId = Long.parseLong(nodeName.substring(nodeName.lastIndexOf('.') + 1));
             double age = Double.parseDouble(node.asText());
@@ -38,13 +35,14 @@ public class StatsTeamSquad extends BaseRootEntity {
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
-        if (entityName.equals("team"))
+        if (entityName.equals("team")) {
             this.uniqueTeamId = childEntity.getId();
+        }
         else if (entityName.equals("players[]"))
             return true;
         else if (entityName.equals("managers[]")) {
-            this.__lastManager = new UniqueTeamManagerEntity(this, uniqueTeamId.getId(), childEntity.getId().getId());
-            this.getRoot().addChildEntity(__lastManager);
+//            this.__lastManager = new UniqueTeamManagerEntity(this, uniqueTeamId.getId(), childEntity.getId().getId());
+//            this.getRoot().addChildEntity(__lastManager);
             return true;
         }
         else if (entityName.startsWith("seasons.")) {
@@ -63,11 +61,11 @@ public class StatsTeamSquad extends BaseRootEntity {
     @Override
     protected boolean handleChildProperty(BaseEntity childEntity, String nodeName, JsonNodeType nodeType, JsonNode node) {
         if (nodeName.equals("membersince.uts")) {
-            long startTime = node.asLong();
-            if (__lastManager != null && __lastManager.getManagerId() == childEntity.getId().getId())
-                __lastManager.setStartTime(startTime);
-            else
-                this.setAsyncProperty(nodeName, UniqueTeamPlayerEntity.createId(this.uniqueTeamId.getId(), childEntity.getId().getId()), e -> ((UniqueTeamPlayerEntity)e).setStartTime(startTime));
+//            long startTime = node.asLong();
+//            if (__lastManager != null && __lastManager.getManagerId() == childEntity.getId().getId())
+//                __lastManager.setStartTime(startTime);
+//            else
+//                this.setAsyncProperty(nodeName, UniqueTeamPlayerEntity.createId(this.uniqueTeamId.getId(), childEntity.getId().getId()), e -> ((UniqueTeamPlayerEntity)e).setStartTime(startTime));
             return true;
         }
         return super.handleChildProperty(childEntity, nodeName, nodeType, node);
@@ -77,8 +75,6 @@ public class StatsTeamSquad extends BaseRootEntity {
     public String toString() {
         return "StatsTeamSquad{" + "id=" + getId() +
                 ", uniqueTeamId=" + uniqueTeamId +
-                ", numberOfPlayers=" + numberOfPlayers +
-                ", averageSquadAge=" + averageSquadAge +
                 '}';
     }
 }

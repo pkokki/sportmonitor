@@ -8,18 +8,21 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public abstract class BaseRootEntity extends BaseTimeEntity {
-    private final String __name;
+    private final BaseRootEntityType __type;
     private final List<Tuple2<Integer, BaseEntity>> __childEntities = new ArrayList<>();
     private final HashMap<EntityId, List<Tuple2<String, Consumer<BaseEntity>>>> __consumers = new HashMap<>();
 
     public BaseRootEntity(BaseRootEntityType type, long timeStamp) {
         super(null, new EntityId(BaseRootEntity.class, type.getId(), timeStamp));
-        this.__name = type.getName();
+        this.__type = type;
         this.addChildEntity(1, this);
     }
 
     public final String getName() {
-        return __name;
+        return __type.getName();
+    }
+    public final BaseRootEntityType getType() {
+        return __type;
     }
 
     public void addChildEntity(BaseEntity entity) {
@@ -76,9 +79,5 @@ public abstract class BaseRootEntity extends BaseTimeEntity {
                 "name='" + getName() + '\'' +
                 ", ......}" +
                 '}';
-    }
-
-    public boolean isType(BaseRootEntityType type) {
-        return this.getName().equals(type.getName());
     }
 }

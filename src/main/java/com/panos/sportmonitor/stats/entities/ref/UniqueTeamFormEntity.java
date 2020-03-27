@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
 import com.panos.sportmonitor.stats.EntityId;
+import com.panos.sportmonitor.stats.EntityKey;
 import com.panos.sportmonitor.stats.entities.MatchEntity;
 import com.panos.sportmonitor.stats.entities.UniqueTeamEntity;
 
@@ -14,8 +15,10 @@ public class UniqueTeamFormEntity extends BaseEntity {
     private Double away3, away5, away7, away9;
     private Double total3, total5, total7, total9;
 
-    public UniqueTeamFormEntity(BaseEntity parent, long id) {
-        super(parent, new EntityId(UniqueTeamFormEntity.class, id));
+    public UniqueTeamFormEntity(BaseEntity parent, EntityId matchId, long teamId, long timeStamp) {
+        super(parent, new EntityId(UniqueTeamFormEntity.class,
+                new EntityId[] { matchId },
+                new EntityKey[] { new EntityKey("teamId", teamId), EntityKey.Timestamp(timeStamp) }));
     }
 
     @Override

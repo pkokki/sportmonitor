@@ -11,6 +11,7 @@ public class UniqueTeamEntity extends BaseEntity {
     private EntityId countryCodeId;
     private EntityId homeRealCategoryId;
     private EntityId stadiumId;
+    private EntityId managerId;
 
     private String name;
     private String suffix;
@@ -22,6 +23,8 @@ public class UniqueTeamEntity extends BaseEntity {
     private String website;
     private String sex;
     private Long teamTypeId;
+    private Integer numberOfPlayers;
+    private Double averageSquadAge;
 
     private Integer statsMatches;
     private Integer statsHomeMatches;
@@ -228,6 +231,7 @@ public class UniqueTeamEntity extends BaseEntity {
             case "cc":
                 this.countryCodeId = new EntityId(childEntity); return true;
             case "stadium": this.stadiumId = new EntityId(childEntity); return true;
+            case "manager": this.managerId = new EntityId(childEntity); return true;
             case "realcategory": this.realCategoryId = new EntityId(childEntity); return true;
             default:
                 return super.handleChildEntity(entityName, childEntity);
@@ -468,6 +472,7 @@ public class UniqueTeamEntity extends BaseEntity {
                 ", teamTypeId=" + teamTypeId +
                 ", countryCodeId=" + countryCodeId +
                 ", stadiumId=" + stadiumId +
+                ", managerId=" + managerId +
                 ", homeRealCategoryId=" + homeRealCategoryId +
                 ", statsMatches=" + statsMatches +
                 ", statsHomeMatches=" + statsHomeMatches +

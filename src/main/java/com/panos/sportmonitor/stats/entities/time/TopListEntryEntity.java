@@ -6,8 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.panos.sportmonitor.stats.*;
 import com.panos.sportmonitor.stats.entities.PlayerEntity;
 
-public class TopListEntryEntity extends BaseTimeEntity {
-    private EntityId playerId;
+public class TopListEntryEntity extends BaseEntity {
     private Integer totalGoals, totalAssists;
     private Integer totalMatches;
     private Integer totalPenalties;
@@ -20,46 +19,47 @@ public class TopListEntryEntity extends BaseTimeEntity {
     private Integer awayGoals;
     private Integer firstHalfGoals;
     private Integer secondHalfGoals;
-    private EntityIdList teamsEntries = new EntityIdList();
     private Integer totalYellowCards;
     private Integer totalYellowRedCards;
     private Integer totalRedCards;
     private Integer totalFirstHalfCards;
     private Integer totalSecondHalfCards;
 
-    public TopListEntryEntity(BaseEntity parent, long id, long timeStamp) {
-        super(parent, new EntityId(TopListEntryEntity.class, id, timeStamp));
+    public TopListEntryEntity(BaseEntity parent, long teamId, long playerId, int entryType, long timeStamp) {
+        super(parent, new EntityId(TopListEntryEntity.class,
+                new EntityKey("teamId", teamId),
+                new EntityKey("playerId", playerId),
+                new EntityKey("entryType", entryType),
+                new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp)
+        ));
     }
 
     @Override
     protected boolean handleChildEntity(String entityName, BaseEntity childEntity) {
         if ("player".equals(entityName)) {
-            this.playerId = new EntityId(childEntity);
+            return true;
         } else {
             if (entityName.startsWith("teams.")) {
-                this.teamsEntries.add(childEntity.getId());
                 return true;
             }
             return super.handleChildEntity(entityName, childEntity);
         }
-        return true;
     }
 
-    @Override
-    public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
-        if (currentNodeName.startsWith("teams.")) {
-            ObjectNode objNode = (ObjectNode)childNode;
-            objNode.put("_doc", "team_player_top_list_entry");
-            objNode.put("_id", this.getRoot().getNext());
-            objNode.put("playerid", playerId.getId());
-        }
-        return super.transformChildNode(currentNodeName, index, childNode);
-    }
+//    @Override
+//    public JsonNode transformChildNode(String currentNodeName, int index, JsonNode childNode) {
+//        if (currentNodeName.startsWith("teams.")) {
+//            ObjectNode objNode = (ObjectNode)childNode;
+//            objNode.put("_doc", "team_player_top_list_entry");
+//            objNode.put("_id", this.getRoot().getNext());
+//            objNode.put("playerid", playerId.getId());
+//        }
+//        return super.transformChildNode(currentNodeName, index, childNode);
+//    }
 
     @Override
     protected boolean handleProperty(String nodeName, JsonNodeType nodeType, JsonNode node) {
         switch (nodeName) {
-            case "playerid": this.playerId = new EntityId(PlayerEntity.class, node.asLong()); break;
             case "total.goals": this.totalGoals = node.asInt(); break;
             case "total.assists": this.totalAssists = node.asInt(); break;
             case "total.matches": this.totalMatches = node.asInt(); break;
@@ -78,7 +78,12 @@ public class TopListEntryEntity extends BaseTimeEntity {
             case "total.red_cards": this.totalRedCards = node.asInt(); break;
             case "total.number_of_cards_1st_half": this.totalFirstHalfCards = node.asInt(); break;
             case "total.number_of_cards_2nd_half": this.totalSecondHalfCards = node.asInt(); break;
-            default: return super.handleProperty(nodeName, nodeType, node);
+            case "playerid":
+                break;
+            default:
+                if (nodeName.startsWith("teams."))
+                    return true;
+                return super.handleProperty(nodeName, nodeType, node);
         }
         return true;
     }
@@ -86,7 +91,6 @@ public class TopListEntryEntity extends BaseTimeEntity {
     @Override
     public String toString() {
         return "TopListEntryEntity{" + "id=" + getId() +
-                ", playerId=" + playerId +
                 ", totalGoals=" + totalGoals +
                 ", totalAssists=" + totalAssists +
                 ", totalMatches=" + totalMatches +
@@ -100,7 +104,6 @@ public class TopListEntryEntity extends BaseTimeEntity {
                 ", awayGoals=" + awayGoals +
                 ", firstHalfGoals=" + firstHalfGoals +
                 ", secondHalfGoals=" + secondHalfGoals +
-                ", teamsEntries=" + teamsEntries +
                 ", totalYellowCards=" + totalYellowCards +
                 ", totalYellowRedCards=" + totalYellowRedCards +
                 ", totalRedCards=" + totalRedCards +
