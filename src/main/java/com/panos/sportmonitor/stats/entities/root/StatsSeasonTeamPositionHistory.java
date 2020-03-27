@@ -8,12 +8,6 @@ import com.panos.sportmonitor.stats.entities.ref.SeasonPosEntity;
 
 public class StatsSeasonTeamPositionHistory extends BaseRootEntity {
     private EntityId seasonId;
-//    private Integer teamCount;
-//    private Integer roundCount;
-//    private EntityIdList promotions = new EntityIdList();
-//    private EntityIdList tables = new EntityIdList();
-//    private EntityIdList teams = new EntityIdList();
-//    private EntityIdList seasonPositions = new EntityIdList();
 
     public StatsSeasonTeamPositionHistory(long timeStamp) {
         super(BaseRootEntityType.StatsSeasonTeamPositionHistory, timeStamp);
@@ -25,10 +19,6 @@ public class StatsSeasonTeamPositionHistory extends BaseRootEntity {
             ObjectNode objNode = (ObjectNode)childNode;
             objNode.remove("position");
         }
-//        else if (currentNodeName.startsWith("previousseason.") || currentNodeName.startsWith("currentseason.")) {
-//            ObjectNode objNode = (ObjectNode)childNode;
-//            objNode.put("_id", this.getRoot().getNext());
-//        }
         return super.transformChildNode(currentNodeName, index, childNode);
     }
 

@@ -103,17 +103,6 @@ public class StatsStore {
                 if (!entityFieldName.equals("id"))
                     listeners.forEach(o -> o.onRelationChanged(entity, entityFieldName, (EntityId)oldValue, (EntityId)newValue));
                 break;
-//            case "EntityIdList":
-//                final EntityIdList oldList = (EntityIdList) oldValue;
-//                final List<EntityId> newIds = ((EntityIdList) newValue)
-//                        .stream()
-//                        .filter(o -> oldList == null || !oldList.contains(o))
-//                        .collect(Collectors.toList());
-//                newIds.forEach(id -> {
-//                    if (oldList != null && isUpdate) oldList.add(id);
-//                    listeners.forEach(o -> o.onRelationAdded(entity, entityFieldName, id));
-//                });
-//                break;
             default:
                 StatsConsole.printlnWarn(String.format("StatsStore.onUpsert %s: cannot apply changes to field '%s' of type '%s': %s", entity.getClass().getSimpleName(), entityFieldName, entityFieldType, newValue));
         }
