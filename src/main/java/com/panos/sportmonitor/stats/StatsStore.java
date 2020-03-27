@@ -103,17 +103,17 @@ public class StatsStore {
                 if (!entityFieldName.equals("id"))
                     listeners.forEach(o -> o.onRelationChanged(entity, entityFieldName, (EntityId)oldValue, (EntityId)newValue));
                 break;
-            case "EntityIdList":
-                final EntityIdList oldList = (EntityIdList) oldValue;
-                final List<EntityId> newIds = ((EntityIdList) newValue)
-                        .stream()
-                        .filter(o -> oldList == null || !oldList.contains(o))
-                        .collect(Collectors.toList());
-                newIds.forEach(id -> {
-                    if (oldList != null && isUpdate) oldList.add(id);
-                    listeners.forEach(o -> o.onRelationAdded(entity, entityFieldName, id));
-                });
-                break;
+//            case "EntityIdList":
+//                final EntityIdList oldList = (EntityIdList) oldValue;
+//                final List<EntityId> newIds = ((EntityIdList) newValue)
+//                        .stream()
+//                        .filter(o -> oldList == null || !oldList.contains(o))
+//                        .collect(Collectors.toList());
+//                newIds.forEach(id -> {
+//                    if (oldList != null && isUpdate) oldList.add(id);
+//                    listeners.forEach(o -> o.onRelationAdded(entity, entityFieldName, id));
+//                });
+//                break;
             default:
                 StatsConsole.printlnWarn(String.format("StatsStore.onUpsert %s: cannot apply changes to field '%s' of type '%s': %s", entity.getClass().getSimpleName(), entityFieldName, entityFieldType, newValue));
         }
@@ -147,8 +147,6 @@ public class StatsStore {
     private boolean isImportantDiff(Object oldValue) {
         if (oldValue == null)
             return false;
-        if (oldValue instanceof EntityIdList)
-            return !((EntityIdList)oldValue).isEmpty();
         return true;
     }
 
@@ -157,8 +155,6 @@ public class StatsStore {
             return false;
         if (newValue == null || Objects.equals(newValue, ""))
             return false;
-        if (newValue instanceof EntityIdList)
-            return !((EntityIdList)newValue).isEmpty() && !ListUtils.subtract((EntityIdList)newValue, (EntityIdList)oldValue).isEmpty();
         return true;
     }
 }

@@ -13,7 +13,6 @@ public abstract class BaseEntity {
     private final EntityId id;
     private final EntityId sourceId;
     private final BaseEntity __parent;
-    private int __next;
 
     public BaseEntity(BaseEntity parent, EntityId id) {
         this.__parent = parent;
@@ -70,13 +69,6 @@ public abstract class BaseEntity {
     }
     public final BaseRootEntity getRoot() {
         return __parent == null ? (BaseRootEntity)this : __parent.getRoot();
-    }
-
-    public long getNext() {
-        ++__next;
-        if (__next < 1 || __next > 999)
-            throw new OutOfRangeException(__next, 1, 999);
-        return (this.id.getId() << 3) + __next;
     }
 
     @Override

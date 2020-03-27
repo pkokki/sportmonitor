@@ -3,7 +3,6 @@ package com.panos.sportmonitor.stats.entities.ref;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.panos.sportmonitor.stats.BaseEntity;
-import com.panos.sportmonitor.stats.EntityIdList;
 import com.panos.sportmonitor.stats.EntityId;
 import com.panos.sportmonitor.stats.entities.MatchEntity;
 
