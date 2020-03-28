@@ -31,7 +31,7 @@ public class UniqueTeamStatsEntity extends BaseEntity {
     private static EntityId createId(EntityId seasonId, long uniqueTeamId, long timeStamp) {
         return new EntityId(UniqueTeamStatsEntity.class,
                 new EntityId[] { seasonId },
-                new EntityKey[] { new EntityKey("teamId", uniqueTeamId), new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp) });
+                new EntityKey[] { new EntityKey("teamId", uniqueTeamId), EntityKey.Timestamp(timeStamp) });
     }
 
     @Override

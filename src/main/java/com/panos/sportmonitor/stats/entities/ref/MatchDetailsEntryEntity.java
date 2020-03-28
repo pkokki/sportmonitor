@@ -19,7 +19,7 @@ public class MatchDetailsEntryEntity extends BaseEntity {
 
     private static EntityId createId(EntityId matchId, long timeStamp, String typeId) {
         LinkedList<EntityKey> keys = new LinkedList<>(matchId.getKeys());
-        keys.add(new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp));
+        keys.add(EntityKey.Timestamp(timeStamp));
         keys.add(new EntityKey("typeId", typeId));
         return new EntityId(MatchDetailsEntryEntity.class, keys);
     }

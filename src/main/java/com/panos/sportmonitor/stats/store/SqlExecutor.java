@@ -35,6 +35,8 @@ public class SqlExecutor extends StatsStoreListener {
 
     @Override
     public void onUpdate(BaseEntity existing, BaseEntity submitted, List<Diff<?>> changes) {
+        if (existing instanceof NullRootEntity || existing instanceof NullEntity)
+            return;
         if (!statements.containsKey(existing.getId())) {
             SqlStatement stm = new UpdateStatement(SqlUtils.transformTableName(existing), existing.getId());
             statements.put(existing.getId(), stm);
@@ -44,6 +46,8 @@ public class SqlExecutor extends StatsStoreListener {
 
     @Override
     public void onPropertyChange(BaseEntity entity, String entityFieldName, Object oldValue, Object newValue) {
+        if (entity instanceof NullRootEntity || entity instanceof NullEntity)
+            return;
         if (newValue != null && !newValue.equals(oldValue)) {
             SqlStatement stm = statements.get(entity.getId());
             String sqlFieldName = SqlUtils.transform(entityFieldName);
@@ -53,22 +57,18 @@ public class SqlExecutor extends StatsStoreListener {
 
     @Override
     public void onRelationChanged(BaseEntity entity, String entityFieldName, EntityId oldValue, EntityId newValue) {
+        if (entity instanceof NullRootEntity || entity instanceof NullEntity)
+            return;
         if (newValue != null && !newValue.equals(oldValue)) {
             SqlStatement stm = statements.get(entity.getId());
+            if (stm == null)
+                throw new IllegalStateException(String.format("%s.%s onRelationChanged no statement found for ", entity.getClass().getSimpleName(), entityFieldName, entity.getId()));
             for (EntityKey key : newValue.getKeys()) {
+                if (key == null)
+                    throw new IllegalStateException(String.format("%s.%s got an EntityId %s with null keys", entity.getClass().getSimpleName(), entityFieldName, newValue));
                 stm.addField(SqlUtils.resolveSqlFieldName(entityFieldName, key.getName()), key.getValue());
             }
         }
-    }
-
-    @Override
-    public void onRelationAdded(BaseEntity entity, String entityFieldName, EntityId id) {
-        String masterTableName = SqlUtils.transformTableName(entity);
-        String relTableName = String.format("%s%s%s", masterTableName, SqlUtils.RELATION_SEPARATOR, SqlUtils.transform(entityFieldName));
-        InsertStatement insertStm = new InsertStatement(relTableName);
-        insertStm.addEntityId(entity.getId(), SqlUtils.FIELD_REL_SOURCE_PREFIX, entityFieldName);
-        insertStm.addEntityId(id, SqlUtils.FIELD_REL_TARGET_PREFIX, entityFieldName);
-        statements.put(new EntityId(NullEntity.class, ++relationIndex), insertStm);
     }
 
     public void submitChanges() {

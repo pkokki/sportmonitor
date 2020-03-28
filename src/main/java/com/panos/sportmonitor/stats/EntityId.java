@@ -7,8 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class EntityId {
-    public static final String KEY_ID = "id";
-    public static final String KEY_TIMESTAMP = "ts";
+
 
     private final List<EntityKey> keys;
     private final Class<? extends BaseEntity> entityClass;
@@ -16,7 +15,7 @@ public class EntityId {
     public EntityId(Class<? extends BaseEntity> entityClass, long id) {
         if (id <= 0)
             throw new IllegalArgumentException("Invalid id: " + id);
-        this.keys = Collections.unmodifiableList(Lists.newArrayList(new EntityKey(KEY_ID, id)));
+        this.keys = Collections.unmodifiableList(Lists.newArrayList(EntityKey.ID(id)));
         this.entityClass = entityClass;
     }
 
@@ -26,8 +25,8 @@ public class EntityId {
         if (timeStamp <= 0)
             throw new IllegalArgumentException("Invalid timestamp: " + timeStamp);
         List<EntityKey> allKeys = new LinkedList<>();
-        allKeys.add(new EntityKey(KEY_ID, id));
-        allKeys.add(new EntityKey(KEY_TIMESTAMP, timeStamp));
+        allKeys.add(EntityKey.ID(id));
+        allKeys.add(EntityKey.Timestamp(timeStamp));
         this.keys = Collections.unmodifiableList(allKeys);
         this.entityClass = entityClass;
     }
@@ -79,7 +78,7 @@ public class EntityId {
         if (keys.size() > 1)
             throw new IllegalStateException("Invalid use of EntityId.getId(). EntityId is multiple.");
         EntityKey key = keys.get(0);
-        if (key.getName().equals(KEY_ID))
+        if (key.isSingleId())
             return (long)key.getValue();
         throw new IllegalStateException("Invalid use of EntityId.getId(). EntityId does not have id.");
     }

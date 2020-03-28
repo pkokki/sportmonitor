@@ -167,20 +167,24 @@ public class StatsParser {
     public BaseRootEntity createRootEntity(final String name, final long timeStamp, final JsonNode currentNode, final String queryUrl) {
         BaseRootEntity entity;
         switch (name) {
-            case "config_tree": entity = new NullQuietRootEntity(timeStamp); break;
-            case "config_sports": entity = null; break;
+            case "config_tree":
+            case "category_get":
+                entity = new NullQuietRootEntity(timeStamp);
+                break;
+            case "config_sports":
+            case "match_bookmakerodds":
+            case "stats_match_form":
+            case "stats_team_tournaments":
+                entity = null;
+                break;
             case "match_timeline":
-            case "match_timelinedelta":
-                entity = new MatchTimeline(timeStamp); break;
+            case "match_timelinedelta": entity = new MatchTimeline(timeStamp); break;
             case "match_detailsextended": entity = new MatchDetailsExtended(timeStamp); break;
             case "match_info": entity = new MatchInfo(timeStamp); break;
-            case "match_bookmakerodds": entity = null; break;
-            case "stats_match_form": entity = null; break;
             case "match_funfacts":
                 entity = new MatchFunFacts(timeStamp, currentNode.get("_id").asLong()); break;
             case "stats_match_get": entity = new StatsMatchGet(timeStamp); break;
             case "stats_match_situation": entity = new StatsMatchSituation(timeStamp); break;
-
             case "stats_formtable":
                 entity = new StatsFormTable(timeStamp, currentNode.get("season").get("_id").asLong());
                 break;
@@ -206,8 +210,6 @@ public class StatsParser {
             case "stats_season_uniqueteamstats": entity = new StatsSeasonUniqueTeamStats(timeStamp); break;
             case "stats_season_odds": entity = new StatsSeasonOdds(timeStamp); break;
             case "stats_season_fixtures": entity = new StatsSeasonFixtures(timeStamp); break;
-
-            case "stats_team_tournaments": entity = null; break;
             case "stats_team_odds_client": entity = new StatsTeamOddsClient(timeStamp); break;
             case "stats_team_info": entity = new StatsTeamInfo(timeStamp); break;
             case "stats_team_lastx": entity = new StatsTeamLastX(timeStamp); break;

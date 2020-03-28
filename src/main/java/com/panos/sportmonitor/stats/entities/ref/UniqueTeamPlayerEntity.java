@@ -17,7 +17,7 @@ public class UniqueTeamPlayerEntity extends BaseEntity {
     private Integer totalGoals, totalYellowCards, totalMatches, totalOffside, totalShotsOnGoal, totalShotsOffGoal, totalShotsBlocked,
             totalAssists, totalGoalPoints, totalMinutesPlayed, totalSubstitutedIn, totalSubstitutedOut,
             totalTeamScored, totalTeamConceded, totalTotalShots, totalMatchesWon, totalMatchesLost, totalMatchesDrawn,
-            totalFirstGoals, totalLastGoals, totalNumberOfCards1stHalf, totalNumberOfCards2ndHalf, homeGoals, awayGoals, firstHalfGoals, secondHalfGoals,
+            totalFirstGoals, totalLastGoals, totalOwnGoals, totalNumberOfCards1stHalf, totalNumberOfCards2ndHalf, homeGoals, awayGoals, firstHalfGoals, secondHalfGoals,
             totalYellowredCards, totalGoalsByHeader, totalCorners, totalRedCards, totalPenalties;
 
     public static EntityId createId(long teamId, long playerId) {
@@ -80,6 +80,7 @@ public class UniqueTeamPlayerEntity extends BaseEntity {
             case "total.matches_drawn": this.totalMatchesDrawn = node.asInt(); break;
             case "total.first_goals": this.totalFirstGoals = node.asInt(); break;
             case "total.last_goals": this.totalLastGoals = node.asInt(); break;
+            case "total.own_goals": this.totalOwnGoals = node.asInt(); break;
             case "total.number_of_cards_2nd_half": this.totalNumberOfCards2ndHalf = node.asInt(); break;
             case "total.number_of_cards_1st_half": this.totalNumberOfCards1stHalf = node.asInt(); break;
             case "home.goals": this.homeGoals = node.asInt(); break;

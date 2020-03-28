@@ -1,269 +1,104 @@
-
-DROP TABLE IF EXISTS match_fun_facts;
-CREATE TABLE match_fun_facts (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	PRIMARY KEY (id, time_stamp)
-);
-DROP TABLE IF EXISTS match_fun_facts__facts;
-CREATE TABLE match_fun_facts__facts (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	dst_time_stamp bigint NOT NULL CONSTRAINT positive_dst_time_stamp CHECK (dst_time_stamp > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp)
-);
-DROP TABLE IF EXISTS match_fun_fact;
-CREATE TABLE match_fun_fact (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	type_id bigint,
-	sentence varchar(256),
-	PRIMARY KEY (id, time_stamp)
-);
-DROP TABLE IF EXISTS match_timeline__events;
-CREATE TABLE match_timeline__events (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS table_round;
-CREATE TABLE table_round (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	name varchar(4),
+DROP TABLE IF EXISTS country;
+CREATE TABLE country (
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	name text,
+	code text,
+	continent_id int,
+	continent text,
+	population bigint,
 	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
-DROP TABLE IF EXISTS match_status;
-CREATE TABLE match_status (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	name varchar(32),
+DROP TABLE IF EXISTS sport;
+CREATE TABLE sport (
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	name text,
 	PRIMARY KEY (id)
-);
-DROP TABLE IF EXISTS stats_form_table__team_form_tables;
-CREATE TABLE stats_form_table__team_form_tables (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	dst_time_stamp bigint NOT NULL CONSTRAINT positive_dst_time_stamp CHECK (dst_time_stamp > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp)
-);
-DROP TABLE IF EXISTS stats_form_table__match_types;
-CREATE TABLE stats_form_table__match_types (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_form_table__table_types;
-CREATE TABLE stats_form_table__table_types (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
 DROP TABLE IF EXISTS match_type;
 CREATE TABLE match_type (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	name varchar(64),
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	name text,
 	set_type_id bigint,
 	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
 DROP TABLE IF EXISTS table_type;
 CREATE TABLE table_type (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	name varchar(32),
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	name text,
 	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
-DROP TABLE IF EXISTS team_form_table__form_entries;
-CREATE TABLE team_form_table__form_entries (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	dst_time_stamp bigint NOT NULL CONSTRAINT positive_dst_time_stamp CHECK (dst_time_stamp > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp)
-);
-DROP TABLE IF EXISTS match_details_extended__entries;
-CREATE TABLE match_details_extended__entries (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	dst_time_stamp bigint NOT NULL CONSTRAINT positive_dst_time_stamp CHECK (dst_time_stamp > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp)
-);
-DROP TABLE IF EXISTS match_details_entry;
-CREATE TABLE match_details_entry (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	code varchar(64),
-	name varchar(64),
-	value_home int,
-	value_away int,
-	value_home_p1 int,
-	value_home_p2 int,
-	value_away_p1 int,
-	value_away_p2 int,
-	PRIMARY KEY (id, time_stamp)
-);
-DROP TABLE IF EXISTS country;
-CREATE TABLE country (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	name varchar(64),
-	code varchar(8),
-	continent_id int,
-	continent varchar(32),
-	population bigint,
+DROP TABLE IF EXISTS table_round;
+CREATE TABLE table_round (
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	name text,
 	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
-DROP TABLE IF EXISTS stadium;
-CREATE TABLE stadium (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	country_id bigint,
-	name varchar(64),
-	city varchar(32),
-	country varchar(16),
-	capacity varchar(16),
-	constr_year varchar(8),
-	address varchar(64),
-	googlecoords varchar(64),
-	pitchsize_x int,
-	pitchsize_y int,
-	url varchar(64),
-	phone varchar(32),
-	PRIMARY KEY (id)
-	-- , FOREIGN KEY (country_id) REFERENCES country (id)
+DROP TABLE IF EXISTS unique_team_goal_stats;
+CREATE TABLE unique_team_goal_stats (
+	unique_team_id bigint NOT NULL,
+	ts bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	matches int,
+	scored_sum int,
+	scored0015 int,
+	scored1630 int,
+	scored3145 int,
+	scored4660 int,
+	scored6175 int,
+	scored7690 int,
+	conceded_sum int,
+	conceded0015 int,
+	conceded1630 int,
+	conceded3145 int,
+	conceded4660 int,
+	conceded6175 int,
+	conceded7690 int,
+	first_goal int,
+	last_goal int,
+	penalty_success_count int,
+	penalty_fail_count int,
+	PRIMARY KEY (unique_team_id, ts)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
-DROP TABLE IF EXISTS stadium__team_homes;
-CREATE TABLE stadium__team_homes (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, dst_id)
+DROP TABLE IF EXISTS season_goal_stats;
+CREATE TABLE season_goal_stats (
+	season_id bigint NOT NULL,
+	ts bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	matches int,
+	scored_sum int,
+	scored0015 int,
+	scored1630 int,
+	scored3145 int,
+	scored4660 int,
+	scored6175 int,
+	scored7690 int,
+	PRIMARY KEY (season_id, ts)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
-DROP TABLE IF EXISTS match__referees;
-CREATE TABLE match__referees (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, dst_id)
-);
-DROP TABLE IF EXISTS stats_match_situation__entries;
-CREATE TABLE stats_match_situation__entries (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS match_situation_entry;
-CREATE TABLE match_situation_entry (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time int,
-	injury_time int,
-	safe int,
-	safe_count int,
-	home_attack int,
-	home_dangerous int,
-	home_safe int,
-	home_attack_count int,
-	home_dangerous_count int,
-	home_safe_count int,
-	away_attack int,
-	away_dangerous int,
-	away_safe int,
-	away_attack_count int,
-	away_dangerous_count int,
-	away_safe_count int,
-	PRIMARY KEY (id)
-);
-DROP TABLE IF EXISTS player_position_type;
-CREATE TABLE player_position_type (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	type varchar(2),
-	name varchar(32),
-	short_name varchar(8),
-	abbr varchar(2),
-	PRIMARY KEY (id)
-);
-DROP TABLE IF EXISTS match_event__assists;
-CREATE TABLE match_event__assists (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, dst_id)
-);
-DROP TABLE IF EXISTS league_table__matches;
-CREATE TABLE league_table__matches (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, dst_id)
-);
-DROP TABLE IF EXISTS tournament__matches;
-CREATE TABLE tournament__matches (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, dst_id)
-);
-DROP TABLE IF EXISTS season__tables;
-CREATE TABLE season__tables (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, dst_id)
-);
-DROP TABLE IF EXISTS season__matches;
-CREATE TABLE season__matches (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, dst_id)
-);
-DROP TABLE IF EXISTS season__tournaments;
-CREATE TABLE season__tournaments (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, dst_id)
-);
-DROP TABLE IF EXISTS stats_season_goals__team_goal_stats;
-CREATE TABLE stats_season_goals__team_goal_stats (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	dst_time_stamp bigint NOT NULL CONSTRAINT positive_dst_time_stamp CHECK (dst_time_stamp > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp)
-);
-DROP TABLE IF EXISTS stats_season_goals__tables;
-CREATE TABLE stats_season_goals__tables (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_season_injuries;
-CREATE TABLE stats_season_injuries (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	PRIMARY KEY (id, time_stamp)
-);
-DROP TABLE IF EXISTS stats_season_injuries__player_statuses;
-CREATE TABLE stats_season_injuries__player_statuses (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_season_last_x__matches;
-CREATE TABLE stats_season_last_x__matches (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_season_last_x__tournaments;
-CREATE TABLE stats_season_last_x__tournaments (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_season_league_summary;
-CREATE TABLE stats_season_league_summary (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
+DROP TABLE IF EXISTS season_league_summary;
+CREATE TABLE season_league_summary (
+	season_id bigint NOT NULL,
+	ts bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
 	matches_played int,
 	goals_total int,
 	matches_home_wins real,
@@ -278,93 +113,15 @@ CREATE TABLE stats_season_league_summary (
 	over_under35 real,
 	over_under45 real,
 	over_under55 real,
-	PRIMARY KEY (id, time_stamp)
-);
-DROP TABLE IF EXISTS stats_season_meta__tournaments;
-CREATE TABLE stats_season_meta__tournaments (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_season_meta__tables;
-CREATE TABLE stats_season_meta__tables (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS sport;
-CREATE TABLE sport (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	name varchar(32),
-	PRIMARY KEY (id)
-);
-DROP TABLE IF EXISTS real_category;
-CREATE TABLE real_category (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	name varchar(64),
-	country_id bigint,
-	PRIMARY KEY (id)
-	-- , FOREIGN KEY (country_id) REFERENCES country (id)
-);
-DROP TABLE IF EXISTS unique_tournament;
-CREATE TABLE unique_tournament (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	name varchar(32),
-	real_category_id bigint,
-	friendly boolean,
-	PRIMARY KEY (id)
-	-- , FOREIGN KEY (real_category_id) REFERENCES real_category (id)
-);
-DROP TABLE IF EXISTS stats_season_next_x__matches;
-CREATE TABLE stats_season_next_x__matches (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_season_next_x__tournaments;
-CREATE TABLE stats_season_next_x__tournaments (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS bookmaker;
-CREATE TABLE bookmaker (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	name varchar(32),
-	url varchar(64),
-	exchange boolean,
-	PRIMARY KEY (id)
-);
-DROP TABLE IF EXISTS season__ise_odds;
-CREATE TABLE season__ise_odds (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	dst_time_stamp bigint NOT NULL CONSTRAINT positive_dst_time_stamp CHECK (dst_time_stamp > 0),
-	PRIMARY KEY (src_id, dst_id, dst_time_stamp)
-);
-DROP TABLE IF EXISTS season__odds;
-CREATE TABLE season__odds (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	dst_time_stamp bigint NOT NULL CONSTRAINT positive_dst_time_stamp CHECK (dst_time_stamp > 0),
-	PRIMARY KEY (src_id, dst_id, dst_time_stamp)
-);
-DROP TABLE IF EXISTS stats_season_over_under__stats_team_over_unders;
-CREATE TABLE stats_season_over_under__stats_team_over_unders (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	dst_time_stamp bigint NOT NULL CONSTRAINT positive_dst_time_stamp CHECK (dst_time_stamp > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp)
+	PRIMARY KEY (season_id, ts)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
 DROP TABLE IF EXISTS season_over_under;
 CREATE TABLE season_over_under (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
+	season_id bigint NOT NULL,
+	ts bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
 	matches int,
 	goalsscored_ft_average real,
 	goalsscored_ft_total int,
@@ -438,410 +195,350 @@ CREATE TABLE season_over_under (
 	p255_totalover int,
 	p255_over int,
 	p255_under int,
-	PRIMARY KEY (id, time_stamp)
+	PRIMARY KEY (season_id, ts)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
 DROP TABLE IF EXISTS tie_break_rule;
 CREATE TABLE tie_break_rule (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	name varchar(512),
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	name text,
 	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
 DROP TABLE IF EXISTS promotion;
 CREATE TABLE promotion (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	code int,
-	name varchar(64),
-	short_name varchar(16),
-	position int,
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	name text,
+	short_name text,
 	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
-DROP TABLE IF EXISTS league_table__table_types;
-CREATE TABLE league_table__table_types (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, dst_id)
+DROP TABLE IF EXISTS stadium;
+CREATE TABLE stadium (
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	country_id bigint,
+	name text,
+	city text,
+	country text,
+	capacity text,
+	constr_year text,
+	googlecoords text,
+	pitchsize_x int,
+	pitchsize_y int,
+	address text,
+	url text,
+	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
+	-- , FOREIGN KEY (country_id) REFERENCES country (id)
 );
-DROP TABLE IF EXISTS league_table__match_types;
-CREATE TABLE league_table__match_types (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, dst_id)
+DROP TABLE IF EXISTS stadium_unique_team;
+CREATE TABLE stadium_unique_team (
+	stadium_id bigint NOT NULL,
+	unique_team_id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	PRIMARY KEY (stadium_id, unique_team_id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
-DROP TABLE IF EXISTS league_table__table_rows;
-CREATE TABLE league_table__table_rows (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, dst_id)
+DROP TABLE IF EXISTS top_list_entry;
+CREATE TABLE top_list_entry (
+	team_id bigint NOT NULL,
+	player_id bigint NOT NULL,
+	entry_type int NOT NULL,
+	ts bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	total_assists int,
+	total_matches int,
+	substituted_in int,
+	minutes_played int,
+	total_yellow_cards int,
+	total_yellow_red_cards int,
+	total_red_cards int,
+	total_first_half_cards int,
+	total_second_half_cards int,
+	total_goals int,
+	total_penalties int,
+	goal_points int,
+	first_goals int,
+	last_goals int,
+	home_goals int,
+	away_goals int,
+	first_half_goals int,
+	second_half_goals int,
+	PRIMARY KEY (team_id, player_id, entry_type, ts)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
-DROP TABLE IF EXISTS stats_season_team_position_history__promotions;
-CREATE TABLE stats_season_team_position_history__promotions (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_season_team_position_history__tables;
-CREATE TABLE stats_season_team_position_history__tables (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_season_team_position_history__teams;
-CREATE TABLE stats_season_team_position_history__teams (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_season_team_position_history__season_positions;
-CREATE TABLE stats_season_team_position_history__season_positions (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_season_teams2__teams;
-CREATE TABLE stats_season_teams2__teams (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_season_teams2__stats_tables;
-CREATE TABLE stats_season_teams2__stats_tables (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_season_top_assists__players;
-CREATE TABLE stats_season_top_assists__players (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	dst_time_stamp bigint NOT NULL CONSTRAINT positive_dst_time_stamp CHECK (dst_time_stamp > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp)
-);
-DROP TABLE IF EXISTS stats_season_top_assists__unique_teams;
-CREATE TABLE stats_season_top_assists__unique_teams (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS top_list_entry__teams_entries;
-CREATE TABLE top_list_entry__teams_entries (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	dst_time_stamp bigint NOT NULL CONSTRAINT positive_dst_time_stamp CHECK (dst_time_stamp > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp)
-);
-DROP TABLE IF EXISTS stats_season_top_cards__players;
-CREATE TABLE stats_season_top_cards__players (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	dst_time_stamp bigint NOT NULL CONSTRAINT positive_dst_time_stamp CHECK (dst_time_stamp > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp)
-);
-DROP TABLE IF EXISTS stats_season_top_cards__unique_teams;
-CREATE TABLE stats_season_top_cards__unique_teams (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_season_top_goals__players;
-CREATE TABLE stats_season_top_goals__players (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	dst_time_stamp bigint NOT NULL CONSTRAINT positive_dst_time_stamp CHECK (dst_time_stamp > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp)
-);
-DROP TABLE IF EXISTS stats_season_top_goals__unique_teams;
-CREATE TABLE stats_season_top_goals__unique_teams (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_season_unique_team_stats__unique_team_stats;
-CREATE TABLE stats_season_unique_team_stats__unique_team_stats (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	dst_time_stamp bigint NOT NULL CONSTRAINT positive_dst_time_stamp CHECK (dst_time_stamp > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp)
-);
-DROP TABLE IF EXISTS stats_team_info__tournaments;
-CREATE TABLE stats_team_info__tournaments (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_team_last_x__matches;
-CREATE TABLE stats_team_last_x__matches (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_team_last_x__tournaments;
-CREATE TABLE stats_team_last_x__tournaments (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_team_last_x__unique_tournaments;
-CREATE TABLE stats_team_last_x__unique_tournaments (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_team_last_x__real_categories;
-CREATE TABLE stats_team_last_x__real_categories (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS match__team_forms;
-CREATE TABLE match__team_forms (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, dst_id)
+DROP TABLE IF EXISTS player_position_type;
+CREATE TABLE player_position_type (
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	type text,
+	name text,
+	short_name text,
+	abbr text,
+	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
 DROP TABLE IF EXISTS cup_round;
 CREATE TABLE cup_round (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	name varchar(16),
-	short_name varchar(8),
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	name text,
+	short_name text,
 	statistics_sort_order int,
 	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
-DROP TABLE IF EXISTS stats_team_next_x__matches;
-CREATE TABLE stats_team_next_x__matches (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
+DROP TABLE IF EXISTS bookmaker;
+CREATE TABLE bookmaker (
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	name text,
+	url text,
+	exchange boolean,
+	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
-DROP TABLE IF EXISTS stats_team_next_x__tournaments;
-CREATE TABLE stats_team_next_x__tournaments (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
+DROP TABLE IF EXISTS unique_team_player;
+CREATE TABLE unique_team_player (
+	team_id bigint NOT NULL,
+	player_id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	start_time bigint,
+	type int,
+	active boolean,
+	shirt text,
+	end_time bigint,
+	total_yellow_cards int,
+	total_matches int,
+	total_shots_off_goal int,
+	total_minutes_played int,
+	total_substituted_out int,
+	total_team_scored int,
+	total_team_conceded int,
+	total_total_shots int,
+	total_matches_won int,
+	total_matches_lost int,
+	total_matches_drawn int,
+	total_own_goals int,
+	total_number_of_cards1st_half int,
+	total_number_of_cards2nd_half int,
+	total_yellowred_cards int,
+	total_shots_blocked int,
+	total_substituted_in int,
+	total_goals int,
+	total_offside int,
+	total_shots_on_goal int,
+	total_goal_points int,
+	total_first_goals int,
+	home_goals int,
+	first_half_goals int,
+	second_half_goals int,
+	total_goals_by_header int,
+	total_corners int,
+	total_last_goals int,
+	away_goals int,
+	total_assists int,
+	total_red_cards int,
+	total_penalties int,
+	PRIMARY KEY (team_id, player_id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
-DROP TABLE IF EXISTS stats_team_next_x__unique_tournaments;
-CREATE TABLE stats_team_next_x__unique_tournaments (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
+DROP TABLE IF EXISTS unique_team_season;
+CREATE TABLE unique_team_season (
+	team_id bigint NOT NULL,
+	season_id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	average_starting_xi_age real,
+	PRIMARY KEY (team_id, season_id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
-DROP TABLE IF EXISTS stats_team_next_x__real_categories;
-CREATE TABLE stats_team_next_x__real_categories (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
+DROP TABLE IF EXISTS unique_team_season_player;
+CREATE TABLE unique_team_season_player (
+	team_id bigint NOT NULL,
+	season_id bigint NOT NULL,
+	player_id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	active boolean,
+	last_event text,
+	started int,
+	yellow_cards int,
+	yellowred_cards int,
+	matches int,
+	shots_off_goal int,
+	minutes_played int,
+	substituted_out int,
+	team_scored int,
+	team_conceded int,
+	total_shots int,
+	matches_won int,
+	matches_lost int,
+	matches_drawn int,
+	own_goals int,
+	number_of_cards1st_half int,
+	number_of_cards2nd_half int,
+	team_matches int,
+	shots_blocked int,
+	substituted_in int,
+	goals int,
+	offside int,
+	shots_on_goal int,
+	goal_points int,
+	first_goals int,
+	goals_by_header int,
+	corners int,
+	last_goals int,
+	red_cards int,
+	assists int,
+	penalties int,
+	PRIMARY KEY (team_id, season_id, player_id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 );
-DROP TABLE IF EXISTS stats_team_odds_client__odds;
-CREATE TABLE stats_team_odds_client__odds (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	dst_time_stamp bigint NOT NULL CONSTRAINT positive_dst_time_stamp CHECK (dst_time_stamp > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id, dst_time_stamp)
+DROP TABLE IF EXISTS real_category;
+CREATE TABLE real_category (
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	name text,
+	country_id bigint,
+	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
+	-- , FOREIGN KEY (country_id) REFERENCES country (id)
 );
-DROP TABLE IF EXISTS stats_team_versus__matches;
-CREATE TABLE stats_team_versus__matches (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
+DROP TABLE IF EXISTS unique_tournament;
+CREATE TABLE unique_tournament (
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	real_category_id bigint,
+	name text,
+	friendly boolean,
+	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
+	-- , FOREIGN KEY (real_category_id) REFERENCES real_category (id)
 );
-DROP TABLE IF EXISTS stats_team_versus__tournaments;
-CREATE TABLE stats_team_versus__tournaments (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
+DROP TABLE IF EXISTS odds;
+CREATE TABLE odds (
+	match_id bigint NOT NULL,
+	ts bigint NOT NULL,
+	ise int NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	home_odds real,
+	draw_odds real,
+	away_odds real,
+	bookmaker_id bigint,
+	home_change real,
+	away_change real,
+	type text,
+	odds_type_id int,
+	exchange boolean,
+	key text,
+	draw_change real,
+	extra text,
+	closing_time text,
+	PRIMARY KEY (match_id, ts, ise)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
+	-- , FOREIGN KEY (bookmaker_id) REFERENCES bookmaker (id)
 );
-DROP TABLE IF EXISTS stats_team_versus__unique_teams;
-CREATE TABLE stats_team_versus__unique_teams (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
-);
-DROP TABLE IF EXISTS stats_team_versus__real_categories;
-CREATE TABLE stats_team_versus__real_categories (
-	src_id bigint NOT NULL CONSTRAINT positive_src_id CHECK (src_id > 0),
-	src_time_stamp bigint NOT NULL CONSTRAINT positive_src_time_stamp CHECK (src_time_stamp > 0),
-	dst_id bigint NOT NULL CONSTRAINT positive_dst_id CHECK (dst_id > 0),
-	PRIMARY KEY (src_id, src_time_stamp, dst_id)
+DROP TABLE IF EXISTS player;
+CREATE TABLE player (
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	nationality_id bigint,
+	second_nationality_id bigint,
+	position_id bigint,
+	name text,
+	full_name text,
+	birth_date bigint,
+	market_value bigint,
+	height int,
+	weight int,
+	foot text,
+	birth_country_id bigint,
+	birth_place text,
+	twitter text,
+	facebook text,
+	nickname text,
+	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
+	-- , FOREIGN KEY (nationality_id) REFERENCES country (id)
+	-- , FOREIGN KEY (second_nationality_id) REFERENCES country (id)
+	-- , FOREIGN KEY (position_id) REFERENCES player_position_type (id)
+	-- , FOREIGN KEY (birth_country_id) REFERENCES country (id)
 );
 DROP TABLE IF EXISTS season;
 CREATE TABLE season (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
 	unique_tournament_id bigint,
-	name varchar(64),
-	abbr varchar(16),
+	name text,
+	abbr text,
 	start_date bigint,
 	end_date bigint,
 	neutral_ground boolean,
 	friendly boolean,
-	year varchar(16),
+	year text,
 	coverage_lineups boolean,
 	real_category_id bigint,
 	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 	-- , FOREIGN KEY (unique_tournament_id) REFERENCES unique_tournament (id)
 	-- , FOREIGN KEY (real_category_id) REFERENCES real_category (id)
 );
-DROP TABLE IF EXISTS player;
-CREATE TABLE player (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	name varchar(64),
-	birth_date bigint,
-	nationality_id bigint,
-	position_id bigint,
-	full_name varchar(128),
-	second_nationality_id bigint,
-	PRIMARY KEY (id)
-	-- , FOREIGN KEY (nationality_id) REFERENCES country (id)
-	-- , FOREIGN KEY (position_id) REFERENCES player_position_type (id)
-	-- , FOREIGN KEY (second_nationality_id) REFERENCES country (id)
-);
 DROP TABLE IF EXISTS tournament;
 CREATE TABLE tournament (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
 	real_category_id bigint,
 	season_id bigint,
 	current_season_id bigint,
 	isk bigint,
-	season_type varchar(4),
-	season_type_name varchar(64),
-	season_type_unique varchar(4),
-	year varchar(16),
-	name varchar(64),
-	abbr varchar(8),
+	season_type text,
+	season_type_name text,
+	season_type_unique text,
+	year text,
+	name text,
+	abbr text,
 	friendly boolean,
 	round_by_round boolean,
 	outdated boolean,
 	live_table bigint,
 	tournament_level_order bigint,
-	tournament_level_name varchar(32),
+	tournament_level_name text,
 	current_round int,
-	cup_roster_id varchar(16),
-	group_name varchar(16),
+	cup_roster_id text,
+	group_name text,
 	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 	-- , FOREIGN KEY (real_category_id) REFERENCES real_category (id)
 	-- , FOREIGN KEY (season_id) REFERENCES season (id)
 	-- , FOREIGN KEY (current_season_id) REFERENCES season (id)
 );
-DROP TABLE IF EXISTS unique_team;
-CREATE TABLE unique_team (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	name varchar(64),
-	abbr varchar(8),
-	medium_name varchar(64),
-	is_country boolean,
-	founded varchar(8),
-	sex varchar(2),
+DROP TABLE IF EXISTS season_meta;
+CREATE TABLE season_meta (
+	season_id bigint NOT NULL,
+	ts bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
 	real_category_id bigint,
-	team_type_id bigint,
-	suffix varchar(8),
-	country_code_id bigint,
-	stadium_id bigint,
-	home_real_category_id bigint,
-	PRIMARY KEY (id)
-	-- , FOREIGN KEY (real_category_id) REFERENCES real_category (id)
-	-- , FOREIGN KEY (country_code_id) REFERENCES country (id)
-	-- , FOREIGN KEY (stadium_id) REFERENCES stadium (id)
-	-- , FOREIGN KEY (home_real_category_id) REFERENCES real_category (id)
-);
-DROP TABLE IF EXISTS stats_season_fixtures;
-CREATE TABLE stats_season_fixtures (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	season_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
-);
-DROP TABLE IF EXISTS league_table;
-CREATE TABLE league_table (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	season_id bigint,
-	max_rounds int,
-	name varchar(32),
-	abbr varchar(32),
-	season_type varchar(4),
-	season_type_name varchar(64),
-	season_type_unique varchar(4),
-	season_start bigint,
-	season_end bigint,
-	tournament_id bigint,
-	real_category_id bigint,
-	rules_id bigint,
-	current_round int,
-	presentation_id int,
-	total_rows int,
-	PRIMARY KEY (id)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
-	-- , FOREIGN KEY (tournament_id) REFERENCES tournament (id)
-	-- , FOREIGN KEY (real_category_id) REFERENCES real_category (id)
-	-- , FOREIGN KEY (rules_id) REFERENCES tie_break_rule (id)
-);
-DROP TABLE IF EXISTS stats_season_goals;
-CREATE TABLE stats_season_goals (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	season_id bigint,
-	matches int,
-	scored_sum int,
-	scored0015 int,
-	scored1630 int,
-	scored3145 int,
-	scored4660 int,
-	scored6175 int,
-	scored7690 int,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
-);
-DROP TABLE IF EXISTS player_status;
-CREATE TABLE player_status (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	player_id bigint,
-	unique_team_id bigint,
-	status_start bigint,
-	status_id int,
-	status_name varchar(32),
-	status_missing int,
-	status_doubtful int,
-	PRIMARY KEY (id)
-	-- , FOREIGN KEY (player_id) REFERENCES player (id)
-	-- , FOREIGN KEY (unique_team_id) REFERENCES unique_team (id)
-);
-DROP TABLE IF EXISTS stats_season_last_x;
-CREATE TABLE stats_season_last_x (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	season_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
-);
-DROP TABLE IF EXISTS stats_season_meta;
-CREATE TABLE stats_season_meta (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
+	unique_tournament_id bigint,
 	stats_coverage_complex_stat boolean,
 	stats_coverage_live_table boolean,
 	stats_coverage_halftime_table boolean,
@@ -867,7 +564,6 @@ CREATE TABLE stats_season_meta (
 	stats_coverage_goal_min_scorer boolean,
 	stats_coverage_substitutions boolean,
 	stats_coverage_squad_service boolean,
-	stats_coverage_transfer_history boolean,
 	stats_coverage_live_score_event_throwin boolean,
 	stats_coverage_live_score_event_goalkick boolean,
 	stats_coverage_live_score_event_freekick boolean,
@@ -884,45 +580,224 @@ CREATE TABLE stats_season_meta (
 	stats_coverage_staff_team_officials boolean,
 	stats_coverage_staff_assistant_coaches boolean,
 	stats_coverage_jerseys boolean,
-	season_id bigint,
-	real_category_id bigint,
-	unique_tournament_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
+	stats_coverage_cup_roster boolean,
+	PRIMARY KEY (season_id, ts)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 	-- , FOREIGN KEY (real_category_id) REFERENCES real_category (id)
 	-- , FOREIGN KEY (unique_tournament_id) REFERENCES unique_tournament (id)
 );
-DROP TABLE IF EXISTS stats_season_next_x;
-CREATE TABLE stats_season_next_x (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	season_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
+DROP TABLE IF EXISTS unique_team;
+CREATE TABLE unique_team (
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	real_category_id bigint,
+	name text,
+	abbr text,
+	medium_name text,
+	is_country boolean,
+	founded text,
+	sex text,
+	team_type_id bigint,
+	country_code_id bigint,
+	home_real_category_id bigint,
+	stadium_id bigint,
+	manager_id bigint,
+	suffix text,
+	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
+	-- , FOREIGN KEY (real_category_id) REFERENCES real_category (id)
+	-- , FOREIGN KEY (country_code_id) REFERENCES country (id)
+	-- , FOREIGN KEY (home_real_category_id) REFERENCES real_category (id)
+	-- , FOREIGN KEY (stadium_id) REFERENCES stadium (id)
+	-- , FOREIGN KEY (manager_id) REFERENCES player (id)
 );
-DROP TABLE IF EXISTS stats_season_odds;
-CREATE TABLE stats_season_odds (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	season_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
+DROP TABLE IF EXISTS unique_team_stats;
+CREATE TABLE unique_team_stats (
+	season_id bigint NOT NULL,
+	team_id bigint NOT NULL,
+	ts bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	unique_team_id bigint,
+	goal_attempts int,
+	shots_on_goal int,
+	shots_off_goal int,
+	corner_kicks int,
+	ball_possession int,
+	shots_blocked int,
+	cards_given int,
+	freekicks int,
+	offside int,
+	shots_on_post int,
+	shots_on_bar int,
+	goals_by_foot int,
+	goals_by_head int,
+	yellow_cards int,
+	red_cards int,
+	goals_scored int,
+	goals_conceded int,
+	yellow_red_cards int,
+	shooting_efficiency int,
+	penalty_success_count int,
+	penalty_fail_count int,
+	clean_sheet_count int,
+	goal_attempts_avg real,
+	shots_on_goal_avg real,
+	shots_off_goal_avg real,
+	corner_kicks_avg real,
+	ball_possession_avg real,
+	shots_blocked_avg real,
+	cards_given_avg real,
+	freekicks_avg real,
+	offside_avg real,
+	shots_on_post_avg real,
+	shots_on_bar_avg real,
+	goals_by_foot_avg real,
+	goals_by_head_avg real,
+	yellow_cards_avg real,
+	red_cards_avg real,
+	goals_scored_avg real,
+	goals_conceded_avg real,
+	yellow_red_cards_avg real,
+	shooting_efficiency_avg text,
+	goal_attempts_matches int,
+	shots_on_goal_matches int,
+	shots_off_goal_matches int,
+	corner_kicks_matches int,
+	ball_possession_matches int,
+	shots_blocked_matches int,
+	cards_given_matches int,
+	freekicks_matches int,
+	offside_matches int,
+	shots_on_post_matches int,
+	shots_on_bar_matches int,
+	goals_by_foot_matches int,
+	goals_by_head_matches int,
+	yellow_cards_matches int,
+	red_cards_matches int,
+	goals_scored_matches int,
+	goals_conceded_matches int,
+	yellow_red_cards_matches int,
+	shooting_efficiency_matches int,
+	late_winning_goals int,
+	PRIMARY KEY (season_id, team_id, ts)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
+	-- , FOREIGN KEY (unique_team_id) REFERENCES unique_team (id)
 );
-DROP TABLE IF EXISTS stats_season_over_under;
-CREATE TABLE stats_season_over_under (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
+DROP TABLE IF EXISTS entries;
+CREATE TABLE entries (
+	id bigint NOT NULL,
+	ts bigint NOT NULL,
 	season_id bigint,
-	league_totals_id bigint,
-	league_totals_time_stamp bigint,
-	PRIMARY KEY (id, time_stamp)
+	unique_team_id bigint,
+	PRIMARY KEY (id, ts)
 	-- , FOREIGN KEY (season_id) REFERENCES season (id)
-	-- , FOREIGN KEY (league_totals_id, league_totals_time_stamp) REFERENCES season_over_under (id, time_stamp)
+	-- , FOREIGN KEY (unique_team_id) REFERENCES unique_team (id)
+);
+DROP TABLE IF EXISTS team;
+CREATE TABLE team (
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	uid_id bigint,
+	name text,
+	abbr text,
+	medium_name text,
+	is_country boolean,
+	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
+	-- , FOREIGN KEY (uid_id) REFERENCES unique_team (id)
+);
+DROP TABLE IF EXISTS match;
+CREATE TABLE match (
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	real_category_id bigint,
+	tournament_id bigint,
+	unique_tournament_id bigint,
+	season_id bigint,
+	team_home_id bigint,
+	team_away_id bigint,
+	round_name_id bigint,
+	stadium_id bigint,
+	time bigint,
+	week text,
+	round int,
+	result_home int,
+	result_away int,
+	result_period text,
+	neutral_ground boolean,
+	comment text,
+	to_be_announced boolean,
+	postponed boolean,
+	canceled boolean,
+	inlivescore boolean,
+	walkover boolean,
+	retired boolean,
+	disqualified boolean,
+	p1_home int,
+	p1_away int,
+	ft_home int,
+	ft_away int,
+	result_winner text,
+	result_betting_winner text,
+	status text,
+	next_match_id bigint,
+	cup_round_match_number int,
+	cup_round_number_of_matches int,
+	ot_home int,
+	ot_away int,
+	manager_home_id bigint,
+	manager_away_id bigint,
+	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
+	-- , FOREIGN KEY (real_category_id) REFERENCES real_category (id)
+	-- , FOREIGN KEY (tournament_id) REFERENCES tournament (id)
+	-- , FOREIGN KEY (unique_tournament_id) REFERENCES unique_tournament (id)
+	-- , FOREIGN KEY (season_id) REFERENCES season (id)
+	-- , FOREIGN KEY (team_home_id) REFERENCES team (id)
+	-- , FOREIGN KEY (team_away_id) REFERENCES team (id)
+	-- , FOREIGN KEY (round_name_id) REFERENCES table_round (id)
+	-- , FOREIGN KEY (stadium_id) REFERENCES stadium (id)
+	-- , FOREIGN KEY (next_match_id) REFERENCES match (id)
+	-- , FOREIGN KEY (manager_home_id) REFERENCES player (id)
+	-- , FOREIGN KEY (manager_away_id) REFERENCES player (id)
+);
+DROP TABLE IF EXISTS league_table;
+CREATE TABLE league_table (
+	id bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	season_id bigint,
+	max_rounds int,
+	name text,
+	abbr text,
+	season_type text,
+	season_type_name text,
+	season_type_unique text,
+	season_start bigint,
+	season_end bigint,
+	tournament_id bigint,
+	real_category_id bigint,
+	rules_id bigint,
+	current_round int,
+	presentation_id int,
+	total_rows int,
+	PRIMARY KEY (id)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
+	-- , FOREIGN KEY (season_id) REFERENCES season (id)
+	-- , FOREIGN KEY (tournament_id) REFERENCES tournament (id)
+	-- , FOREIGN KEY (real_category_id) REFERENCES real_category (id)
+	-- , FOREIGN KEY (rules_id) REFERENCES tie_break_rule (id)
 );
 DROP TABLE IF EXISTS team_over_under;
 CREATE TABLE team_over_under (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
+	team_id bigint NOT NULL,
+	ts bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
 	matches int,
 	goalsscored_ft_average real,
 	goalsscored_ft_total int,
@@ -942,430 +817,104 @@ CREATE TABLE team_over_under (
 	conceded_p2_average real,
 	conceded_p2_total int,
 	conceded_p2_matches int,
-	team_id bigint,
-	PRIMARY KEY (id, time_stamp)
+	PRIMARY KEY (team_id, ts)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 	-- , FOREIGN KEY (team_id) REFERENCES unique_team (id)
 );
-DROP TABLE IF EXISTS stats_season_tables;
-CREATE TABLE stats_season_tables (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	season_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
+DROP TABLE IF EXISTS table_row;
+CREATE TABLE table_row (
+	league_table_id bigint NOT NULL,
+	row_id bigint NOT NULL,
+	ts bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	position_type_id bigint,
+	team_id bigint,
+	change_total int,
+	change_home int,
+	change_away int,
+	draw_total int,
+	draw_home int,
+	draw_away int,
+	goal_diff_total int,
+	goal_diff_home int,
+	goal_diff_away int,
+	goals_against_total int,
+	goals_against_home int,
+	goals_against_away int,
+	goals_for_total int,
+	goals_for_home int,
+	goals_for_away int,
+	loss_total int,
+	loss_home int,
+	loss_away int,
+	total int,
+	home int,
+	away int,
+	points_total int,
+	points_home int,
+	points_away int,
+	pos int,
+	pos_home int,
+	pos_away int,
+	sort_position_total int,
+	sort_position_home int,
+	sort_position_away int,
+	win_total int,
+	win_home int,
+	win_away int,
+	PRIMARY KEY (league_table_id, row_id, ts)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
+	-- , FOREIGN KEY (position_type_id) REFERENCES promotion (id)
+	-- , FOREIGN KEY (team_id) REFERENCES team (id)
 );
-DROP TABLE IF EXISTS stats_season_team_position_history;
-CREATE TABLE stats_season_team_position_history (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	season_id bigint,
-	team_count int,
-	round_count int,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
-);
-DROP TABLE IF EXISTS stats_season_teams2;
-CREATE TABLE stats_season_teams2 (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	season_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
-);
-DROP TABLE IF EXISTS stats_season_top_assists;
-CREATE TABLE stats_season_top_assists (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	season_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
-);
-DROP TABLE IF EXISTS team_player_top_list_entry;
-CREATE TABLE team_player_top_list_entry (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	unique_team_id bigint,
-	player_id boolean,
-	active boolean,
-	last_event varchar(64),
-	started int,
-	assists int,
-	matches int,
-	shirt_number int,
-	substituted_in int,
-	minutes_played int,
-	yellow_cards int,
-	yellow_red_cards int,
-	red_cards int,
-	first_half_cards int,
-	second_half_cards int,
-	goals int,
-	penalties int,
-	goal_points int,
-	first_goals int,
-	last_goals int,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (unique_team_id) REFERENCES unique_team (id)
-);
-DROP TABLE IF EXISTS top_list_entry;
-CREATE TABLE top_list_entry (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	player_id bigint,
-	total_assists int,
-	total_matches int,
-	substituted_in int,
-	minutes_played int,
-	total_yellow_cards int,
-	total_yellow_red_cards int,
-	total_red_cards int,
-	total_first_half_cards int,
-	total_second_half_cards int,
-	total_goals int,
-	total_penalties int,
-	goal_points int,
-	first_goals int,
-	last_goals int,
-	home_goals int,
-	away_goals int,
-	first_half_goals int,
-	second_half_goals int,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (player_id) REFERENCES player (id)
-);
-DROP TABLE IF EXISTS stats_season_top_cards;
-CREATE TABLE stats_season_top_cards (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	season_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
-);
-DROP TABLE IF EXISTS stats_season_top_goals;
-CREATE TABLE stats_season_top_goals (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	season_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
-);
-DROP TABLE IF EXISTS stats_season_unique_team_stats;
-CREATE TABLE stats_season_unique_team_stats (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	season_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
-);
-DROP TABLE IF EXISTS unique_team_stats;
-CREATE TABLE unique_team_stats (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	unique_team_id bigint,
-	goal_attempts int,
-	shots_on_goal int,
-	shots_off_goal int,
-	corner_kicks int,
-	ball_possession int,
-	shots_blocked int,
-	cards_given int,
-	freekicks int,
-	offside int,
-	shots_on_post int,
-	shots_on_bar int,
-	goals_by_foot int,
-	goals_by_head int,
-	attendance int,
-	yellow_cards int,
-	red_cards int,
-	goals_scored int,
-	goals_conceded int,
-	yellow_red_cards int,
-	shooting_efficiency int,
-	late_winning_goals int,
-	penalty_success_count int,
-	penalty_fail_count int,
-	clean_sheet_count int,
-	goal_attempts_avg real,
-	shots_on_goal_avg real,
-	shots_off_goal_avg real,
-	corner_kicks_avg real,
-	ball_possession_avg real,
-	shots_blocked_avg real,
-	cards_given_avg real,
-	freekicks_avg real,
-	offside_avg real,
-	shots_on_post_avg real,
-	shots_on_bar_avg real,
-	goals_by_foot_avg real,
-	goals_by_head_avg real,
-	attendance_avg real,
-	yellow_cards_avg real,
-	red_cards_avg real,
-	goals_scored_avg real,
-	goals_conceded_avg real,
-	yellow_red_cards_avg real,
-	shooting_efficiency_avg varchar(8),
-	goal_attempts_matches int,
-	shots_on_goal_matches int,
-	shots_off_goal_matches int,
-	corner_kicks_matches int,
-	ball_possession_matches int,
-	shots_blocked_matches int,
-	cards_given_matches int,
-	freekicks_matches int,
-	offside_matches int,
-	shots_on_post_matches int,
-	shots_on_bar_matches int,
-	goals_by_foot_matches int,
-	goals_by_head_matches int,
-	attendance_matches int,
-	yellow_cards_matches int,
-	red_cards_matches int,
-	goals_scored_matches int,
-	goals_conceded_matches int,
-	yellow_red_cards_matches int,
-	shooting_efficiency_matches int,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (unique_team_id) REFERENCES unique_team (id)
-);
-DROP TABLE IF EXISTS stats_team_info;
-CREATE TABLE stats_team_info (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	unique_team_id bigint,
-	stadium_id bigint,
-	manager_id bigint,
-	manager_member_since bigint,
-	twitter varchar(32),
-	hashtag varchar(32),
-	matchup varchar(16),
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (unique_team_id) REFERENCES unique_team (id)
-	-- , FOREIGN KEY (stadium_id) REFERENCES stadium (id)
-	-- , FOREIGN KEY (manager_id) REFERENCES player (id)
-);
-DROP TABLE IF EXISTS stats_team_last_x;
-CREATE TABLE stats_team_last_x (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	unique_team_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (unique_team_id) REFERENCES unique_team (id)
-);
-DROP TABLE IF EXISTS stats_team_next_x;
-CREATE TABLE stats_team_next_x (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	unique_team_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (unique_team_id) REFERENCES unique_team (id)
-);
-DROP TABLE IF EXISTS stats_team_odds_client;
-CREATE TABLE stats_team_odds_client (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	unique_team_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (unique_team_id) REFERENCES unique_team (id)
-);
-DROP TABLE IF EXISTS team;
-CREATE TABLE team (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	uid bigint,
-	name varchar(64),
-	abbr varchar(8),
-	medium_name varchar(64),
-	is_country boolean,
-	PRIMARY KEY (id)
-	-- , FOREIGN KEY (uid) REFERENCES unique_team (id)
-);
-DROP TABLE IF EXISTS match;
-CREATE TABLE match (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	real_category_id bigint,
-	tournament_id bigint,
-	unique_tournament_id bigint,
-	time bigint,
-	week varchar(4),
-	round int,
-	result_home int,
-	result_away int,
-	season_id bigint,
-	team_home_id bigint,
-	team_away_id bigint,
-	team_home_uid bigint,
-	team_away_uid bigint,
-	to_be_announced boolean,
-	postponed boolean,
-	walkover boolean,
-	round_name_id bigint,
-	stadium_id bigint,
-	coverage_lineup int,
-	coverage_formations int,
-	coverage_live_table bigint,
-	coverage_injuries int,
-	coverage_ball_spotting boolean,
-	coverage_corners_only boolean,
-	coverage_multi_cast boolean,
-	coverage_scout_match int,
-	coverage_scout_coverage_status int,
-	coverage_scout_connected boolean,
-	coverage_live_odds boolean,
-	coverage_deeper_coverage boolean,
-	coverage_tactical_lineup boolean,
-	coverage_basic_lineup boolean,
-	coverage_has_stats boolean,
-	coverage_in_live_score boolean,
-	coverage_penalty_shootout int,
-	coverage_scout_test boolean,
-	coverage_lmt_support int,
-	coverage_venue boolean,
-	coverage_match_data_complete boolean,
-	coverage_media_coverage boolean,
-	coverage_substitutions boolean,
-	updated_time bigint,
-	ended_time bigint,
-	p_time bigint,
-	time_info_running boolean,
-	removed boolean,
-	facts boolean,
-	local_derby boolean,
-	distance int,
-	wind_advantage int,
-	match_status varchar(16),
-	match_status_id bigint,
-	cancelled boolean,
-	result_period varchar(4),
-	neutral_ground boolean,
-	canceled boolean,
-	inlivescore boolean,
-	retired boolean,
-	disqualified boolean,
-	manager_home_id bigint,
-	manager_away_id bigint,
-	history_previous_match_id bigint,
-	home_team_history_prev_match_id bigint,
-	home_team_history_next_match_id bigint,
-	away_team_history_prev_match_id bigint,
-	away_team_history_next_match_id bigint,
-	result_winner varchar(8),
-	p1_home int,
-	p1_away int,
-	ft_home int,
-	ft_away int,
-	weather int,
-	pitch_condition int,
-	result_betting_winner varchar(8),
-	comment varchar(512),
-	status varchar(32),
-	next_matchi_id bigint,
-	match_difficulty_rating_home int,
-	match_difficulty_rating_away int,
-	ot_home int,
-	ot_away int,
-	cup_round_match_number int,
-	cup_round_number_of_matches int,
-	odds_bookmaker_id bigint,
-	odds_bookmaker_bet_id bigint,
-	odds_type varchar(8),
-	odds_type_short varchar(8),
-	odds_type_id varchar(2),
-	odds_livebet boolean,
-	odds_is_match_odds boolean,
-	odds_active boolean,
-	odds_betstop boolean,
-	odds_updated bigint,
-	PRIMARY KEY (id)
-	-- , FOREIGN KEY (real_category_id) REFERENCES real_category (id)
-	-- , FOREIGN KEY (tournament_id) REFERENCES tournament (id)
-	-- , FOREIGN KEY (unique_tournament_id) REFERENCES unique_tournament (id)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
-	-- , FOREIGN KEY (team_home_id) REFERENCES team (id)
-	-- , FOREIGN KEY (team_away_id) REFERENCES team (id)
-	-- , FOREIGN KEY (team_home_uid) REFERENCES unique_team (id)
-	-- , FOREIGN KEY (team_away_uid) REFERENCES unique_team (id)
-	-- , FOREIGN KEY (round_name_id) REFERENCES table_round (id)
-	-- , FOREIGN KEY (stadium_id) REFERENCES stadium (id)
-	-- , FOREIGN KEY (match_status_id) REFERENCES match_status (id)
-	-- , FOREIGN KEY (manager_home_id) REFERENCES player (id)
-	-- , FOREIGN KEY (manager_away_id) REFERENCES player (id)
-	-- , FOREIGN KEY (history_previous_match_id) REFERENCES match (id)
-	-- , FOREIGN KEY (home_team_history_prev_match_id) REFERENCES match (id)
-	-- , FOREIGN KEY (home_team_history_next_match_id) REFERENCES match (id)
-	-- , FOREIGN KEY (away_team_history_prev_match_id) REFERENCES match (id)
-	-- , FOREIGN KEY (away_team_history_next_match_id) REFERENCES match (id)
-	-- , FOREIGN KEY (next_matchi_id) REFERENCES match (id)
-	-- , FOREIGN KEY (odds_bookmaker_id) REFERENCES bookmaker (id)
-);
-DROP TABLE IF EXISTS match_event;
-CREATE TABLE match_event (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
+DROP TABLE IF EXISTS season_pos;
+CREATE TABLE season_pos (
+	season_id bigint NOT NULL,
+	unique_team_id bigint NOT NULL,
+	round int NOT NULL,
+	source_id bigint,
+	source_ts bigint,
 	match_id bigint,
-	type_id int,
-	minute int,
-	seconds int,
-	type varchar(64),
-	name varchar(64),
-	event_time bigint,
-	updated_time bigint,
-	disabled boolean,
-	injury_time int,
-	team varchar(8),
-	status_id bigint,
-	result_home int,
-	result_away int,
-	period int,
-	scorer_id bigint,
-	header boolean,
-	own_goal boolean,
-	penalty boolean,
-	player_id bigint,
-	card varchar(16),
-	minutes int,
-	period_name varchar(32),
-	period_score_home int,
-	period_score_away int,
-	result_winner varchar(8),
-	player_out_id bigint,
-	player_in_id bigint,
-	PRIMARY KEY (id)
+	position int,
+	moved text,
+	PRIMARY KEY (season_id, unique_team_id, round)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
+	-- , FOREIGN KEY (season_id) REFERENCES season (id)
 	-- , FOREIGN KEY (match_id) REFERENCES match (id)
-	-- , FOREIGN KEY (status_id) REFERENCES match_status (id)
-	-- , FOREIGN KEY (scorer_id) REFERENCES player (id)
-	-- , FOREIGN KEY (player_id) REFERENCES player (id)
-	-- , FOREIGN KEY (player_out_id) REFERENCES player (id)
-	-- , FOREIGN KEY (player_in_id) REFERENCES player (id)
 );
-DROP TABLE IF EXISTS stats_form_table;
-CREATE TABLE stats_form_table (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	season_id bigint,
-	win_points int,
-	loss_points int,
-	current_round int,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
-);
-DROP TABLE IF EXISTS team_form_entry;
-CREATE TABLE team_form_entry (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	_index int,
-	group_name varchar(16),
-	type_id varchar(2),
-	value varchar(2),
-	home_match boolean,
-	neutral_ground boolean,
-	match_id bigint,
-	PRIMARY KEY (id, time_stamp)
+DROP TABLE IF EXISTS unique_team_form;
+CREATE TABLE unique_team_form (
+	match_id bigint NOT NULL,
+	team_id bigint NOT NULL,
+	ts bigint NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	unique_team_id bigint,
+	home3 real,
+	home5 real,
+	home7 real,
+	home9 real,
+	away3 real,
+	away5 real,
+	away7 real,
+	away9 real,
+	total3 real,
+	total5 real,
+	total7 real,
+	total9 real,
+	PRIMARY KEY (match_id, team_id, ts)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
+	-- , FOREIGN KEY (unique_team_id) REFERENCES unique_team (id)
 	-- , FOREIGN KEY (match_id) REFERENCES match (id)
 );
 DROP TABLE IF EXISTS team_form_table;
 CREATE TABLE team_form_table (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
+	season_id bigint NOT NULL,
+	unique_team_id bigint NOT NULL,
+	round int NOT NULL,
+	source_id bigint,
+	source_ts bigint,
 	position_total int,
 	position_home int,
 	position_away int,
@@ -1411,184 +960,26 @@ CREATE TABLE team_form_table (
 	points_away int,
 	next_opponent_team_id bigint,
 	next_opponent_time bigint,
-	next_opponent_match_difficulty_rating_home int,
-	next_opponent_match_difficulty_rating_away int,
-	PRIMARY KEY (id, time_stamp)
+	PRIMARY KEY (season_id, unique_team_id, round)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 	-- , FOREIGN KEY (next_opponent_team_id) REFERENCES team (id)
 );
-DROP TABLE IF EXISTS match_details_extended;
-CREATE TABLE match_details_extended (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
+DROP TABLE IF EXISTS team_form_entry;
+CREATE TABLE team_form_entry (
+	season_id bigint NOT NULL,
+	unique_team_id bigint NOT NULL,
+	round int NOT NULL,
+	name text NOT NULL,
+	index int NOT NULL,
+	source_id bigint,
+	source_ts bigint,
+	type_id text,
+	value text,
+	home_match boolean,
+	neutral_ground boolean,
 	match_id bigint,
-	team_home varchar(32),
-	team_away varchar(16),
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (match_id) REFERENCES match (id)
-);
-DROP TABLE IF EXISTS stats_match_get;
-CREATE TABLE stats_match_get (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	match_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (match_id) REFERENCES match (id)
-);
-DROP TABLE IF EXISTS stats_match_situation;
-CREATE TABLE stats_match_situation (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	match_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (match_id) REFERENCES match (id)
-);
-DROP TABLE IF EXISTS team_goal_stats;
-CREATE TABLE team_goal_stats (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	team_id bigint,
-	matches int,
-	scored_sum int,
-	scored0015 int,
-	scored1630 int,
-	scored3145 int,
-	scored4660 int,
-	scored6175 int,
-	scored7690 int,
-	conceded_sum int,
-	conceded0015 int,
-	conceded1630 int,
-	conceded3145 int,
-	conceded4660 int,
-	conceded6175 int,
-	conceded7690 int,
-	first_goal int,
-	last_goal int,
-	penalty_success_count int,
-	penalty_fail_count int,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (team_id) REFERENCES team (id)
-);
-DROP TABLE IF EXISTS odds;
-CREATE TABLE odds (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	match_id bigint,
-	home_odds real,
-	draw_odds real,
-	away_odds real,
-	bookmaker_id bigint,
-	type varchar(32),
-	odds_type_id int,
-	draw_change real,
-	away_change real,
-	exchange boolean,
-	key varchar(32),
-	extra varchar(8),
-	closing_time varchar(16),
-	home_change real,
-	home_tb_id bigint,
-	home_odds_field_id int,
-	draw_tb_id bigint,
-	draw_odds_field_id int,
-	away_tb_id bigint,
-	away_odds_field_id int,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (match_id) REFERENCES match (id)
-	-- , FOREIGN KEY (bookmaker_id) REFERENCES bookmaker (id)
-);
-DROP TABLE IF EXISTS table_row;
-CREATE TABLE table_row (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	promotion_id bigint,
-	team_id bigint,
-	change_total int,
-	change_home int,
-	change_away int,
-	draw_total int,
-	draw_home int,
-	draw_away int,
-	goal_diff_total int,
-	goal_diff_home int,
-	goal_diff_away int,
-	goals_against_total int,
-	goals_against_home int,
-	goals_against_away int,
-	goals_for_total int,
-	goals_for_home int,
-	goals_for_away int,
-	loss_total int,
-	loss_home int,
-	loss_away int,
-	total int,
-	home int,
-	away int,
-	points_total int,
-	points_home int,
-	points_away int,
-	pos int,
-	pos_home int,
-	pos_away int,
-	sort_position_total int,
-	sort_position_home int,
-	sort_position_away int,
-	win_total int,
-	win_home int,
-	win_away int,
-	PRIMARY KEY (id)
-	-- , FOREIGN KEY (promotion_id) REFERENCES promotion (id)
-	-- , FOREIGN KEY (team_id) REFERENCES team (id)
-);
-DROP TABLE IF EXISTS season_pos;
-CREATE TABLE season_pos (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	unique_team_id bigint,
-	season_id bigint,
-	match_id bigint,
-	round int,
-	position int,
-	moved varchar(4),
-	PRIMARY KEY (id)
-	-- , FOREIGN KEY (unique_team_id) REFERENCES unique_team (id)
-	-- , FOREIGN KEY (season_id) REFERENCES season (id)
-	-- , FOREIGN KEY (match_id) REFERENCES match (id)
-);
-DROP TABLE IF EXISTS unique_team_form;
-CREATE TABLE unique_team_form (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	unique_team_id bigint,
-	match_id bigint,
-	home3 real,
-	home5 real,
-	home7 real,
-	home9 real,
-	away3 real,
-	away5 real,
-	away7 real,
-	away9 real,
-	total3 real,
-	total5 real,
-	total7 real,
-	total9 real,
-	PRIMARY KEY (id)
-	-- , FOREIGN KEY (unique_team_id) REFERENCES unique_team (id)
-	-- , FOREIGN KEY (match_id) REFERENCES match (id)
-);
-DROP TABLE IF EXISTS stats_team_versus;
-CREATE TABLE stats_team_versus (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	next_match_id bigint,
-	live_match_id bigint,
-	PRIMARY KEY (id, time_stamp)
-	-- , FOREIGN KEY (next_match_id) REFERENCES match (id)
-);
-DROP TABLE IF EXISTS match_timeline;
-CREATE TABLE match_timeline (
-	id bigint NOT NULL CONSTRAINT positive_id CHECK (id > 0),
-	time_stamp bigint NOT NULL CONSTRAINT positive_time_stamp CHECK (time_stamp > 0),
-	match_id bigint,
-	PRIMARY KEY (id, time_stamp)
+	PRIMARY KEY (season_id, unique_team_id, round, name, index)
+	-- , FOREIGN KEY (source_id, source_ts) REFERENCES entries (id, ts)
 	-- , FOREIGN KEY (match_id) REFERENCES match (id)
 );
 

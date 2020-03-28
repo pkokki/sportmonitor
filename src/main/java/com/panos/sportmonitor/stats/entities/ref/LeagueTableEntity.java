@@ -35,6 +35,7 @@ public class LeagueTableEntity extends BaseEntity {
             case "tabletype[]":
             case "matchtype[]":
             case "tablerows[]":
+            case "tables[]":
                 return true;
             case "tournament": this.tournamentId = new EntityId(childEntity); return true;
             case "realcategory": this.realCategoryId = new EntityId(childEntity); return true;

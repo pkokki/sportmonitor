@@ -45,7 +45,7 @@ public class LiveOverviewController {
 
     @PostMapping(value = "/sportradar", consumes = "text/plain")
     String sportradar(@RequestBody String message) {
-        this.radarProducer.sendMessage(message);
+        //this.radarProducer.sendMessage(message);
 
         final ObjectMapper mapper = new ObjectMapper();
         JsonNode json = null;
@@ -55,16 +55,23 @@ public class LiveOverviewController {
             StatsConsole.printlnWarn("sportradar: invalid json");
             return "ERROR";
         }
-        StatsFileWriter statsFileWriter = new StatsFileWriter("C:\\panos\\betting\\radar\\logs\\", json, true);
-        StatsStore store = new StatsStore();
-        store.addListener(new StoreCounterListener());
-        SqlExecutor sqlExecutor = new SqlExecutor(true,false);
-        sqlExecutor.addSqlExecutorListener(statsFileWriter);
-        store.addListener(sqlExecutor);
-        StatsParser parser = new StatsParser(store);
-        parser.addListener(statsFileWriter);
-        parser.parse(json);
-        store.submitChanges();
+        try {
+            StatsFileWriter statsFileWriter = new StatsFileWriter("C:\\panos\\betting\\radar\\logs\\", json, false);
+            StatsStore store = new StatsStore();
+            store.addListener(new StoreCounterListener());
+            SqlExecutor sqlExecutor = new SqlExecutor(true, false);
+            sqlExecutor.addSqlExecutorListener(statsFileWriter);
+            store.addListener(sqlExecutor);
+            StatsParser parser = new StatsParser(store);
+            parser.addListener(statsFileWriter);
+            parser.parse(json);
+            store.submitChanges();
+        }
+        catch (Exception ex) {
+            StatsConsole.printlnWarn("sportradar: " + ex.getMessage());
+            ex.printStackTrace();
+            return "ERROR";
+        }
         return "OK";
     }
 

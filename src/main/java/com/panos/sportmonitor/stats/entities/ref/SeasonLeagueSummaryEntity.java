@@ -12,7 +12,7 @@ public class SeasonLeagueSummaryEntity extends BaseEntity {
     private Double overUnder05, overUnder15, overUnder25, overUnder35, overUnder45, overUnder55;
 
     public SeasonLeagueSummaryEntity(BaseEntity parent, long seasonId, long timeStamp) {
-        super(parent, new EntityId(SeasonLeagueSummaryEntity.class, new EntityKey("seasonId", seasonId), new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp)));
+        super(parent, new EntityId(SeasonLeagueSummaryEntity.class, new EntityKey("seasonId", seasonId), EntityKey.Timestamp(timeStamp)));
     }
 
     @Override

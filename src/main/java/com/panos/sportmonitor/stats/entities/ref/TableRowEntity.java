@@ -29,7 +29,7 @@ public class TableRowEntity extends BaseEntity {
     public TableRowEntity(BaseEntity parent, EntityId tableId, long rowId, long timeStamp) {
         super(parent, new EntityId(TableRowEntity.class,
                 new EntityId[] { tableId },
-                new EntityKey[] { new EntityKey("rowId", rowId), new EntityKey("timeStamp", timeStamp) }));
+                new EntityKey[] { new EntityKey("rowId", rowId), EntityKey.Timestamp(timeStamp) }));
     }
 
     @Override

@@ -29,7 +29,7 @@ public class OddsEntity extends BaseEntity {
     public OddsEntity(BaseEntity parent, long matchId, long timeStamp, int ise) {
         super(parent, new EntityId(OddsEntity.class,
                 new EntityKey("matchId", matchId),
-                new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp),
+                EntityKey.Timestamp(timeStamp),
                 new EntityKey("ise", ise)
                 ));
     }

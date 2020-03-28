@@ -10,7 +10,7 @@ public class PlayerEntity extends BaseEntity {
     private EntityId nationalityId, secondNationalityId, birthCountryId;
     private EntityId positionId;
 
-    private String name, fullName;
+    private String name, fullName, nickname;
     private Long birthDate, marketValue;
     private Integer height, weight;
     private String foot, birthPlace, twitter, facebook;
@@ -24,6 +24,7 @@ public class PlayerEntity extends BaseEntity {
         switch (nodeName) {
             case "name": this.name = node.asText(); break;
             case "fullname": this.fullName = node.asText(); break;
+            case "nickname": this.nickname = node.asText(); break;
             case "birthdate.uts": this.birthDate = node.asLong(); break;
             case "marketvalue": this.marketValue = node.asLong(); break;
             case "height": this.height = node.asInt(); break;

@@ -10,18 +10,22 @@ https://docs.timescale.com/latest/getting-started/installation/docker/installati
 
 **PSQL client**: docker exec -it timescaledb psql -U postgres
 
-    select table_schema, table_name, (xpath('/row/cnt/text()', xml_count))[1]::text::int as row_count
-    from (
-      select table_name, table_schema,
-             query_to_xml(format('select count(*) as cnt from %I.%I', table_schema, table_name), false, true, '') as xml_count
-      from information_schema.tables
-      where table_schema = 'public'
+    SELECT table_schema, table_name, (XPATH('/row/cnt/text()', XML_COUNT))[1]::text::int AS row_count
+    FROM (
+      SELECT table_name, table_schema,
+             QUERY_TO_XML(FORMAT('SELECT count(*) AS cnt FROM %I.%I', table_schema, table_name), false, true, '') AS xml_count
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
     ) t;
 
-    select l.id, MAX(e.timestamp) 
-    from event_master_data l inner join event_data e on l.id = e."eventId" 
-    where l.expired = false 
-    group by l.id;
+    SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE';
+    
+    SELECT column_name FROM information_schema.columns WHERE table_schema='public' AND table_name='country';
+    
+    SELECT t.table_name, c.column_name 
+    FROM information_schema.tables AS t
+    LEFT JOIN information_schema.columns AS c ON t.table_schema=c.table_schema AND t.table_name=c.table_name AND c.column_name='source_id'
+    WHERE t.table_schema='public' AND t.table_type='BASE TABLE';
 
 ### Kafka cheat sheet 
     root@localhost:/opt/kafka_2.11-0.10.1.0#

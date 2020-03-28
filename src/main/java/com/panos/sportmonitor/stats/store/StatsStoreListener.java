@@ -16,5 +16,4 @@ public abstract class StatsStoreListener {
 
     public void onPropertyChange(BaseEntity entity, String entityFieldName, Object oldValue, Object newValue) {}
     public void onRelationChanged(BaseEntity entity, String entityFieldName, EntityId oldValue, EntityId newValue) {}
-    public void onRelationAdded(BaseEntity entity, String entityFieldName, EntityId id) {}
 }

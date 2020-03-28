@@ -3,16 +3,29 @@ package com.panos.sportmonitor.stats;
 import java.util.Objects;
 
 public class EntityKey {
+    private static final String KEY_ID = "id";
+    private static final String KEY_TIMESTAMP = "ts";
+
     private final String name;
     private final Object value;
+    private final boolean singleId;
 
     public EntityKey(String name, Object value) {
+        this(false, name, value);
+        if (name.equals(KEY_ID) || name.equals(KEY_TIMESTAMP))
+            throw new IllegalArgumentException("Invalid key name. Use static method.");
+    }
+    private EntityKey(boolean isSingleId, String name, Object value) {
+        this.singleId = isSingleId;
         this.name = name;
         this.value = value;
     }
 
+    public static EntityKey ID(long id) {
+        return new EntityKey(true, KEY_ID, id);
+    }
     public static EntityKey Timestamp(long timeStamp) {
-        return new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp);
+        return new EntityKey(false, KEY_TIMESTAMP, timeStamp);
     }
 
     public Object getValue() {
@@ -20,6 +33,9 @@ public class EntityKey {
     }
     public String getName() {
         return name;
+    }
+    public boolean isSingleId() {
+        return singleId;
     }
 
     @Override

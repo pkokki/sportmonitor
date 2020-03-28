@@ -28,7 +28,7 @@ public class TopListEntryEntity extends BaseEntity {
                 new EntityKey("teamId", teamId),
                 new EntityKey("playerId", playerId),
                 new EntityKey("entryType", entryType),
-                new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp)
+                EntityKey.Timestamp(timeStamp)
         ));
     }
 

@@ -31,7 +31,7 @@ public class RealCategoryEntity extends BaseEntity {
         if (entityName.equals("cc")) {
             this.countryId = new EntityId(childEntity);
             return true;
-        } else if (entityName.equals("tournaments[]") || entityName.startsWith("uniquetournaments.")) {
+        } else if (entityName.equals("tournaments[]") || entityName.startsWith("uniquetournaments.") || entityName.equals("sport")) {
             return true;
         }
         return super.handleChildEntity(entityName, childEntity);

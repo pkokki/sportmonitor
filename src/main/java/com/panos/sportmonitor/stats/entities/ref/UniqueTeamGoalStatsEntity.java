@@ -18,7 +18,7 @@ public class UniqueTeamGoalStatsEntity extends BaseEntity {
     private static EntityId createId(long uniqueTeamId, long timeStamp) {
         return new EntityId(UniqueTeamGoalStatsEntity.class,
                 new EntityKey("uniqueTeamId", uniqueTeamId),
-                new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp));
+                EntityKey.Timestamp(timeStamp));
     }
 
     @Override

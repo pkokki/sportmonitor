@@ -22,6 +22,12 @@ public class PlayerPositionTypeEntity extends BaseEntity {
             case "name": this.name = node.asText(); break;
             case "shortname": this.shortName = node.asText(); break;
             case "abbr": this.abbr = node.asText(); break;
+            case "order": 
+            case "matchpos":
+            case "basename":
+            case "baseshortname":
+            case "baseabbr":
+                break;
             default: return super.handleProperty(nodeName, nodeType, node);
         }
         return true;

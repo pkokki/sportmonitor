@@ -8,7 +8,7 @@ public class TeamOverUnderEntity extends AbstractOverUnderEntity {
     private EntityId teamId;
 
     public TeamOverUnderEntity(BaseEntity parent, long teamId, long timeStamp) {
-        super(parent, new EntityId(TeamOverUnderEntity.class, new EntityKey("teamId", teamId), new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp)));
+        super(parent, new EntityId(TeamOverUnderEntity.class, new EntityKey("teamId", teamId), EntityKey.Timestamp(timeStamp)));
     }
 
     @Override

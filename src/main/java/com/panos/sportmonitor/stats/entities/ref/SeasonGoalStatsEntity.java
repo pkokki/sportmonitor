@@ -16,7 +16,7 @@ public class SeasonGoalStatsEntity extends BaseEntity {
     private static EntityId createId(EntityId seasonId, long timeStamp) {
         return new EntityId(SeasonGoalStatsEntity.class,
                 new EntityId[] { seasonId },
-                new EntityKey[] { new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp) }
+                new EntityKey[] { EntityKey.Timestamp(timeStamp) }
         );
     }
 

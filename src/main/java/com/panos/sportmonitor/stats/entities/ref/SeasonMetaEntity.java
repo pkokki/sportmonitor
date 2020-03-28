@@ -54,7 +54,7 @@ public class SeasonMetaEntity extends BaseEntity {
     private Boolean statsCoverageJerseys, statsCoverageCupRoster;
 
     public SeasonMetaEntity(BaseEntity parent, long seasonId, long timeStamp) {
-        super(parent, new EntityId(SeasonMetaEntity.class, new EntityKey("seasonId", seasonId), new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp)));
+        super(parent, new EntityId(SeasonMetaEntity.class, new EntityKey("seasonId", seasonId), EntityKey.Timestamp(timeStamp)));
     }
 
     @Override

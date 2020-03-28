@@ -10,7 +10,7 @@ public class SeasonOverUnderEntity extends AbstractOverUnderEntity {
     public SeasonOverUnderEntity(BaseEntity parent, EntityId seasonId, long timeStamp) {
         super(parent, new EntityId(SeasonOverUnderEntity.class,
                 new EntityId[] { seasonId },
-                new EntityKey[] { new EntityKey(EntityId.KEY_TIMESTAMP, timeStamp) }));
+                new EntityKey[] { EntityKey.Timestamp(timeStamp) }));
     }
 
     @Override

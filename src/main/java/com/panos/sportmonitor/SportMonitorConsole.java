@@ -3,6 +3,7 @@ package com.panos.sportmonitor;
 import com.panos.sportmonitor.stats.StatsParser;
 import com.panos.sportmonitor.stats.StatsStore;
 import com.panos.sportmonitor.stats.store.SqlExecutor;
+import com.panos.sportmonitor.stats.store.SqlTableCreator;
 import com.panos.sportmonitor.stats.store.SqlTableDiffer;
 import com.panos.sportmonitor.stats.store.StoreCounterListener;
 import org.apache.commons.io.FileUtils;
@@ -22,7 +23,7 @@ public class SportMonitorConsole {
         store.addListener(new SqlExecutor(true, false));
         StatsParser parser = new StatsParser(store);
 
-        File folder = new File("C:\\panos\\betting\\radar\\logs\\");
+        File folder = new File("C:\\panos\\betting\\radar\\logs1\\");
         String[] extensions = new String[] { "json" };
         List<File> files = FileUtils.listFiles(folder, extensions, false).stream().sorted().collect(Collectors.toList());
         System.out.println(String.format("Found %d files in folder %s", files.size(), folder.getAbsolutePath()));

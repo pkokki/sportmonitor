@@ -3,7 +3,7 @@ package com.panos.sportmonitor.stats;
 import java.util.Objects;
 
 public class BaseRootEntityType {
-    public static final BaseRootEntityType NullRoot = new BaseRootEntityType(0, "null");
+    public static final BaseRootEntityType NullRoot = new BaseRootEntityType(9999, "null");
     public static final BaseRootEntityType MatchDetailsExtended = new BaseRootEntityType(1, "MatchDetailsExtended");
     public static final BaseRootEntityType MatchFunFacts = new BaseRootEntityType(2, "MatchFunFacts");
     public static final BaseRootEntityType MatchTimeline = new BaseRootEntityType(3, "MatchTimeline");

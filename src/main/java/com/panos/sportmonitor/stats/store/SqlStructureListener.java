@@ -39,30 +39,6 @@ public abstract class SqlStructureListener extends StatsStoreListener {
         createOrUpdateFieldInfo(entity, entityFieldName, newValue, false);
     }
 
-    @Override
-    public final void onRelationAdded(BaseEntity entity, String entityFieldName, EntityId targetId) {
-        throw new IllegalStateException(String.format("%s has onRelationAdded: %s --> %s", entity.getName(), entityFieldName, targetId));
-//        String relTableName = SqlUtils.transformTableName(String.format("%s%s%s", entity.getClass().getSimpleName(), SqlUtils.RELATION_SEPARATOR, entityFieldName));
-//        TableInfo relTableInfo = sqlData.computeIfAbsent(relTableName, TableInfo::new);
-//        if (relTableInfo.getFields().isEmpty()) {
-//            List<String> sqlFieldNames = new ArrayList<>();
-//            for (EntityKey key : entity.getId().getKeys()) {
-//                String sqlFieldName = SqlUtils.FIELD_REL_SOURCE_PREFIX + SqlUtils.resolveSqlFieldName(entityFieldName, key.getName());
-//                sqlFieldNames.add(sqlFieldName);
-//                createOrUpdateSingleFieldInfo(relTableInfo.getFields(), sqlFieldName, key.getValue(), true);
-//            }
-//            relTableInfo.addForeignKey(sqlFieldNames, entity.getId());
-//
-//            sqlFieldNames = new ArrayList<>();
-//            for (EntityKey key : targetId.getKeys()) {
-//                String sqlFieldName = SqlUtils.FIELD_REL_TARGET_PREFIX + SqlUtils.resolveSqlFieldName(entityFieldName, key.getName());
-//                sqlFieldNames.add(sqlFieldName);
-//                createOrUpdateSingleFieldInfo(relTableInfo.getFields(), sqlFieldName, key.getValue(), true);
-//            }
-//            relTableInfo.addForeignKey(sqlFieldNames, targetId);
-//        }
-    }
-
     private void createOrUpdateFieldInfo(BaseEntity entity, String entityFieldName, Object value, boolean isPK) {
         String tableName = SqlUtils.transformTableName(entity);
         TableInfo tableInfo = sqlData.computeIfAbsent(tableName, TableInfo::new);

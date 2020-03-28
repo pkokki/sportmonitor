@@ -14,7 +14,7 @@ public class UniqueTeamSeasonPlayerEntity extends BaseEntity {
     private String lastEvent;
     private Integer started, goals, yellowCards, yellowredCards, redCards, matches, offside, shotsOnGoal, shotsOffGoal, shotsBlocked,
             assists, corners, penalties, goalPoints, minutesPlayed, substitutedIn, substitutedOut, teamScored, teamConceded, totalShots,
-            matchesWon, matchesLost, matchesDrawn, firstGoals, lastGoals, numberOfCards1stHalf, numberOfCards2ndHalf, teamMatches, goalsByHeader;
+            matchesWon, matchesLost, matchesDrawn, firstGoals, lastGoals, ownGoals, numberOfCards1stHalf, numberOfCards2ndHalf, teamMatches, goalsByHeader;
 
     public static EntityId createId(long teamId, long seasonId, long playerId) {
         return new EntityId(UniqueTeamSeasonPlayerEntity.class,
@@ -68,6 +68,7 @@ public class UniqueTeamSeasonPlayerEntity extends BaseEntity {
             case "matches_drawn": this.matchesDrawn = node.asInt(); break;
             case "first_goals": this.firstGoals = node.asInt(); break;
             case "last_goals": this.lastGoals = node.asInt(); break;
+            case "own_goals": this.ownGoals = node.asInt(); break;
             case "corners": this.corners = node.asInt(); break;
             case "penalties": this.penalties = node.asInt(); break;
             case "number_of_cards_2nd_half": this.numberOfCards2ndHalf = node.asInt(); break;
